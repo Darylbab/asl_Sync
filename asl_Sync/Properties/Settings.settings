@@ -1,0 +1,256 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="asl_SyncLibrary.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MySQLWS" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;server= buy.alta.com; username= altamin; password= blackjack; Convert Zero Datetime= True; &lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">server= buy.alta.com; username= altamin; password= blackjack; Convert Zero Datetime= True; </Value>
+    </Setting>
+    <Setting Name="Axess" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source =(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 10.34.241.12)(PORT = 1521))) (CONNECT_DATA =(SERVICE_NAME = AX10G) ) ); User Id= cwc; Password= cwc;Convert Zero Datetime=True; &lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source =(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 10.34.241.12)(PORT = 1521))) (CONNECT_DATA =(SERVICE_NAME = AX10G) ) ); User Id= cwc; Password= cwc;Convert Zero Datetime=True; </Value>
+    </Setting>
+    <Setting Name="Mirror" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;server= axess.alta.com; username= root; password= AxA1tA!38;Convert Zero Datetime=True;&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">server= axess.alta.com; username= root; password= AxA1tA!38;Convert Zero Datetime=True;</Value>
+    </Setting>
+    <Setting Name="LiftopiaMTC_URL" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://extranet.liftopia.com/x/reports/passholders.php</Value>
+    </Setting>
+    <Setting Name="LiftopiaMTC_Key" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F88E77D3D9B18A6F3E8ABC4D42929&amp;</Value>
+    </Setting>
+    <Setting Name="LiftopiaMTC_ID" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">801001</Value>
+    </Setting>
+    <Setting Name="LiftopiaMTC_Data_File" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">MTCGUESTS</Value>
+    </Setting>
+    <Setting Name="LiftopiaMTC_Path" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\\taskman\c$\acctg\winscp\data\mtcguests.csv</Value>
+    </Setting>
+    <Setting Name="Axess_WTPSI" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://cwc.teamaxess.com:16302/axis_705/services/WTPSInterface?wsdl</Value>
+    </Setting>
+    <Setting Name="Axess_WTPSI_AddOn" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://cwc.teamaxess.com:16302/axis_705/services/WTPSIAddOn?wsdl</Value>
+    </Setting>
+    <Setting Name="Axess_WTPSI_User" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">alta120</Value>
+    </Setting>
+    <Setting Name="Axess_WTPSI_Password" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">alta</Value>
+    </Setting>
+    <Setting Name="Axess_DCI4CRM" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://cwc.teamaxess.com:16302/axis_705/services/DCI4CRM?wsdl</Value>
+    </Setting>
+    <Setting Name="Axess_DCI4CRM_User" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">POS</Value>
+    </Setting>
+    <Setting Name="Axess_DCI4CRM_Password" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">705</Value>
+    </Setting>
+    <Setting Name="Axess_Alta_Project_No" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">705</Value>
+    </Setting>
+    <Setting Name="SeasonStart" Type="System.DateTime" Scope="Application">
+      <Value Profile="(Default)">2018-06-01</Value>
+    </Setting>
+    <Setting Name="SeasonEnd" Type="System.DateTime" Scope="Application">
+      <Value Profile="(Default)">2019-05-30</Value>
+    </Setting>
+    <Setting Name="SyncTempDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\\taskman\c$\acctg\temp</Value>
+    </Setting>
+    <Setting Name="SyncDataDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\\alta.com\namespace\APPS\fpdata\altaax</Value>
+    </Setting>
+    <Setting Name="SyncExtDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\\alta.com\namespace\APPS\fpdata\extsync</Value>
+    </Setting>
+    <Setting Name="SyncUTADir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\\alta.com\namespace\APPS\FPData\extsync\uta</Value>
+    </Setting>
+    <Setting Name="SyncSharedDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\\alta.com\namespace\APPS\fpdata\shared</Value>
+    </Setting>
+    <Setting Name="DefaultBirthdate" Type="System.DateTime" Scope="Application">
+      <Value Profile="(Default)">1969-12-31</Value>
+    </Setting>
+    <Setting Name="YearStart" Type="System.DateTime" Scope="Application">
+      <Value Profile="(Default)">2018-07-01</Value>
+    </Setting>
+    <Setting Name="YearEnd" Type="System.DateTime" Scope="Application">
+      <Value Profile="(Default)">2019-05-31</Value>
+    </Setting>
+    <Setting Name="TestFlag" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">N</Value>
+    </Setting>
+    <Setting Name="UTAEnd" Type="System.DateTime" Scope="Application">
+      <Value Profile="(Default)">2019-05-02</Value>
+    </Setting>
+    <Setting Name="MtnColEnd" Type="System.DateTime" Scope="Application">
+      <Value Profile="(Default)">2019-05-31</Value>
+    </Setting>
+    <Setting Name="WBEnd" Type="System.DateTime" Scope="Application">
+      <Value Profile="(Default)">2019-05-31</Value>
+    </Setting>
+    <Setting Name="BPEnd" Type="System.DateTime" Scope="Application">
+      <Value Profile="(Default)">2019-05-31</Value>
+    </Setting>
+    <Setting Name="NewFLD" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="UPClist" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UPSPCards" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="UPCClink" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UPRestAcct" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UPRemSales" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UPPOEReads" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UPChrgs" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UPAR" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UPAXChk" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Cleanup" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="TimeDiff" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="Season" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">2018-19</Value>
+    </Setting>
+    <Setting Name="SMTPHost" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">relay.alta.com</Value>
+    </Setting>
+    <Setting Name="SMTPUnlockCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">MCRMGHMAILQ_0k3bQcWFnR9u</Value>
+    </Setting>
+    <Setting Name="SMTPObject" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Chilkat.Email2</Value>
+    </Setting>
+    <Setting Name="WasatchBenefits" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">snowbird,=20;deer valley,=30;solitude,=40</Value>
+    </Setting>
+    <Setting Name="SyncFTPDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\\taskman\c$\acctg\winscp\data</Value>
+    </Setting>
+    <Setting Name="MaxUse_MC" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">999</Value>
+    </Setting>
+    <Setting Name="MaxUse_MS" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">999</Value>
+    </Setting>
+    <Setting Name="MaxUse_WB" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="MaxUse_BP" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="MaxUse_OS" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">999</Value>
+    </Setting>
+    <Setting Name="MCReciprocity" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=184.106.144.107; user= altaadmin; password= 0VM6f58k;&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=184.106.144.107; user= altaadmin; password= 0VM6f58k;</Value>
+    </Setting>
+    <Setting Name="LiftopiaAlta_Data_File" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">AltaGuests</Value>
+    </Setting>
+    <Setting Name="LiftopiaAlta_URL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://www.liftopia.com/x/reports/guests.php?PartnerId=141&amp;ApiKey=6EF2313B4B6D6A2BFFF24BDB83662&amp;v=2</Value>
+    </Setting>
+    <Setting Name="UTABulkEmail" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">efcbulkimport@rideuta.com</Value>
+    </Setting>
+    <Setting Name="EmailFromAddress" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">darylb@alta.com</Value>
+    </Setting>
+    <Setting Name="UTABegin" Type="System.DateTime" Scope="Application">
+      <Value Profile="(Default)">2018-11-01</Value>
+    </Setting>
+    <Setting Name="TempErrLog" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\\taskman\c$\acctg\temp\ErrLog.CSV</Value>
+    </Setting>
+    <Setting Name="SRConnection" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=altajava\srsql;Initial Catalog=SR.DB;Integrated Security=True&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=altajava\srsql;Initial Catalog=SR.DB;Integrated Security=True</Value>
+    </Setting>
+    <Setting Name="ITFileCopyFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\\alta.com\namespace\public\_IT\Alta Created CSV Files\</Value>
+    </Setting>
+    <Setting Name="Axess_OBI4POS" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://cwc.teamaxess.com:16351/OBI4POS/</Value>
+    </Setting>
+    <Setting Name="Axess_DCI4WTP" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://wtpsi.teamaxess.com:16351/DCI4WTP/DCI4WTPService.svc?wsdl</Value>
+    </Setting>
+    <Setting Name="Axess_POS_SYNC" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://cwc.teamaxess.com:16351/DCI4Synchronisation/DCI4SynchronisationService.svc?</Value>
+    </Setting>
+    <Setting Name="MySQLDW" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;server=web-database.alta.com;username=keyhole;password=MightyM0use;Convert Zero Datetime=True;&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">server=web-database.alta.com;username=keyhole;password=MightyM0use;Convert Zero Datetime=True;</Value>
+    </Setting>
+    <Setting Name="AsgardRW" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;server= asgard.alta.com; username=heimdall; password= ragnarok;Convert Zero Datetime=True;&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">server= asgard.alta.com; username=heimdall; password= ragnarok;Convert Zero Datetime=True;</Value>
+    </Setting>
+    <Setting Name="AsgardRO" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;server= asgard.alta.com; username=amora; password= rainbow;Convert Zero Datetime=True;&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">server= asgard.alta.com; username=amora; password= rainbow;Convert Zero Datetime=True;</Value>
+    </Setting>
+    <Setting Name="AsgardDebug" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;server= asgard.alta.com; username=loki; password=S3rpent!;Convert Zero Datetime=True;&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">server= asgard.alta.com; username=loki; password=S3rpent!;Convert Zero Datetime=True;</Value>
+    </Setting>
+    <Setting Name="SharedDataFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\\taskman\c$\acctg\winscp\data\</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
