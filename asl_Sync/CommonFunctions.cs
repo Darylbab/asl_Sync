@@ -712,30 +712,40 @@ namespace asl_SyncLibrary
 
         public long RowCount(OleDbConnection aConnection, string aTable, string aFilter = "")
         {
-            long Result = 0;
             ConnectionState myState = aConnection.State;
-            try
+            string Query = "SELECT * FROM " + aTable;
+            if (aFilter != string.Empty)
             {
-                string Query = $"SELECT 1 FROM {aTable}";
-                if (aFilter != string.Empty) Query += $" WHERE {aFilter}";
-                using (OleDbCommand myCommand = new OleDbCommand(Query, aConnection))
-                {
-                    myCommand.CommandType = CommandType.Text;
-                    if (myState == ConnectionState.Closed)
-                        OpenConn(aConnection);
-                    Result = Convert.ToInt64(myCommand.ExecuteScalar());
-                }
+                Query += " WHERE " + aFilter;
             }
-            catch (OleDbException ex)
-            {
-                System.Diagnostics.Debug.Print(ex.Message);
-                tError.UpdateErrorLog("CommonFunctions.RowCount", 9999, ex.Message, ex.Data.ToString());
-            }
-            if (myState == ConnectionState.Closed)
-                CloseConn(aConnection);
-            aConnection.Dispose();
-
+            DataTable tDT = LoadTable(aConnection, Query, "RC");
+            long Result = tDT != null ? tDT.Rows.Count : 0;
             return Result;
+
+
+
+            //try
+            //{
+            //    string Query = $"SELECT count(*) FROM {aTable}";
+            //    if (aFilter != string.Empty) Query += $" WHERE {aFilter}";
+            //    using (OleDbCommand myCommand = new OleDbCommand(Query, aConnection))
+            //    {
+            //        myCommand.CommandType = CommandType.Text;
+            //        if (myState == ConnectionState.Closed)
+            //            OpenConn(aConnection);
+            //        Result = Convert.ToInt64(myCommand.ExecuteScalar());
+            //    }
+            //}
+            //catch (OleDbException ex)
+            //{
+            //    System.Diagnostics.Debug.Print(ex.Message);
+            //    tError.UpdateErrorLog("CommonFunctions.RowCount", 9999, ex.Message, ex.Data.ToString());
+            //}
+            //if (myState == ConnectionState.Closed)
+            //    CloseConn(aConnection);
+            //aConnection.Dispose();
+
+            //return Result;
 
         }
 
@@ -830,7 +840,7 @@ namespace asl_SyncLibrary
                 {
                     tError.UpdateErrorLog("CommonFunctions.ExecuteSQL(" + aConnection.DataSource + ")", 9999, ex.Message, aQuery.Replace("'", "''"));
                 }
-                if (aConnection.State != ConnectionState.Closed)
+            if (aConnection.State != ConnectionState.Closed)
             {
                 CloseConn(aConnection);
             }
@@ -1133,7 +1143,7 @@ namespace asl_SyncLibrary
                     return false;
                 }
             }
-            return (aConnection.State == ConnectionState.Closed);
+            return (aConnection.State == ConnectionState.Closed); 
         }
 
         public bool CloseConn(MySqlConnection aConnection, long aWait = 10)
@@ -1159,7 +1169,9 @@ namespace asl_SyncLibrary
                     tError.UpdateErrorLog("CommonFunctions.CloseConn", ex.Number, ex.Message, aConnection.DataSource);
                 }
             }
-            return (aConnection.State == ConnectionState.Closed);
+            bool RtnVal = (aConnection.State == ConnectionState.Closed);
+            aConnection.ClearAllPoolsAsync();
+            return RtnVal;
         }
 
         public XmlDocument ExecuteWeb(string aURL, XmlDocument aRequestDoc)
@@ -1211,19 +1223,10 @@ namespace asl_SyncLibrary
             return "\"" + aString + "\"";
         }
 
-        public decimal Null2Val(decimal? aDecimalValue) => (aDecimalValue == null ? 0 : aDecimalValue.Value);
-        public Int16 Null2Val(Int16? aIntVal)
-        {
-            Int16 RetVal = 0;
-            if (aIntVal.HasValue)
-            {
-                RetVal = aIntVal.Value;
-            }
-            return RetVal;
-        }
-
-        public Int32 Null2Val(Int32? aIntVal) => (aIntVal == null ? 0 : aIntVal.Value);
-        public Int64 Null2Val(Int64? aIntVal) => (aIntVal == null ? 0 : aIntVal.Value);
+        public decimal Null2Val(decimal? aDecimalValue) => (aDecimalValue ?? 0);
+        public Int16 Null2Val(Int16? aIntVal) => (aIntVal ?? 0);
+        public Int32 Null2Val(Int32? aIntVal) => (aIntVal ?? 0);
+        public Int64 Null2Val(Int64? aIntVal) => (aIntVal ?? 0);
 
         public string TimestampConvert(double timeStamp, bool dateOnly = false)
         {

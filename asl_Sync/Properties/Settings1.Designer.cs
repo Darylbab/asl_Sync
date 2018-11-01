@@ -26,8 +26,8 @@ namespace asl_SyncLibrary.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("server= buy.alta.com; username= altamin; password= blackjack; Convert Zero Dateti" +
-            "me= True; ")]
+        [global::System.Configuration.DefaultSettingValueAttribute("server= buy.alta.com; username= syncron; password= debut-drift-dream; Convert Zer" +
+            "o Datetime= True; Pooling=False;")]
         public string MySQLWS {
             get {
                 return ((string)(this["MySQLWS"]));

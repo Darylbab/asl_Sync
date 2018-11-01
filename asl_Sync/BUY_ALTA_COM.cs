@@ -55,19 +55,22 @@ namespace asl_SyncLibrary
         public Serverstatus GetServerStatus()
         {
             Serverstatus tStat = Serverstatus.Unknown;
-            if (cf.OpenConn(Buy_Alta_ComConn) == ConnectionState.Open)
+            using (Buy_Alta_ComConn)
             {
-                cf.CloseConn(Buy_Alta_ComConn);
-                tStat = Serverstatus.Active;
-            }
-            else
-            {
-                try
+                if (cf.OpenConn(Buy_Alta_ComConn) == ConnectionState.Open)
                 {
-                    Buy_Alta_ComConn.Ping();
-                    tStat = Serverstatus.Service_Failed;
+                    cf.CloseConn(Buy_Alta_ComConn);
+                    tStat = Serverstatus.Active;
                 }
-                catch { tStat = Serverstatus.Server_Failed; }
+                else
+                {
+                    try
+                    {
+                        Buy_Alta_ComConn.Ping();
+                        tStat = Serverstatus.Service_Failed;
+                    }
+                    catch { tStat = Serverstatus.Server_Failed; }
+                }
             }
             return tStat;
         }

@@ -51,7 +51,7 @@ namespace TokenXRefSync
                             string UpdateQuery = string.Empty;
                             if (SalesRow["mediaid"].ToString().Trim() != RowTransAufBereit["mediaid"].ToString().Trim())
                             {
-                                UpdateQuery += $"mediaid='{SalesRow["mediaid"].ToString().Trim()}', nkartennr='{SalesRow["mediaid"].ToString().Trim().Substring(0, 10)}'";
+                                UpdateQuery += $"mediaid='{SalesRow["mediaid"].ToString().Trim()}', nkartennr='{(SalesRow["mediaid"].ToString() + "          ").Substring(0, 10).Trim()}'";
                             }
                             if (SalesRow["wtp32"].ToString().Trim() != RowTransAufBereit["wtp32"].ToString().Trim())
                             {
@@ -190,7 +190,7 @@ namespace TokenXRefSync
                                         bool tMatch = false;
                                         if (tVal == 1)
                                         {
-                                            tMatch = ((RowSales["wtp32"].ToString() == TokenRow["webid"].ToString().Substring(0, 8)) && (RowSales["nkassanr"].ToString() == TokenRow["workpos"].ToString()));
+                                            tMatch = ((RowSales["wtp32"].ToString() == (TokenRow["webid"].ToString() + "        ").Substring(0, 8)) && (RowSales["nkassanr"].ToString() == TokenRow["workpos"].ToString()));
                                         }
                                         else
                                             if (tVal == 2)
@@ -354,6 +354,7 @@ namespace TokenXRefSync
                         {
                             CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.spcards SET tokenkey=0, pmtprofile=0, authnet_custid=0 WHERE recid={RowSPCards["recid"].ToString()}");
                         }
+                        SslStatus.Text = $"Row {TblSPCards.Rows.IndexOf(RowSPCards).ToString()} of {TblSPCards.Rows.Count.ToString()}";
                     }
                 }
             }
@@ -376,15 +377,16 @@ namespace TokenXRefSync
                                 CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.artrans SET tokenkey='{RowSPCards["tokenkey"].ToString()}', authnet_custid='{RowSPCards["authnet_custid"].ToString()}' WHERE serialkey='{RowARTrans["serialkey"].ToString()}' AND authcode = ''");
                             }
                         }
+                        SslStatus.Text = $"Row {TblARTrans.Rows.IndexOf(RowARTrans).ToString()} of {TblARTrans.Rows.Count.ToString()}";
                     }
                 }
             }
             SslStatus.Text = "COMPLETE";
             Cursor.Current = OldCursor;
         }
-
-        private void BtnRunUpdates_Click(object sender, EventArgs e)
+        private void Run()
         {
+            timer1.Enabled = false;
             BtnRunUpdates.Enabled = false;
             Cursor OldCursor = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;
@@ -392,7 +394,12 @@ namespace TokenXRefSync
             if (CbUpdateTokenXRef.Checked) Update_tokenxref();
             if (CbUpdateSalesData.Checked) Update_salesdata();
             Cursor.Current = OldCursor;
+            timer1.Enabled = true;
         }
+
+        private void BtnRunUpdates_Click(object sender, EventArgs e) => Run();
+
+        private void Timer1_Tick(object sender, EventArgs e) => Run();
     }
 
 }

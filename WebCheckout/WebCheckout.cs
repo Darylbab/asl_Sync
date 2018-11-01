@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.OleDb;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,9 @@ namespace WebCheckout
         CommonFunctions CF = new CommonFunctions();
         DataWarehouse DW = new DataWarehouse();
         Mirror am = new Mirror();
+        Shop AltaShop = new Shop();
 
+        OleDbConnection VFPConn = new OleDbConnection("Provider=VFPOLEDB.1");
 
         System.Data.DataTable AltaCredit;
         System.Data.DataTable ARTrans;
@@ -35,6 +38,9 @@ namespace WebCheckout
         System.Data.DataTable WebSales;
         System.Data.DataTable Willcall;
 
+        const string IFormat = "#,##0";
+        const string DFormat = "#,##0.00";
+
         DateTime mStart = DateTime.Today.AddDays(-1);   //assume yesterday
         //DateTime mEnd;
         DateTime mEndDate;
@@ -43,20 +49,20 @@ namespace WebCheckout
         decimal mDisc = 0;
         decimal mAMEX = 0;
         decimal mCardTot = 0;
-        decimal mRelaodDisc = 0;
+        decimal mReloadDisc = 0;
         decimal mReloadTot = 0;
         //decimal mSubTot = 0;
         decimal mAXTot = 0;
-        decimal mShipTot = 0;
+        //decimal mShipTot = 0;
         //decimal mOrderTot = 0;
         decimal mAltaCredit = 0;
         //decimal madjcardtot = 0;
-        decimal mfamcredits = 0;
+        //decimal mfamcredits = 0;
         decimal mgiftuse = 0;
         decimal mgiftloads = 0;
-        decimal mgiftsprdcd = 0;
+        //decimal mgiftsprdcd = 0;
         decimal mwebship = 0;
-        decimal mwebreloads = 0;
+        //decimal mwebreloads = 0;
         //decimal mweborders = 0;
         //decimal maxorders = 0;
         //decimal maxreloads = 0;
@@ -81,26 +87,26 @@ namespace WebCheckout
         decimal mwebcoupon = 0;
         decimal mwebgiftuse = 0;
         decimal mwebtotal = 0;
-        decimal mtickexpbeg = 0;
-        decimal mtickexpend = 0;
+        //decimal mtickexpbeg = 0;
+        //decimal mtickexpend = 0;
         decimal maxrecd = 0;
         decimal mwcsent = 0;
         decimal maxcanc = 0;
         decimal mwccredit = 0;
         decimal mwcrefund = 0;
-        long mqty = 0;
-        decimal mprice = 0;
-        decimal mhfeet = 0;
-        decimal mhinches = 0;
+        //long mqty = 0;
+        //decimal mprice = 0;
+        //decimal mhfeet = 0;
+        //decimal mhinches = 0;
         decimal mtrretail = 0;
-        decimal mtrgift = 0;
-        decimal mtrwillcall = 0;
+        //decimal mtrgift = 0;
+        //decimal mtrwillcall = 0;
         decimal mvcwillcall = 0;
         decimal mShort = 0;
-        decimal maxsales = 0;
+        //decimal maxsales = 0;
         decimal mwebsales = 0;
-        decimal mwebretail = 0;
-        decimal mwebretailreload = 0;
+        //decimal mwebretail = 0;
+        //decimal mwebretailreload = 0;
         decimal mwebrefund = 0;
         decimal mwebgift = 0;
         decimal mTotRec = 0;
@@ -148,6 +154,7 @@ namespace WebCheckout
             //'temp'
             //'daylightsavings'
             //'arsum'
+            LoadData();
         }
 
         //private void OrdersSum()
@@ -337,41 +344,56 @@ namespace WebCheckout
             System.Windows.Forms.Application.Exit();
         }
 
-        private void BtnLoadData_Click(object sender, EventArgs e)
-        {
-            LoadData();
-        }
+        private void BtnLoadData_Click(object sender, EventArgs e) => LoadData();
 
         private void LoadData()
-        { 
+        {
+            Cursor.Current = Cursors.WaitCursor;
             SetButtonStatus(false);
             SetTextboxStatus(false);
             SetLabelStatus(false);
-            btnEdit.Enabled = true;
+            StatusText.Enabled = true;
+            StatusText.Visible = true;
+            btnExit.Enabled = true;
             btnSummaryReport.Enabled = true;
             btnEstoreDetail.Enabled = true;
             StatusText.Text = "Loading Checkout Info";
+            System.Windows.Forms.Application.DoEvents();
             AXCust = CF.LoadTable(am.MirrorConn, $"SELECT * FROM {am.ActiveDatabase}.tabaxcust WHERE ((nperskassa < 60) OR (nperskassa between 117 AND 120)) ORDER BY nperskassa, npersnr", "AXCust");
-            POS20Sum = CF.LoadDataRow(DW.dwConn, $"SELECT cmast, cvisa, cdisc, camex, cardtot, cgiftuse, cgiftadd, totrec, webreloads, weborders, webskisch, webfampck, webtickn, webtickr, webgift, webrefund, ccbillamt, webship, acredit, axtot, axwebdisc FROM {DW.ActiveDatabase}.possum WHERE saledate='{mStart.ToString(Mirror.AxessDateFormat)}' AND pos=20");
-            POS21Sum = CF.LoadDataRow(DW.dwConn, $"SELECT cmast, cvisa, cdisc, camex, cardtot, cgiftuse, cgiftadd, totrec, webreloads, weborders, webskisch, webfampck, webtickn, webtickr, webgift, webrefund, ccbillamt, webship, acredit, axtot, axwebdisc FROM {DW.ActiveDatabase}.possum WHERE saledate='{mStart.ToString(Mirror.AxessDateFormat)}' AND pos=21");
-            ClrFields();
+            //FoxPro
+            VFPConn.ConnectionString = @"provider=vfpoledb.1;data source = G:\FPData\altaax\possum.dbf";
+            POS20Sum = CF.LoadDataRow(VFPConn, $"SELECT cmast, cvisa, cdisc, camex, cardtot, cgiftuse, cgiftadd, totrec, webreloads, weborders, webskisch, webfampck, webtickn, webtickr, webgift, webrefund, ccbillamt, webship, acredit, axtot, axwebdisc FROM possum WHERE saledate={CF.SetFoxProDate(mStart)} AND pos=20");
+            VFPConn.ConnectionString = @"provider=vfpoledb.1;data source = G:\FPData\altaax\possum.dbf";
+            POS21Sum = CF.LoadDataRow(VFPConn, $"SELECT cmast, cvisa, cdisc, camex, cardtot, cgiftuse, cgiftadd, totrec, webreloads, weborders, webskisch, webfampck, webtickn, webtickr, webgift, webrefund, ccbillamt, webship, acredit, axtot, axwebdisc FROM possum WHERE saledate={CF.SetFoxProDate(mStart)} AND pos=21");
+//mySQL
+            //POS20Sum = CF.LoadDataRow(DW.dwConn, $"SELECT cmast, cvisa, cdisc, camex, cardtot, cgiftuse, cgiftadd, totrec, webreloads, weborders, webskisch, webfampck, webtickn, webtickr, webgift, webrefund, ccbillamt, webship, acredit, axtot, axwebdisc FROM {DW.ActiveDatabase}.possum WHERE saledate='{mStart.ToString(Mirror.AxessDateFormat)}' AND pos=20");
+            //POS21Sum = CF.LoadDataRow(DW.dwConn, $"SELECT cmast, cvisa, cdisc, camex, cardtot, cgiftuse, cgiftadd, totrec, webreloads, weborders, webskisch, webfampck, webtickn, webtickr, webgift, webrefund, ccbillamt, webship, acredit, axtot, axwebdisc FROM {DW.ActiveDatabase}.possum WHERE saledate='{mStart.ToString(Mirror.AxessDateFormat)}' AND pos=21");
+            //ClrFields();
             if (POS20Sum != null)
             {
                 LoadFields();
             }
             mEndDate = mStart.AddDays(1);
             StatusText.Text = "Loading eStore Data";
+            System.Windows.Forms.Application.DoEvents();
             GetWebSales();
             GetCreditUse();
             StatusText.Text = "Loading Alta Credit Info";
+            System.Windows.Forms.Application.DoEvents();
             Update_Reloads();
             GetWillcall();
             GetRCBill();
             StatusText.Text = "Loading Axess Info";
+            System.Windows.Forms.Application.DoEvents();
             GetAXWebReloads();
             //GetAXOrders();
             StatusText.Text = "Updating Checkout Detail Files";
-            if ((WebSales != null) && (mccbill != 0))
+            System.Windows.Forms.Application.DoEvents();
+            bool msalesflag = false;
+            if (POS20Sum != null) msalesflag = true;
+            if (POS21Sum != null) msalesflag = true;
+            if (mccbill != 0) msalesflag = true;
+                if (msalesflag)
             {
                 if (mCardTot == 0)
                 {
@@ -410,7 +432,11 @@ namespace WebCheckout
                 btnEstoreDetail.Enabled = true;
                 btnPreviousDay.Enabled = true;
                 btnNextDay.Enabled = true;
+                System.Windows.Forms.Application.DoEvents();
             }
+            StatusText.Enabled = false;
+            StatusText.Visible = false;
+            Cursor.Current = Cursors.Default;
         }
 
         private void EnableRpts()
@@ -437,38 +463,15 @@ namespace WebCheckout
         private void CalcTot()
         {
             // ***GET E - STORE TOTALS***
-            decimal mwebtotal = 0;
-            decimal mwebcoupon = 0;
-            decimal mwebauthnet = 0;
-            decimal mwebgiftuse = 0;
-            decimal mwebship = 0;
-            //decimal mpassorders = 0;
-            decimal mpassreloads = 0;
-            decimal mtickn = 0;
-            decimal mtickr = 0;
-            decimal mskischool = 0;
-            decimal mwebgift = 0;
-            decimal mwebrefund = 0;
-            //decimal maxpassorders = 0;
-            decimal maxpassreloads = 0;
-            //decimal mwcalln = 0;
-            //decimal mwcallr = 0;
-            decimal mfampck = 0;
-            decimal mrcbillamt = 0;
-            decimal mreloaddisc = 0;
-            decimal mccamt = 0;
-            decimal mcredit = 0;
-            decimal lgiftuse = 0;
-            decimal lwebship = 0;
-
+            //ClrFields();
             foreach (DataRow WebSale in WebSales.Rows)
             {
                 string mOrderID = WebSale["orderid"].ToString().Trim();
 
-                mccamt = 0;
-                mcredit = 0;
-                lgiftuse = 0;
-                lwebship = 0;
+                decimal mccamt = 0;
+                decimal mcredit = 0;
+                decimal lgiftuse = 0;
+                decimal lwebship = 0;
                 while (mOrderID == WebSale["orderid"].ToString().Trim())
                 {
                     if (WebSale["status"].ToString().Trim() == "APPROVED" || WebSale["orderid"].ToString().Trim() == "CREDIT_APPLIED")
@@ -532,9 +535,12 @@ namespace WebCheckout
                         mcredit = 0;
                     }
                 }
-                mwebcoupon = mwebcoupon + mcredit;
-                mwebauthnet = mwebauthnet + mccamt;
-                mwebgiftuse = mwebgiftuse + lgiftuse;
+                mwebcoupon += mcredit;
+                txtECoupons.Text = mwebcoupon.ToString(DFormat);
+                mwebauthnet += mccamt;
+                txtCreditCards.Text = mwebauthnet.ToString(DFormat);
+                mwebgiftuse += lgiftuse;
+                txtGiftCardUse.Text = mwebgiftuse.ToString(DFormat);
                 mwebship = mwebship + lwebship;
             }
             //**** get resort charge/ refund totals***
@@ -565,11 +571,13 @@ namespace WebCheckout
             //        maxpassorders += Order.Field<decimal>("tariff");
             //    }
             //}
+            //txtAxessOrders.Text = mpassorders.ToString(DFormat);
 
             //*** RELOADS ***
             maxpassreloads = 0;
             maxrecd = 0;
             maxcanc = 0;
+            if (SalesDay != null)
             foreach (DataRow SaleDay in SalesDay.Rows)
             {
                 decimal tariff = SaleDay.Field<decimal>("tariff");
@@ -586,11 +594,16 @@ namespace WebCheckout
                     maxcanc -= tariff;
                 }
             }
+            txtReceivedByAxess21.Text = maxrecd.ToString(DFormat);
+            txtCancelledByAxess.Text = maxcanc.ToString(DFormat);
             mReloadTot = maxpassreloads;
+            txtAxessPrepaidsReloads.Text = mReloadTot.ToString(DFormat);
             //* **GET WILLCALL TICKETS ***
             mwcnew = 0;
+            txtWillcallTicketReservations.Text = mwcnew.ToString(DFormat);
             mwcreload = 0;
             mwcsent = 0;
+            txtSentFromWillcall.Text = mwcsent.ToString(DFormat);
             mwccredit = 0;
             mwcrefund = 0;
             foreach (DataRow WC in Willcall.Rows)
@@ -627,24 +640,29 @@ namespace WebCheckout
                         }
                     }
                 }
+                txtBackInWillcall.Text = mwccredit.ToString(DFormat);
                 //txtAxessOrders.BackColor = (mpassorders != maxpassorders ? Color.Red : Color.Yellow);
-                txtAxessPrepaidsReloads.BackColor = (mpassreloads != maxpassreloads + mreloaddisc ? Color.Red : Color.Yellow);
+                txtAxessPrepaidsReloads.BackColor = (mpassreloads != maxpassreloads + mReloadDisc ? Color.Red : Color.Yellow);
                 txtWillcallTicketReservations.BackColor = (mtickn != mwcnew ? Color.Red : Color.Yellow);
                 txtWillcallDateSpecificReloads.BackColor = (mtickr != mwcreload ? Color.Red : Color.Yellow);
                 //**** summarize results***
                 mCardTot = mVISA + mMAST + mAMEX + mDisc;
                 //mwebsales = mpassorders + mpassreloads + mskischool + mwebgift + mtickn + mtickr + mfampck + mreloaddisc + mwebship;
-                mwebsales = mpassreloads + mskischool + mwebgift + mtickn + mtickr + mfampck + mreloaddisc + mwebship;
-                mwebauthnet = mwebauthnet + mrcbillamt + mwebrefund;
+                mwebsales = mpassreloads + mskischool + mwebgift + mtickn + mtickr + mfampck + mReloadDisc + mwebship;
+                txtEstoreSales.Text = mwebsales.ToString(DFormat);
+                mwebauthnet += mrcbillamt + mwebrefund;
+                txtCreditCards.Text = mwebauthnet.ToString(DFormat);
                 mAXTot = mwebauthnet + mwebcoupon + mwebgiftuse;
+                txtEstoreReceipts.Text = mAXTot.ToString(DFormat);
                 mTotRec = mCardTot + mgiftuse + mAltaCredit;
-                msalestot = mpassreloads + mskischool + mwebgift + mtickn + mtickr + mfampck + mreloaddisc + mrcbillamt + mwebrefund + mwebship;
+                msalestot = mpassreloads + mskischool + mwebgift + mtickn + mtickr + mfampck + mReloadDisc + mrcbillamt + mwebrefund + mwebship;
                 //msalestot = mpassorders + mpassreloads + mskischool + mwebgift + mtickn + mtickr + mfampck + mreloaddisc + mrcbillamt + mwebrefund + mwebship;
                 mShort = msalestot - mTotRec;
                 if (Convert.ToDouble(Math.Abs(mShort)) < 0.01)
                 {
                     mShort = 0;
                 }
+                txtOverShort.Text = mShort.ToString(DFormat);
                 txtAuthNetTotal.BackColor = (Convert.ToDouble(Math.Abs(mCardTot - mwebauthnet)) <= 0.01 ? Color.Yellow : Color.Red);
                 txtSalesTotal.BackColor = ((msalestot != mAXTot) || (mTotRec != mAXTot) || (mTotRec != msalestot) ? Color.Red : Color.Yellow);
                 txtEstoreReceipts.BackColor = txtSalesTotal.BackColor;
@@ -655,7 +673,7 @@ namespace WebCheckout
         private void GetAXWebReloads()
         {
             PmtDay = CF.LoadTable(DW.dwConn, $"SELECT * FROM {DW.ActiveDatabase}.pmtdata WHERE saledate = '{sStart}' AND nkassanr IN (20,21) AND testflag = 0 ORDER BY transkey", "PmtDay");
-            SalesDay = CF.LoadTable(DW.dwConn, $"SELECT * FROM {DW.ActiveDatabase}.salesdata WHERE saledate = '{sStart}' AND nkassa IN (20, 21) AND testflag = 0 ORDER BY transkey", "SalesDay");
+            SalesDay = CF.LoadTable(DW.dwConn, $"SELECT * FROM {DW.ActiveDatabase}.salesdata WHERE saledate = '{sStart}' AND nkassanr IN (20, 21) AND testflag = 0 ORDER BY transkey", "SalesDay");
         }
 
         //private void GetAXOrders()
@@ -676,11 +694,13 @@ namespace WebCheckout
 
         private void GetRCBill()
         {
-            string Where = "billdate = '{sStart}' AND authcode <> '' AND ((tokenkey <> '' AND arcustid = '11874') or transtype = 'R')";
+            string Where = $"billdate = '{sStart}' AND authcode <> '' AND ((tokenkey <> '' AND arcustid = '11874') or transtype = 'R')";
             CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.artrans SET creditamt = 0 WHERE creditamt is null AND {Where}");
             CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.artrans SET debitamt = 0 WHERE debitamt is null AND {Where}");
-            CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.artrans SET mrcbillamt = (debitamt-creditamt) WHERE transtype <> 'R' AND {Where}");
-            CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.artrans SET mwebrefund = (debitamt-creditamt) WHERE transtype = 'R' AND {Where}");
+            string tVal = CF.GetSQLField(DW.dwConn, $"SELECT SUM(debitamt-creditamt) FROM {DW.ActiveDatabase}.artrans WHERE transtype <> 'R' AND {Where}");
+            mrcbillamt = (tVal == string.Empty ? 0 : Convert.ToDecimal(tVal));
+            tVal = CF.GetSQLField(DW.dwConn, $"SELECT SUM(creditamt-debitamt) FROM {DW.ActiveDatabase}.artrans WHERE transtype <> '=' AND {Where}");
+            mwebrefund = (tVal == string.Empty ? 0 : Convert.ToDecimal(tVal)); 
             ARTrans = CF.LoadTable(DW.dwConn, $"SELECT * FROM {DW.ActiveDatabase}.artrans WHERE {Where}", "ARTrans");
         }
 
@@ -695,7 +715,7 @@ namespace WebCheckout
                     AXReloads = CF.LoadDataRow(DW.dwConn, $"SELECT saledate, nlfdzaehler, transkey FROM {DW.ActiveDatabase}.salesdata WHERE nkassanr=20 AND nseriennr={WebSale["nserialno"].ToString()} ORDER BY saledate DESC LIMIT 1");
                     if (AXReloads != null)
                     {
-                        if (AXReloads.Field<DateTime>("saledate") != WebSale.Field<DateTime>("saledate"))
+                        if (AXReloads.Field<DateTime>("saledate") != WebSale.Field<DateTime>("sale_date"))
                         {
                             CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.salesdata SET saledate = '{WebSale.Field<DateTime>("saledate").ToString(Mirror.AxessDateFormat)}' WHERE nlfdzaehler='{WebSale["nlfdzaehler"].ToString()}'");
                             CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.pmtdata SET saledate = '{WebSale.Field<DateTime>("saledate").ToString(Mirror.AxessDateFormat)}' WHERE transkey='{WebSale["transkey"].ToString()}'");
@@ -707,22 +727,32 @@ namespace WebCheckout
 
         private void GetWebSales()
         {
-            string Query = $"SELECT DATE(O.created) as sale_date,  O.id as orderid, I.id as itemid, I.parent_order_item_id as fampckid, I.product_id, " +
-                $"I.tickettype, I.persontype, I.poolnumber, I.product_type, cast(I.product_name as char(30)) as product_name, I.price, I.qty, I.total, " +
-                $"SUBSTR(O.status, 1, 15) as status, SUBSTR(I.firstname, 1, 20) as firstname, SUBSTR(I.lastname, 1, 20) as lastname, I.birthdate, I.gender, " +
-                $"I.feet, I.inches, I.webid, I.NJOURNALNO, I.NPOSNO, I.NPROJECTNO, I.NSERIALNO, I.NTARIFF, I.SZCURRENCY, I.product_sku, I.product_group,  " +
-                $"I.product_description, I.required_docs_json, I.required_docs_verified,  I.flaggedByEvan, I.attach_credit_card, I.axess_skip_soap, I.NERRORNO, " +
-                $"I.SZERRORMESSAGE, I.SZVALIDTILL, I.NCUSTOMERID, I.axess_status, I.axess_msg, I.created, I.modified, I.cancelled, O.customer_id, " +
-                $"O.customerPaymentProfileId, O.invoice, O.email, O.optin, O.has_required_docs, O.phone, SUBSTR(O.billing_firstname, 1, 20) as billing_firstname, " +
-                $"SUBSTR(O.billing_lastname, 1, 20) as billing_lastname, O.billing_address, O.billing_city, O.billing_state, O.billing_zip, O.billing_country, " +
-                $"O.ship_to_billing_address, O.shipping_firstname, O.shipping_lastname, O.shipping_address, O.shipping_city, O.shipping_state, O.shipping_zip, " +
-                $"O.shipping_country, O.subtotal, O.shipping_amount, O.shipping_method, O.tax_amount, O.credit_amount, O.gift_card_amount, O.total as ccamt, " +
-                $"O.cc_name, O.cc_type, O.cc_number, O.cc_expiration_month, O.cc_expiration_year, O.tran_response_code, O.tran_response_sub_code, " +
-                $"O.tran_response_reason_code, O.tran_response_reason_text, O.tran_approval_code, O.tran_avs_result_code, O.tran_transaction_id, O.tran_original_id, " +
-                $"O.tran_amount, O.tran_transaction_type, O.portal_id, O.portal_name,  O.is_test, O.created, O.modified, SPACE(20) as confirmed " +
-                $"FROM altaweb.alta_orders AS O INNER JOIN altaweb.alta_order_items AS I ON O.id = I.order_id " +
-                $"WHERE I.created = '{sStart}'";
-            WebSales = CF.LoadTable(BUY.Buy_Alta_ComConn, Query, "WebSales");
+            //string Query = $"SELECT DATE(O.created) as sale_date,  O.id as orderid, I.id as itemid, I.parent_order_item_id as fampckid, I.product_id, " +
+            //    $"I.tickettype, I.persontype, I.poolnumber, I.product_type, cast(I.product_name as char(30)) as product_name, I.price, I.qty, I.total, " +
+            //    $"SUBSTR(O.status, 1, 15) as status, SUBSTR(I.firstname, 1, 20) as firstname, SUBSTR(I.lastname, 1, 20) as lastname, I.birthdate, I.gender, " +
+            //    $"I.feet, I.inches, I.webid, I.NJOURNALNO, I.NPOSNO, I.NPROJECTNO, I.NSERIALNO, I.NTARIFF, I.SZCURRENCY, I.product_sku, I.product_group,  " +
+            //    $"I.product_description, I.required_docs_json, I.required_docs_verified,  I.flaggedByEvan, I.attach_credit_card, I.axess_skip_soap, I.NERRORNO, " +
+            //    $"I.SZERRORMESSAGE, I.SZVALIDTILL, I.NCUSTOMERID, I.axess_status, I.axess_msg, I.created, I.modified, I.cancelled, O.customer_id, " +
+            //    $"O.customerPaymentProfileId, O.invoice, O.email, O.optin, O.has_required_docs, O.phone, SUBSTR(O.billing_firstname, 1, 20) as billing_firstname, " +
+            //    $"SUBSTR(O.billing_lastname, 1, 20) as billing_lastname, O.billing_address, O.billing_city, O.billing_state, O.billing_zip, O.billing_country, " +
+            //    $"O.ship_to_billing_address, O.shipping_firstname, O.shipping_lastname, O.shipping_address, O.shipping_city, O.shipping_state, O.shipping_zip, " +
+            //    $"O.shipping_country, O.subtotal, O.shipping_amount, O.shipping_method, O.tax_amount, O.credit_amount, O.gift_card_amount, O.total as ccamt, " +
+            //    $"O.cc_name, O.cc_type, O.cc_number, O.cc_expiration_month, O.cc_expiration_year, O.tran_response_code, O.tran_response_sub_code, " +
+            //    $"O.tran_response_reason_code, O.tran_response_reason_text, O.tran_approval_code, O.tran_avs_result_code, O.tran_transaction_id, O.tran_original_id, " +
+            //    $"O.tran_amount, O.tran_transaction_type, O.portal_id, O.portal_name,  O.is_test, O.created, O.modified, SPACE(20) as confirmed " +
+            //    $"FROM altaweb.alta_orders AS O INNER JOIN altaweb.alta_order_items AS I ON O.id = I.order_id " +
+            //    $"WHERE I.created = '{sStart}'";
+            string Query = $"SELECT DATE(O.created_at) AS sale_date, O.id AS orderid, I.id AS itemid, I.axess_tickettype AS tickettype, I.product_type, " +
+                $"CAST(I.product_name AS CHAR (30)) AS product_name, I.price, I.quantity AS qty, I.total, SUBSTR(O.status, 1, 15) AS status, " +
+                $"SUBSTR(I.person_firstname, 1, 20) AS firstname, SUBSTR(I.person_lastname, 1, 20) AS lastname, I.axess_wtp AS webid, T.NJOURNALNO, T.NPOSNO AS NPOSNO, " +
+                $"T.NSERIALNO, I.product_group, O.subtotal, O.shipping_amount, O.credit_amount, O.giftcard_amount AS gift_card_amount, O.total AS ccamt, " +
+                $"P.transaction_auth_code AS tran_approval_code, SPACE(20) AS confirmed " +
+                $"FROM altashop.orders AS O " +
+                $"INNER JOIN altashop.order_items AS I ON O.id = I.order_id " +
+                $"LEFT JOIN altashop.payments AS P ON P.order_id = O.ID " +
+                $"LEFT JOIN altashop.axess_transactions AS T ON T.order_item_id=I.id " +
+                $"WHERE I.created_at >= '{sStart}' AND I.created_at < '{mStart.AddDays(1).ToString(Mirror.AxessDateFormat)}'";
+            WebSales = CF.LoadTable(AltaShop.Shop_Alta_ComConn, Query, "WebSales");
         }
 
         private void GetCreditUse() => AltaCredit = CF.LoadTable(BUY.Buy_Alta_ComConn, $"SELECT A.creditkey, A.customerkey, A.ecoupon, " +
@@ -792,7 +822,7 @@ namespace WebCheckout
             txtMastercard.Enabled = Enable;
             txtOverShort.Enabled = Enable;
             txtPassCardOrders.Enabled = Enable;
-            txtPreaidsReloads.Enabled = Enable;
+            txtPrepaidsReloads.Enabled = Enable;
             txtRCBillingTotal.Enabled = Enable;
             txtReceivedByAxess21.Enabled = Enable;
             txtSalesTotal.Enabled = Enable;
@@ -836,28 +866,41 @@ namespace WebCheckout
         private void ClrFields()
         {
             mMAST = 0;
+            txtMastercard.Text = mMAST.ToString(DFormat);
             mVISA = 0;
+            txtVISA.Text = mVISA.ToString(DFormat);
             mDisc = 0;
+            txtDiscover.Text = mDisc.ToString(DFormat);
             mAMEX = 0;
+            txtAMEX.Text = mAMEX.ToString(DFormat);
             mCardTot = 0;
-            maxsales = 0;
+            txtAuthNetTotal.Text = mCardTot.ToString(DFormat);
+            mReloadTot = 0;
+            txtAxessPrepaidsReloads.Text = mReloadTot.ToString(DFormat);
+            //maxsales = 0;
             //maxorders = 0;
             mwebsales = 0;
+            txtEstoreSales.Text = mwebsales.ToString(DFormat);
             //mweborders = 0;
-            mwebreloads = 0;
-            mwebretail = 0;
-            mwebretailreload = 0;
-            mShipTot = 0;
+            //mwebreloads = 0;
+            //mwebretail = 0;
+            //mwebretailreload = 0;
+            //mShipTot = 0;
             mShort = 0;
+            txtOverShort.Text = mShort.ToString(DFormat);
             mwebtotal = 0;
             mTotRec = 0;
             mwebcoupon = 0;
+            txtECoupons.Text = mwebcoupon.ToString(DFormat);
             mwebauthnet = 0;
-            mfamcredits = 0;
-            mgiftsprdcd = 0;
+            txtCreditCards.Text = string.Empty;
+            //mfamcredits = 0;
+            //mgiftsprdcd = 0;
             mgiftloads = 0;
             mgiftuse = 0;
+            txtGiftCardUse.Text = mgiftuse.ToString(DFormat);
             //mpassorders = 0;
+            //txtPassCardOrders.Text = mpassorders.ToString(DFormat);
             mpassreloads = 0;
             mskischool = 0;
             mwebrefund = 0;
@@ -867,56 +910,88 @@ namespace WebCheckout
             mtickn = 0;
             mtickr = 0;
             mAltaCredit = 0;
+            txtCreditUses.Text = mAltaCredit.ToString(DFormat);
             //maxpassorders = 0;
+            //txtAxessOrders.Text = maxpassorders.ToString(DFormat);
             maxpassreloads = 0;
             mwcnew = 0;
+            txtWillcallTicketReservations.Text = mwcnew.ToString(DFormat);
             mwcreload = 0;
+            txtWillcallDateSpecificReloads.Text = mwcreload.ToString(DFormat);
             //mOrderID = string.Empty;
-            mqty = 0;
-            mprice = 0;
+            //mqty = 0;
+            //mprice = 0;
             mLastName = string.Empty;
             mFirstName = string.Empty;
             mDOB = CF.defaultDOB;
-            mhfeet = 0;
-            mhinches = 0;
+            //mhfeet = 0;
+            //mhinches = 0;
             mWebID = string.Empty;
             mProduct = string.Empty;
             mType = string.Empty;
             maxrecd = 0;
+            txtReceivedByAxess21.Text = maxrecd.ToString(DFormat);
             mwcsent = 0;
+            txtSentFromWillcall.Text = mwcsent.ToString(DFormat);
             maxcanc = 0;
+            txtCancelledByAxess.Text = maxcanc.ToString(DFormat);
+            mAXTot = 0;
+            txtEstoreReceipts.Text = mAXTot.ToString(DFormat);
             mwccredit = 0;
+            txtBackInWillcall.Text = mwccredit.ToString(DFormat);
+            System.Windows.Forms.Application.DoEvents();
         }
 
         private void LoadFields()
         {
-            mMAST = POS20Sum.Field<decimal>("cmast");
-            mVISA = POS20Sum.Field<decimal>("cvisa");
-            mDisc = POS20Sum.Field<decimal>("cdisc");
-            mAMEX = POS20Sum.Field<decimal>("camex");
-            mCardTot = POS20Sum.Field<decimal>("cardtot");
-            mgiftuse = POS20Sum.Field<decimal>("cgiftuse");
-            mgiftloads = POS20Sum.Field<decimal>("cgiftadd");
-            mTotRec = POS20Sum.Field<int>("totrec");
-            mpassreloads = POS20Sum.Field<decimal>("webreloads");
-            //mpassorders = POS20Sum.Field<decimal>("weborders");
-            mskischool = POS20Sum.Field<decimal>("webskisch");
-            mfampck = POS20Sum.Field<decimal>("webfampck");
-            mtickn = POS20Sum.Field<decimal>("webtickn");
-            mtickr = POS20Sum.Field<decimal>("webtickr");
-            mwebgift = POS20Sum.Field<decimal>("webgift");
-            mwebrefund = POS20Sum.Field<decimal>("webrefund");
-            mrcbillamt = POS20Sum.Field<decimal>("ccbillamt");
-            mwebship = POS20Sum.Field<decimal>("webship");
-            mAltaCredit = POS20Sum.Field<decimal>("acredit");
-            msalestot = POS20Sum.Field<decimal>("axtot");
-            mRelaodDisc = POS20Sum.Field<decimal>("axwebdisc");
-            maxsales = 0;
+            mMAST = CF.Null2Val(POS20Sum.Field<decimal?>("cmast"));
+            txtMastercard.Text = mMAST.ToString(DFormat);
+            mVISA = CF.Null2Val(POS20Sum.Field<decimal?>("cvisa"));
+            txtVISA.Text = mVISA.ToString(DFormat);
+            mDisc = CF.Null2Val(POS20Sum.Field<decimal?>("cdisc"));
+            txtDiscover.Text = mDisc.ToString(DFormat);
+            mAMEX = CF.Null2Val(POS20Sum.Field<decimal?>("camex"));
+            txtAMEX.Text = mAMEX.ToString(DFormat);
+            mCardTot = CF.Null2Val(POS20Sum.Field<decimal?>("cardtot"));
+            txtAuthNetTotal.Text = mCardTot.ToString(DFormat);
+            mgiftuse = CF.Null2Val(POS20Sum.Field<decimal?>("cgiftuse"));
+            txtAuthNetGiftCardUse.Text = mgiftuse.ToString(DFormat);
+            mgiftloads = CF.Null2Val(POS20Sum.Field<decimal?>("cgiftadd"));
+
+            mTotRec = CF.Null2Val(POS20Sum.Field<decimal?>("totrec"));
+            txtSettledReceipts.Text = mTotRec.ToString(DFormat);
+            mpassreloads = CF.Null2Val(POS20Sum.Field<decimal?>("webreloads"));
+            txtPrepaidsReloads.Text = mpassreloads.ToString(DFormat);
+            //mpassorders = CF.Null2Val(POS20Sum.Field<decimal?>("weborders"));
+            //txtPassCardOrders.Text = mpassorders.ToString(DFormat);
+            mskischool = CF.Null2Val(POS20Sum.Field<decimal?>("webskisch"));
+            txtSkiSchoolSales.Text = mskischool.ToString(DFormat);
+            mfampck = CF.Null2Val(POS20Sum.Field<decimal?>("webfampck"));
+            txtFamilyPackages.Text = mfampck.ToString(DFormat);
+            mtickn = CF.Null2Val(POS20Sum.Field<decimal?>("webtickn"));
+            txtTicketReservations.Text = mtickn.ToString(DFormat);
+            mtickr = CF.Null2Val(POS20Sum.Field<decimal?>("webtickr"));
+            txtDateSpecificReloads.Text = mtickr.ToString(DFormat);
+            mwebgift = CF.Null2Val(POS20Sum.Field<decimal?>("webgift"));
+            txtGiftCards.Text = mwebgift.ToString(DFormat);
+            mwebrefund = CF.Null2Val(POS20Sum.Field<decimal?>("webrefund"));
+            txtAuthNetRefunds.Text = mwebrefund.ToString(DFormat);
+            mrcbillamt = CF.Null2Val(POS20Sum.Field<decimal?>("ccbillamt"));
+            txtRCBillingTotal.Text = mrcbillamt.ToString(DFormat);
+            mwebship = CF.Null2Val(POS20Sum.Field<decimal?>("webship"));
+            txtShipping.Text = mwebship.ToString(DFormat);
+            mAltaCredit = CF.Null2Val(POS20Sum.Field<decimal?>("acredit"));
+            txtCreditUses.Text = mAltaCredit.ToString(DFormat);
+            msalestot = CF.Null2Val(POS20Sum.Field<decimal?>("axtot"));
+            txtSalesTotal.Text = msalestot.ToString(DFormat);
+            mReloadDisc = CF.Null2Val(POS20Sum.Field<decimal?>("axwebdisc"));
+            //maxsales = 0;
+            System.Windows.Forms.Application.DoEvents();
         }
 
-        private void BtnPreviousDay_Click(object sender, EventArgs e) => dtpWorkDate.Value = dtpWorkDate.Value.AddDays(-1);
+        //private void BtnPreviousDay_Click(object sender, EventArgs e) => dtpWorkDate.Value = dtpWorkDate.Value.AddDays(-1);
 
-        private void BtnNextDay_Click(object sender, EventArgs e) => dtpWorkDate.Value = dtpWorkDate.Value.AddDays(1);
+        //private void BtnNextDay_Click(object sender, EventArgs e) => dtpWorkDate.Value = dtpWorkDate.Value.AddDays(1);
 
         private void BtnSummaryReport_Click(object sender, EventArgs e)
         {
@@ -959,7 +1034,7 @@ namespace WebCheckout
                     $"acredit = {mAltaCredit.ToString()}, webship = {mwebship.ToString()}, webreloads = {mpassreloads.ToString()}, " +
                     $"webSKISCH = {mskischool.ToString()}, webfampck = {mfampck.ToString()}, webgift = {mwebgift.ToString()}, webrefund = {mwebrefund.ToString()}, " +
                     $"ccbillamt = {mrcbillamt.ToString()}, webtickn = {mtickn.ToString()}, webtickr = {mtickr.ToString()}, webtot = {msalestot.ToString()}, " +
-                    $"axreloads = {maxpassreloads.ToString()}, axwebdisc = {mRelaodDisc.ToString()}, trretail = {mtrretail.ToString()}, " +
+                    $"axreloads = {maxpassreloads.ToString()}, axwebdisc = {mReloadDisc.ToString()}, trretail = {mtrretail.ToString()}, " +
                     $"trwillcall ={(mwcreload + mwcnew).ToString()}, vcwillcall = {mvcwillcall.ToString()}, axcard = {mwebauthnet.ToString()}, " +
                     $"axcredit = {mwebcoupon.ToString()}, axgift = {mwebgiftuse.ToString()}, axtot = {mAXTot.ToString()}, axsales = {msalestot.ToString()}, ccsettled = '{sStart}' " +
                     $"WHERE saledate = '{sStart}'";
@@ -983,7 +1058,7 @@ namespace WebCheckout
                     $"{mDisc.ToString()}, {mAMEX.ToString()}, {mCardTot.ToString()}, {mgiftuse.ToString()}, {mgiftloads.ToString()}, {mCardTot.ToString()}, " +
                     $"{mAltaCredit.ToString()}, {mwebship.ToString()}, 0, {mpassreloads.ToString()}, {mskischool.ToString()}, " +
                     $"{mfampck.ToString()}, {mwebgift.ToString()}, {mwebrefund.ToString()}, {mrcbillamt.ToString()}, {mtickn.ToString()}, {mtickr.ToString()}, " +
-                    $"{msalestot.ToString()}, 0, {maxpassreloads.ToString()}, {mRelaodDisc.ToString()}, {mtrretail.ToString()}, " +
+                    $"{msalestot.ToString()}, 0, {maxpassreloads.ToString()}, {mReloadDisc.ToString()}, {mtrretail.ToString()}, " +
                     $"{(mwcreload + mwcnew).ToString()}, {mvcwillcall.ToString()}, {mwebauthnet.ToString()}, {mwebcoupon.ToString()}, {mwebgiftuse.ToString()}, " +
                     $"{mAXTot.ToString()}, {msalestot.ToString()}, '{sStart}')";
                 //tQuery = $"INSERT {DW.ActiveDatabase}.possum (saledate, cmast, cvisa, cdisc, camex, cardtot, cgiftuse, cgiftadd, cardcheck, acredit, webship, weborders, " +

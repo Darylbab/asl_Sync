@@ -11,9 +11,9 @@ namespace AltaSum
 {
     public partial class AltaSum : Form
     {
-        //"saledate", "ytdweek", "dofweek", "tixsales", "tixsalesq", "rtixsales", "rtixsalesq", "convuse", "convuseq", "expuse", "expuseq", "websales", "websalesq", "mcsales", "mcsalesq", "expsales", "expsalesq", "powsales", "powsalesq", "spsales", "spsalesq"20, "sssales", "sssalesq", "sspsales", "sspsalesq", "ssasales", "ssasalesq", "ssksales", "ssksalesq", "ssosales", "ssosalesq"30, "catsales", "catsalesq", "rcsales", "rcsalesq", "ossales", "ossalesq", "giftsales", "giftsalesq", "weborders", "webordersq"40, "tcash", "tar", "tweb", "tvchr", "tgift", "tcard", "alfssales", "alfsqty", "alfsshort", "watscafe", "watscg", "watsbrew", "watsshort", "albsales", "albqty", "albshort", "skisbase", "skiswats", "skisalfs", "skisdemo"60, "skisweb", "skisski", "skisretail", "skisrental", "skisfood", "skisgc", "skisserv", "skisshort", "tickvisit", "powvisit", "expvisit", "sbvisit", "ccvisit", "mcvisit", "slvisit", "ngvisit", "s3visit", "spvisit", "empspvisit", "goldvisit"80, "skivisits", "newloadqty", "reloadqty", "webloadqty", "powcrqty", "powcramt", "passreads", "gliupdate", "bflag" 
+        //"saledate", "ytdweek", "dofweek", "tixsales", "tixsalesq", "rtixsales", "rtixsalesq", "convuse", "convuseq", "expuse", "expuseq", "websales", "websalesq", "mcsales", "mcsalesq", "expsales", "expsalesq", "powsales", "powsalesq", "spsales", "spsalesq"20, "sssales", "sssalesq", "sspsales", "sspsalesq", "ssasales", "ssasalesq", "ssksales", "ssksalesq", "ssosales", "ssosalesq"30, "catsales", "catsalesq", "rcsales", "rcsalesq", "ossales", "ossalesq", "giftsales", "giftsalesq", "weborders", "webordersq"40, "tcash", "tar", "tweb", "tvchr", "tgift", "tcard", "alfssales", "alfsqty", "alfsshort", "watscafe", "watscg", "watsbrew", "watsshort", "albsales", "albqty", "albshort", "skisbase", "skiswats", "skisalfs", "skisdemo"60, "skisweb", "skisski", "skisretail", "skisrental", "skisfood", "skisgc", "skisserv", "skisshort", "tickvisit", "powvisit", "expvisit", "sbvisit", "ccvisit", "mcvisit", "slvisit", "ngvisit", "s3visit", "spvisit", "empspvisit", "goldvisit"80, "skivisits", "newloadqty", "reloadqty", "webloadqty", "powcrqty", "powcramt", "passreads", "glupdate", "bflag" 
         //"tixsales", "tixsalesq", "rtixsales", "rtixsalesq", "convuse", "convuseq", "expuse", "expuseq", "websales", "websalesq", "mcsales", "mcsalesq", "expsales", "expsalesq", "powsales", "powsalesq", "spsales", "spsalesq", "sssales", "sssalesq", "sspsales", "sspsalesq", "ssasales", "ssasalesq", "ssksales", "ssksalesq", "ssosales", "ssosalesq", "catsales", "catsalesq", "rcsales", "rcsalesq", "ossales", "ossalesq", "giftsales", "giftsalesq", "weborders", "webordersq", "tcash", "tar", "tweb", "tvchr", "tgift", "tcard", "alfssales", "alfsqty", "alfssshort", "watscafe", "watscg", "watsbrew", "watsshort", "albsales", "albqty", "albshort", "skisbase", "skiswats", "skisalfs", "skisdemo", "skisweb", "skisski", "skisretail", "skisrental", "skisfood", "skisgc", "skisserv", "skisshort", "tickvisit", "powvisit", "expvisit", "sbvisit", "ccvisit", "mcvisit", "slvisit", "ngvisit", "s3visit", "spvisit", "empspvisit", "goldvisit", "skivisitis", "newloadqty", "reloadqty", "webloadqty", "powcrqty", "powcramt", "passreads"
-        public string[] locs = new string[] { "saledate", "ytdweek", "dofweek", "tixsales", "tixsalesq", "rtixsales", "rtixsalesq", "convuse", "convuseq", "expuse", "expuseq", "websales", "websalesq", "mcsales", "mcsalesq", "expsales", "expsalesq", "powsales", "powsalesq", "spsales", "spsalesq", "sssales", "sssalesq", "sspsales", "sspsalesq", "ssasales", "ssasalesq", "ssksales", "ssksalesq", "ssosales", "ssosalesq", "catsales", "catsalesq", "rcsales", "rcsalesq", "ossales", "ossalesq", "giftsales", "giftsalesq", "weborders", "webordersq", "tcash", "tar", "tweb", "tvchr", "tgift", "tcard", "alfssales", "alfsqty", "alfsshort", "watscafe", "watscg", "watsbrew", "watsshort", "albsales", "albqty", "albshort", "skisbase", "skiswats", "skisalfs", "skisdemo", "skisweb", "skisski", "skisretail", "skisrental", "skisfood", "skisgc", "skisserv", "skisshort", "tickvisit", "powvisit", "expvisit", "sbvisit", "ccvisit", "mcvisit", "slvisit", "ngvisit", "s3visit", "spvisit", "empspvisit", "goldvisit", "skivisits", "newloadqty", "reloadqty", "webloadqty", "powcrqty", "powcramt", "passreads", "gliupdate", "bflag" };
+        public string[] locs = new string[] { "saledate", "ytdweek", "dofweek", "tixsales", "tixsalesq", "rtixsales", "rtixsalesq", "convuse", "convuseq", "expuse", "expuseq", "websales", "websalesq", "mcsales", "mcsalesq", "expsales", "expsalesq", "powsales", "powsalesq", "spsales", "spsalesq", "sssales", "sssalesq", "sspsales", "sspsalesq", "ssasales", "ssasalesq", "ssksales", "ssksalesq", "ssosales", "ssosalesq", "catsales", "catsalesq", "rcsales", "rcsalesq", "ossales", "ossalesq", "giftsales", "giftsalesq", "weborders", "webordersq", "tcash", "tar", "tweb", "tvchr", "tgift", "tcard", "alfssales", "alfsqty", "alfsshort", "watscafe", "watscg", "watsbrew", "watsshort", "albsales", "albqty", "albshort", "skisbase", "skiswats", "skisalfs", "skisdemo", "skisweb", "skisski", "skisretail", "skisrental", "skisfood", "skisgc", "skisserv", "skisshort", "tickvisit", "powvisit", "expvisit", "sbvisit", "ccvisit", "mcvisit", "slvisit", "ngvisit", "s3visit", "spvisit", "empspvisit", "goldvisit", "skivisits", "newloadqty", "reloadqty", "webloadqty", "powcrqty", "powcramt", "passreads", "glupdate", "bflag" };
 
         //private AltaSkiLifts asl = new AltaSkiLifts();
         private Mirror AM = new Mirror();
@@ -398,6 +398,7 @@ namespace AltaSum
             lblStatus.Text = "Loading data for Alta Summary Report.";
             System.Data.DataTable tDT = CF.LoadTable(DW.dwConn, $"SELECT descrip, cweek, pweek, weekpcnt, cytd, pytd, ytdpcnt, rtype FROM {DW.ActiveDatabase}.altadata WHERE rtype <> '' ORDER BY sorder", "altadata");
             Int32 CurRow = 3;
+            Int32 RowSkip = 1;
             if (tDT != null)
             {
                 foreach (DataRow tDR in tDT.Rows)
@@ -409,6 +410,7 @@ namespace AltaSum
                         border[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
                         ulRange = excel.Range[excel.Cells[CurRow, 1], excel.Cells[CurRow, 7]];
                         ulRange.Font.Bold = true;
+                        RowSkip = 2;
                     }
                     lblStatus.Text = $"Setting data row {(CurRow - 2).ToString()} of {tDT.Rows.Count.ToString()}.";
                     string RType = tDR["rtype"].ToString();
@@ -419,7 +421,9 @@ namespace AltaSum
                     ws.Cells[CurRow, 4] = (tDR.Field<decimal>("weekpcnt") / 100).ToString("0#.00%");
                     ws.Cells[CurRow, 5] = tDR.Field<int>("cytd").ToString(CurFormat);
                     ws.Cells[CurRow, 6] = tDR.Field<int>("pytd").ToString(CurFormat);
-                    ws.Cells[CurRow++, 7] = (tDR.Field<decimal>("ytdpcnt") / 100).ToString("0#.00%");
+                    ws.Cells[CurRow, 7] = (tDR.Field<decimal>("ytdpcnt") / 100).ToString("0#.00%");
+                    CurRow += RowSkip;
+                    RowSkip = 1;
                 }
                 string CopyName = $"AltaSummaryReport_{DateTime.Now.ToString("yyyy_MM_dd hh_mm")}";
                 string FullPathName = $"C:\\temp\\{CopyName}.xlsx";
@@ -454,18 +458,16 @@ namespace AltaSum
             ws.PageSetup.CenterHeader = $"Skier Visits Summary Report\r\n{mdate.ToString("MM/dd/yyyy (dddd)")}";
             lblStatus.Text = "Loading data for Skier Visits Summary Report.";
             ws.Cells[1, 6] = mdate.ToString("MM/dd/yyyy");
-            System.Data.DataTable TickSumYear = CF.LoadTable(DW.dwConn, $"SELECT tgroup, nticktype, tickdesc, nperstype, persdesc, COUNT(*) as ytickcount, (SELECT COUNT(*) AS dtickcount FROM {DW.ActiveDatabase}.skivisits AS B WHERE readdate = '{mdate.ToString(Mirror.AxessDateFormat)}' AND A.tgroup=B.tgroup AND A.nticktype=B.nticktype AND A.nperstype=B.nperstype) AS dtickcount FROM {DW.ActiveDatabase}.skivisits AS A WHERE readdate <= '{mcyday.ToString(Mirror.AxessDateFormat)}' AND readdate >= '{mcystart.ToString(Mirror.AxessDateFormat)}' GROUP BY tgroup, nticktype, nperstype ORDER BY tgroup", "ticksumyear");
+            System.Data.DataTable TickSumYear = CF.LoadTable(DW.dwConn, $"SELECT tgroup, tickdesc, persdesc, COUNT(*) as ytickcount, (SELECT COUNT(*) AS dtickcount FROM {DW.ActiveDatabase}.skivisits AS B WHERE readdate = '{mdate.ToString(Mirror.AxessDateFormat)}' AND A.tgroup=B.tgroup AND A.nticktype=B.nticktype AND A.nperstype=B.nperstype) AS dtickcount FROM {DW.ActiveDatabase}.skivisits AS A WHERE readdate <= '{mcyday.ToString(Mirror.AxessDateFormat)}' AND readdate >= '{mcystart.ToString(Mirror.AxessDateFormat)}' GROUP BY tgroup, tickdesc, persdesc ORDER BY tgroup", "ticksumyear");
             Int32 CurRow = 2;
             foreach (System.Data.DataRow tDR in TickSumYear.Rows)
             {
                 lblStatus.Text = $"Setting data row {(CurRow - 2).ToString()} of {TickSumYear.Rows.Count.ToString()}.";
                 ws.Cells[CurRow, 1] = tDR["tgroup"].ToString();
-                ws.Cells[CurRow, 2] = tDR.Field<int>("nticktype");
-                ws.Cells[CurRow, 3] = tDR["tickdesc"].ToString();
-                ws.Cells[CurRow, 4] = tDR.Field<int>("nperstype").ToString();
-                ws.Cells[CurRow, 5] = tDR["persdesc"].ToString();
-                ws.Cells[CurRow, 6] = tDR["dtickcount"].ToString();
-                ws.Cells[CurRow++, 7] = tDR["ytickcount"].ToString();
+                ws.Cells[CurRow, 2] = tDR["tickdesc"].ToString();
+                ws.Cells[CurRow, 3] = tDR["persdesc"].ToString();
+                ws.Cells[CurRow, 4] = tDR["dtickcount"].ToString();
+                ws.Cells[CurRow++, 5] = tDR["ytickcount"].ToString();
             }
             string CopyName = $"SkiVisitsSummaryReport_{DateTime.Now.ToString("yyyy_MM_dd hh_mm")}";
             string FullPathName = $"C:\\temp\\{CopyName}.xlsx";
@@ -569,6 +571,14 @@ namespace AltaSum
             Cursor = Cursors.WaitCursor;
             dateTimePicker1.Value = dateTimePicker1.Value.AddDays(1);
             Cursor = Cursors.Default;
+        }
+
+        private void AltaSum_Load(object sender, EventArgs e)
+        {
+            if (!"MIKEM,ALO,PETE,DARYLB".Contains(Environment.UserName.ToUpper()))
+            {
+                System.Windows.Forms.Application.Exit();
+            }
         }
     }
 }

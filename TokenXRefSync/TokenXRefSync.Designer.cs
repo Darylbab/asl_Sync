@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.CbUpdateMediaID = new System.Windows.Forms.CheckBox();
             this.PbUpdateMediaID = new System.Windows.Forms.ProgressBar();
             this.PbUpdateTokenXRef = new System.Windows.Forms.ProgressBar();
@@ -38,6 +39,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.SslStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.BtnRunUpdates = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -130,6 +132,12 @@
             this.BtnRunUpdates.UseVisualStyleBackColor = true;
             this.BtnRunUpdates.Click += new System.EventHandler(this.BtnRunUpdates_Click);
             // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
+            // 
             // TokenXRefSync
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -165,6 +173,7 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel SslStatus;
         private System.Windows.Forms.Button BtnRunUpdates;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

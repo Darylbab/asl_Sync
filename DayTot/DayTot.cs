@@ -79,18 +79,36 @@ namespace DayTot
 
         private void ValidateRow()
         {
+            //mySQL
+            int tDayOfWeek = Convert.ToInt32(mStart.DayOfWeek);
+            if (tDayOfWeek == 0)
+            {
+                tDayOfWeek = 7;
+            }
             if (!CF.RowExists(DW.dwConn, $"{DW.ActiveDatabase}.altasum", $"saledate='{mStart.ToString(Mirror.AxessDateFormat)}'"))
             {
-                int tDayOfWeek = Convert.ToInt32(mStart.DayOfWeek);
-                if (tDayOfWeek == 0)
-                {
-                    tDayOfWeek = 7;
-                }
-                CF.ExecuteSQL(DW.dwConn, $"INSERT INTO {DW.ActiveDatabase}.altasum (saledate,ytdweek,dofweek) VALUES ('{mStart.ToString(Mirror.AxessDateFormat)}',{CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(mStart, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday).ToString()},{tDayOfWeek.ToString()})");
+                CF.ExecuteSQL(DW.dwConn, $"INSERT INTO {DW.ActiveDatabase}.altasum (saledate, ytdweek, dofweek) VALUES ('{mStart.ToString(Mirror.AxessDateFormat)}',{CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(mStart, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday).ToString()},{tDayOfWeek.ToString()})");
+            }
+            //VFP
+            VFPConn.ConnectionString = @"provider=vfpoledb.1;data source = G:\FPData\altaax\altasum_x.dbf";
+            if (CF.RowCount(VFPConn, "altasum_x", $"saledate={CF.SetFoxProDate(mStart)}") == 0 )
+            //if (!CF.RowExists(VFPConn, "altasum", $"saledate={CF.SetFoxProDate(mStart)}"))
+            {
+                VFPConn.ConnectionString = @"provider=vfpoledb.1;data source = G:\FPData\altaax\altasum_x.dbf";
+                string Query = $"INSERT INTO altasum_x (saledate, ytdweek, dofweek,tixsales,tixsalesq,rtixsales,rtixsalesq,convuse,convuseq,expuse,expuseq,websales," +
+                    $"websalesq,mcsales,mcsalesq,expsales,expsalesq,powsales,powsalesq,spsales,spsalesq,sssales,sssalesq,sspsales,sspsalesq,ssasales,ssasalesq,ssksales," +
+                    $"ssksalesq,ssosales,ssosalesq,catsales,catsalesq,rcsales,rcsalesq,osales,osalesq,giftsales,giftsalesq,weborders,webordersq,tcash,tar,tweb,tvchr," +
+                    $"tgift,tcard,alfssales,alfsqty,alfsshort,watscafe,watscg,watsbrew,watsshort,albsales,albqty,albshort,skisbase,skiswats,skisalfs,skisdemo,skisweb," +
+                    $"skisski,skisretail,skisrental,skisfood,skisgc,skisserv,skisshort,tickvisit,powvisit,expvisit,sbvisit,ccvisit,mcvisit,slvisit,ngvisit,s3visit,spvisit," +
+                    $"empspvisit,goldvisit,skivisits,newloadqty,reloadqty,webloadqty,powcrqty,powcramt,passreads,glupdate,bflag) " +
+                    $"VALUES ({CF.SetFoxProDate(mStart)},{CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(mStart, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday).ToString()},{tDayOfWeek.ToString()}," +
+                    $"0.00,0,0.00,0,0.00,0,0.00,0,0.00,0,0.00,0,0.00,0,0.00,0,0,0,0.00,0,0.00,0,0.00,0,0.00,0,0.00,0,0.00,0,0.00,0,0.00,0,0.00,0,0.00,0,0.00,0.00,0.00,0.00,0.00," +
+                    $"0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)";
+                CF.ExecuteSQL(VFPConn, Query);
             }
         }
 
-        private void Sum_Ski_Visits()
+            private void Sum_Ski_Visits()
         {
             string[,] sv = new string[14, 2] { { "TS", "0" }, { "PC", "0" }, { "EX", "0" }, { "SB", "0" }, { "MC", "0" }, { "CC", "0" }, { "SL", "0" }, { "NG", "0" }, { "SP", "0" }, { "S3", "0" }, { "EM", "0" }, { "SO", "0" }, { "SR", "0" }, { "OS", "0" } };
             long TotalRides = 0;
@@ -108,6 +126,7 @@ namespace DayTot
                 //sv[4, 1] = (Convert.ToInt32(sv[4, 1]) -  SBOnlyRides).ToString();
                 sv[11, 1] = CF.GetSQLField(DW.dwConn, $"SELECT COUNT(*) AS passes FROM {DW.ActiveDatabase}.skivisits WHERE readdate='{mStart.ToString(Mirror.AxessDateFormat)}' AND passtoalta<>0");
                 ValidateRow();
+                //first do mySQL
                 string tQuery = $"UPDATE {DW.ActiveDatabase}.altasum SET " +
                     $"tickvisit = {sv[0, 1]}, " +      // TS  
                     $"powvisit = {sv[1, 1]}, " +       // PC
@@ -122,8 +141,12 @@ namespace DayTot
                     $"empspvisit = {sv[10, 1]}, " +    // EM
                     $"passreads = {sv[11, 1]}, " +	 // sugarloaf pass reads
                     $"skivisits = {(Convert.ToDecimal(sv[0, 1]) + Convert.ToDecimal(sv[1, 1]) + Convert.ToDecimal(sv[2, 1]) + Convert.ToDecimal(sv[3, 1]) + Convert.ToDecimal(sv[4, 1]) + Convert.ToDecimal(sv[5, 1]) + Convert.ToDecimal(sv[6, 1]) + Convert.ToDecimal(sv[7, 1]) + Convert.ToDecimal(sv[8, 1]) + Convert.ToDecimal(sv[9, 1]) + Convert.ToDecimal(sv[10, 1])).ToString()} " +
-                    $"WHERE saledate = '{mStart.ToString(Mirror.AxessDateFormat)}'";
-                CF.ExecuteSQL(DW.dwConn, tQuery);
+                    $"WHERE saledate = ";
+                CF.ExecuteSQL(DW.dwConn, $"{tQuery}'{mStart.ToString(Mirror.AxessDateFormat)}'");
+                //then do FoxPro
+                tQuery = tQuery.Replace($"{DW.ActiveDatabase}.", string.Empty);
+                VFPConn.ConnectionString = @"provider=vfpoledb.1;data source = G:\FPData\altaax\altasum_x.dbf";
+                CF.ExecuteSQL(VFPConn, $"{tQuery.Replace("altasum","altasum_x")}{CF.SetFoxProDate(mStart)}");
 
                 Int32 X = Convert.ToInt32(CF.GetSQLField(DW.dwConn, $"{SkiVisitsQuery} AND nticktype<1"));
                 Int32 Y = Convert.ToInt32(CF.GetSQLField(DW.dwConn, $"{SkiVisitsQuery} AND nticktype<1 AND nkassanr>=50 AND nkassanr<=55"));
@@ -222,6 +245,8 @@ namespace DayTot
                     MSHORT += Convert.ToDecimal(RowSkiShop["overshort"].ToString());
                     ValidateRow();
                     CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.altasum SET skisalfs={malfs.ToString()}, skiswats={mwats.ToString()}, skisbase={mbase.ToString()}, skisdemo={mdemo.ToString()}, skisweb={mweb.ToString()}, skisserv={mservice.ToString()}, skisrental={mrental.ToString()}, skisski={mski.ToString()}, skisretail={mretail.ToString()}, skisfood={mfood.ToString()}, skisgc={mgift.ToString()}, skisshort={MSHORT.ToString()} WHERE saledate='{mStart.ToString(Mirror.AxessDateFormat)}'");
+                    VFPConn.ConnectionString = @"provider=vfpoledb.1;data source = G:\FPData\altaax\altasum_x.dbf";
+                    CF.ExecuteSQL(VFPConn, $"UPDATE altasum_x SET skisalfs={malfs.ToString()}, skiswats={mwats.ToString()}, skisbase={mbase.ToString()}, skisdemo={mdemo.ToString()}, skisweb={mweb.ToString()}, skisserv={mservice.ToString()}, skisrental={mrental.ToString()}, skisski={mski.ToString()}, skisretail={mretail.ToString()}, skisfood={mfood.ToString()}, skisgc={mgift.ToString()}, skisshort={MSHORT.ToString()} WHERE saledate={CF.SetFoxProDate(mStart)}");
                 }
             }
 
@@ -502,8 +527,10 @@ namespace DayTot
                 $"tgift = {mgift.ToString()}, " +
                 $"tcard = {mcard.ToString()}, " +
                 $"bflag={(((mpmts == msales) || (Math.Abs(mpmts - msales) <= 5)) ? "0" : "1")} " +
-                $"WHERE saledate = '{mStart.ToString(Mirror.AxessDateFormat)}'";
-            CF.ExecuteSQL(DW.dwConn, Query);
+                $"WHERE saledate = ";
+            CF.ExecuteSQL(DW.dwConn, Query + $"'{mStart.ToString(Mirror.AxessDateFormat)}'");
+            VFPConn.ConnectionString = @"provider=vfpoledb.1;data source = G:\FPData\altaax\altasum_x.dbf";
+            CF.ExecuteSQL(VFPConn, Query.Replace($"{DW.ActiveDatabase}.altasum","altasum_x").Replace("ossales","osales") + CF.SetFoxProDate(mStart));
         }
 
         private void Sum_FoodBev()
@@ -521,6 +548,7 @@ namespace DayTot
             VFPConn.ConnectionString = @"provider=vfpoledb.1;data source = G:\FPData\FB\daytot.dbf";
             using (DataTable TblDayTot = CF.LoadTable(VFPConn, $"SELECT * FROM daytot WHERE sdate={CF.SetFoxProDate(mStart)}", "daytot"))
             {
+                if (TblDayTot != null)
                 foreach (DataRow RowDayTot in TblDayTot.Rows)
                 {
                     decimal SalesTot = Convert.ToDecimal(RowDayTot["salestot"].ToString());
@@ -564,6 +592,8 @@ namespace DayTot
             }
             ValidateRow();
             CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.altasum SET alfssales={MalfsSALES.ToString()}, alfsshort={MalfsSHORT.ToString()}, albsales={mALBsales.ToString()}, albshort={mALBshort.ToString()}, watscafe={mwatssales.ToString()}, watscg={mcolsales.ToString()}, watsbrew={mbrewsales.ToString()}, watsshort={mwatsshort.ToString()} WHERE saledate='{mStart.ToString(Mirror.AxessDateFormat)}'");
+            VFPConn.ConnectionString = @"provider=vfpoledb.1;data source = G:\FPData\altaax\altasum_x.dbf";
+            CF.ExecuteSQL(VFPConn, $"UPDATE altasum_x SET alfssales={MalfsSALES.ToString()}, alfsshort={MalfsSHORT.ToString()}, albsales={mALBsales.ToString()}, albshort={mALBshort.ToString()}, watscafe={mwatssales.ToString()}, watscg={mcolsales.ToString()}, watsbrew={mbrewsales.ToString()}, watsshort={mwatsshort.ToString()} WHERE saledate={CF.SetFoxProDate(mStart)}");
         }
 
         private void RunDay(DateTime NewDate)

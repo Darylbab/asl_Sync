@@ -74,7 +74,7 @@
             this.txtDateSpecificReloads = new System.Windows.Forms.TextBox();
             this.lblDateSpecificReloads = new System.Windows.Forms.Label();
             this.btnPrepaidsReloads = new System.Windows.Forms.Button();
-            this.txtPreaidsReloads = new System.Windows.Forms.TextBox();
+            this.txtPrepaidsReloads = new System.Windows.Forms.TextBox();
             this.lblPrepaidsReloads = new System.Windows.Forms.Label();
             this.btnPassCardOrders = new System.Windows.Forms.Button();
             this.txtPassCardOrders = new System.Windows.Forms.TextBox();
@@ -246,7 +246,7 @@
             this.panel1.Controls.Add(this.txtDateSpecificReloads);
             this.panel1.Controls.Add(this.lblDateSpecificReloads);
             this.panel1.Controls.Add(this.btnPrepaidsReloads);
-            this.panel1.Controls.Add(this.txtPreaidsReloads);
+            this.panel1.Controls.Add(this.txtPrepaidsReloads);
             this.panel1.Controls.Add(this.lblPrepaidsReloads);
             this.panel1.Controls.Add(this.btnPassCardOrders);
             this.panel1.Controls.Add(this.txtPassCardOrders);
@@ -272,6 +272,7 @@
             this.txtEstoreReceipts.Name = "txtEstoreReceipts";
             this.txtEstoreReceipts.Size = new System.Drawing.Size(100, 20);
             this.txtEstoreReceipts.TabIndex = 49;
+            this.txtEstoreReceipts.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblEstoreReceipts
             // 
@@ -288,6 +289,7 @@
             this.txtECoupons.Name = "txtECoupons";
             this.txtECoupons.Size = new System.Drawing.Size(100, 20);
             this.txtECoupons.TabIndex = 46;
+            this.txtECoupons.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblECoupons
             // 
@@ -304,6 +306,7 @@
             this.txtGiftCardUse.Name = "txtGiftCardUse";
             this.txtGiftCardUse.Size = new System.Drawing.Size(100, 20);
             this.txtGiftCardUse.TabIndex = 43;
+            this.txtGiftCardUse.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblGiftCardUse
             // 
@@ -320,6 +323,7 @@
             this.txtCreditCards.Name = "txtCreditCards";
             this.txtCreditCards.Size = new System.Drawing.Size(100, 20);
             this.txtCreditCards.TabIndex = 40;
+            this.txtCreditCards.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblCreditCards
             // 
@@ -354,6 +358,7 @@
             this.txtSalesTotal.Name = "txtSalesTotal";
             this.txtSalesTotal.Size = new System.Drawing.Size(100, 20);
             this.txtSalesTotal.TabIndex = 35;
+            this.txtSalesTotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblSalesTotal
             // 
@@ -380,6 +385,7 @@
             this.txtRCBillingTotal.Name = "txtRCBillingTotal";
             this.txtRCBillingTotal.Size = new System.Drawing.Size(100, 20);
             this.txtRCBillingTotal.TabIndex = 32;
+            this.txtRCBillingTotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblRCBillingTotal
             // 
@@ -406,6 +412,7 @@
             this.txtAuthNetRefunds.Name = "txtAuthNetRefunds";
             this.txtAuthNetRefunds.Size = new System.Drawing.Size(100, 20);
             this.txtAuthNetRefunds.TabIndex = 29;
+            this.txtAuthNetRefunds.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblAuthNetRefunds
             // 
@@ -422,6 +429,7 @@
             this.txtEstoreSales.Name = "txtEstoreSales";
             this.txtEstoreSales.Size = new System.Drawing.Size(100, 20);
             this.txtEstoreSales.TabIndex = 26;
+            this.txtEstoreSales.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblEstoreSales
             // 
@@ -438,6 +446,7 @@
             this.txtShipping.Name = "txtShipping";
             this.txtShipping.Size = new System.Drawing.Size(100, 20);
             this.txtShipping.TabIndex = 23;
+            this.txtShipping.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblShipping
             // 
@@ -463,6 +472,7 @@
             this.txtGiftCards.Name = "txtGiftCards";
             this.txtGiftCards.Size = new System.Drawing.Size(100, 20);
             this.txtGiftCards.TabIndex = 20;
+            this.txtGiftCards.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblGiftCards
             // 
@@ -489,6 +499,7 @@
             this.txtSkiSchoolSales.Name = "txtSkiSchoolSales";
             this.txtSkiSchoolSales.Size = new System.Drawing.Size(100, 20);
             this.txtSkiSchoolSales.TabIndex = 17;
+            this.txtSkiSchoolSales.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblSkiSchoolSales
             // 
@@ -515,6 +526,7 @@
             this.txtFamilyPackages.Name = "txtFamilyPackages";
             this.txtFamilyPackages.Size = new System.Drawing.Size(100, 20);
             this.txtFamilyPackages.TabIndex = 14;
+            this.txtFamilyPackages.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblFamilyPackages
             // 
@@ -541,6 +553,7 @@
             this.txtTicketReservations.Name = "txtTicketReservations";
             this.txtTicketReservations.Size = new System.Drawing.Size(100, 20);
             this.txtTicketReservations.TabIndex = 11;
+            this.txtTicketReservations.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblTicketReservations
             // 
@@ -567,6 +580,7 @@
             this.txtDateSpecificReloads.Name = "txtDateSpecificReloads";
             this.txtDateSpecificReloads.Size = new System.Drawing.Size(100, 20);
             this.txtDateSpecificReloads.TabIndex = 8;
+            this.txtDateSpecificReloads.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblDateSpecificReloads
             // 
@@ -587,12 +601,13 @@
             this.btnPrepaidsReloads.UseVisualStyleBackColor = true;
             this.btnPrepaidsReloads.Click += new System.EventHandler(this.BtnPrepaidsReloads_Click);
             // 
-            // txtPreaidsReloads
+            // txtPrepaidsReloads
             // 
-            this.txtPreaidsReloads.Location = new System.Drawing.Point(164, 58);
-            this.txtPreaidsReloads.Name = "txtPreaidsReloads";
-            this.txtPreaidsReloads.Size = new System.Drawing.Size(100, 20);
-            this.txtPreaidsReloads.TabIndex = 5;
+            this.txtPrepaidsReloads.Location = new System.Drawing.Point(164, 58);
+            this.txtPrepaidsReloads.Name = "txtPrepaidsReloads";
+            this.txtPrepaidsReloads.Size = new System.Drawing.Size(100, 20);
+            this.txtPrepaidsReloads.TabIndex = 5;
+            this.txtPrepaidsReloads.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblPrepaidsReloads
             // 
@@ -619,6 +634,7 @@
             this.txtPassCardOrders.Name = "txtPassCardOrders";
             this.txtPassCardOrders.Size = new System.Drawing.Size(100, 20);
             this.txtPassCardOrders.TabIndex = 2;
+            this.txtPassCardOrders.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblPassCardOrders
             // 
@@ -672,6 +688,7 @@
             this.txtAxessPrepaidsReloads.Name = "txtAxessPrepaidsReloads";
             this.txtAxessPrepaidsReloads.Size = new System.Drawing.Size(100, 20);
             this.txtAxessPrepaidsReloads.TabIndex = 17;
+            this.txtAxessPrepaidsReloads.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblAxessPrepaidsReloads
             // 
@@ -697,6 +714,7 @@
             this.txtAxessOrders.Name = "txtAxessOrders";
             this.txtAxessOrders.Size = new System.Drawing.Size(100, 20);
             this.txtAxessOrders.TabIndex = 14;
+            this.txtAxessOrders.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblAxessOrders
             // 
@@ -750,6 +768,7 @@
             this.txtWillcallTicketReservations.Name = "txtWillcallTicketReservations";
             this.txtWillcallTicketReservations.Size = new System.Drawing.Size(100, 20);
             this.txtWillcallTicketReservations.TabIndex = 17;
+            this.txtWillcallTicketReservations.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblWillcallTicketReservations
             // 
@@ -776,6 +795,7 @@
             this.txtWillcallDateSpecificReloads.Name = "txtWillcallDateSpecificReloads";
             this.txtWillcallDateSpecificReloads.Size = new System.Drawing.Size(100, 20);
             this.txtWillcallDateSpecificReloads.TabIndex = 14;
+            this.txtWillcallDateSpecificReloads.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblWillcallDateSpecificReloads
             // 
@@ -821,6 +841,7 @@
             this.txtBackInWillcall.Name = "txtBackInWillcall";
             this.txtBackInWillcall.Size = new System.Drawing.Size(100, 20);
             this.txtBackInWillcall.TabIndex = 23;
+            this.txtBackInWillcall.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblBackInWillcall
             // 
@@ -837,6 +858,7 @@
             this.txtCancelledByAxess.Name = "txtCancelledByAxess";
             this.txtCancelledByAxess.Size = new System.Drawing.Size(100, 20);
             this.txtCancelledByAxess.TabIndex = 20;
+            this.txtCancelledByAxess.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblCancelledByAxess
             // 
@@ -853,6 +875,7 @@
             this.txtSentFromWillcall.Name = "txtSentFromWillcall";
             this.txtSentFromWillcall.Size = new System.Drawing.Size(100, 20);
             this.txtSentFromWillcall.TabIndex = 17;
+            this.txtSentFromWillcall.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblSentFromWillcall
             // 
@@ -869,6 +892,7 @@
             this.txtReceivedByAxess21.Name = "txtReceivedByAxess21";
             this.txtReceivedByAxess21.Size = new System.Drawing.Size(100, 20);
             this.txtReceivedByAxess21.TabIndex = 14;
+            this.txtReceivedByAxess21.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblReceivedByAxess21
             // 
@@ -926,6 +950,7 @@
             this.txtSettledReceipts.Name = "txtSettledReceipts";
             this.txtSettledReceipts.Size = new System.Drawing.Size(100, 20);
             this.txtSettledReceipts.TabIndex = 48;
+            this.txtSettledReceipts.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblSettledReceipts
             // 
@@ -961,6 +986,7 @@
             this.txtCreditUses.Name = "txtCreditUses";
             this.txtCreditUses.Size = new System.Drawing.Size(100, 20);
             this.txtCreditUses.TabIndex = 44;
+            this.txtCreditUses.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblCreditUses
             // 
@@ -977,6 +1003,7 @@
             this.txtAuthNetGiftCardUse.Name = "txtAuthNetGiftCardUse";
             this.txtAuthNetGiftCardUse.Size = new System.Drawing.Size(100, 20);
             this.txtAuthNetGiftCardUse.TabIndex = 42;
+            this.txtAuthNetGiftCardUse.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblAuthNetGiftCardUse
             // 
@@ -993,6 +1020,7 @@
             this.txtAuthNetTotal.Name = "txtAuthNetTotal";
             this.txtAuthNetTotal.Size = new System.Drawing.Size(100, 20);
             this.txtAuthNetTotal.TabIndex = 40;
+            this.txtAuthNetTotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblAuthNetTotal
             // 
@@ -1018,6 +1046,7 @@
             this.txtDiscover.Name = "txtDiscover";
             this.txtDiscover.Size = new System.Drawing.Size(100, 20);
             this.txtDiscover.TabIndex = 23;
+            this.txtDiscover.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblDiscover
             // 
@@ -1034,6 +1063,7 @@
             this.txtAMEX.Name = "txtAMEX";
             this.txtAMEX.Size = new System.Drawing.Size(100, 20);
             this.txtAMEX.TabIndex = 20;
+            this.txtAMEX.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblAMEX
             // 
@@ -1050,6 +1080,7 @@
             this.txtMastercard.Name = "txtMastercard";
             this.txtMastercard.Size = new System.Drawing.Size(100, 20);
             this.txtMastercard.TabIndex = 17;
+            this.txtMastercard.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblMastercard
             // 
@@ -1066,6 +1097,7 @@
             this.txtVISA.Name = "txtVISA";
             this.txtVISA.Size = new System.Drawing.Size(100, 20);
             this.txtVISA.TabIndex = 14;
+            this.txtVISA.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblVISA
             // 
@@ -1107,6 +1139,7 @@
             this.txtOverShort.Name = "txtOverShort";
             this.txtOverShort.Size = new System.Drawing.Size(100, 20);
             this.txtOverShort.TabIndex = 51;
+            this.txtOverShort.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblOverShort
             // 
@@ -1289,7 +1322,7 @@
         private System.Windows.Forms.TextBox txtDateSpecificReloads;
         private System.Windows.Forms.Label lblDateSpecificReloads;
         private System.Windows.Forms.Button btnPrepaidsReloads;
-        private System.Windows.Forms.TextBox txtPreaidsReloads;
+        private System.Windows.Forms.TextBox txtPrepaidsReloads;
         private System.Windows.Forms.Label lblPrepaidsReloads;
         private System.Windows.Forms.Button btnPassCardOrders;
         private System.Windows.Forms.TextBox txtPassCardOrders;

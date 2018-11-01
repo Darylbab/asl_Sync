@@ -21,6 +21,7 @@ namespace POS_Sync
         private CommonFunctions CF = new CommonFunctions();
         private Mirror AM = new Mirror();
         private AltaSync ASy = new AltaSync();
+        private DataWarehouse DW = new DataWarehouse();
 
         private string ArgList = string.Empty;
         private string ArgDateStart = string.Empty;
@@ -116,16 +117,22 @@ namespace POS_Sync
             {
                 if (POSItem.Checked)
                 {
-                    PBStatus.Visible = true;
                     SSLStatus.Text = $"Loading data for POS {POSItem.Text}.";
                     Application.DoEvents();
+                    PBStatus.Visible = true;
                     ASy.SyncPOS(POSItem.SubItems[0].Text, dtpPOSSync.Value);
                     POSItem.Checked = false;
                     PBStatus.Visible = false;
-                    SSLStatus.Text = "";
-                    Application.DoEvents();
                 }
             }
+            SSLStatus.Text = "Updating SalesData Uses.";
+            Application.DoEvents();
+            DW.UpdateSalesDataUses();
+            SSLStatus.Text = "Updating SPCard Uses.";
+            Application.DoEvents();
+            DW.UpdateSPCardsUses();
+            SSLStatus.Text = "";
+            Application.DoEvents();
         }
 
         private void BtnSelectAll_Click(object sender, EventArgs e)

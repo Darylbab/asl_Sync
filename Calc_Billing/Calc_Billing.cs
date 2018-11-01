@@ -233,7 +233,7 @@ namespace Calc_Billing
             }
             if (chkDisplayReport.Checked)
             {
-                //ARTrans = CF.LoadTable(DW.dwConn, "SELECT * FROM { DW.ActiveDatabase}.artrans WHERE(arcustid IN ('11874', '') OR (arcustid IS null)) AND (authcode = '' OR authcode IS null) AND ((debitamt + creditamt) > 0) AND (transdate > '{mcystart.ToString(Mirror.AxessDateFormat)}' ORDER BY tokenkey, transdate DESC", "ARTrans");
+                DataTable ARTrans = CF.LoadTable(DW.dwConn, "SELECT * FROM { DW.ActiveDatabase}.artrans WHERE(arcustid IN ('11874', '') OR (arcustid IS null)) AND (authcode = '' OR authcode IS null) AND ((debitamt + creditamt) > 0) AND (transdate > '{mcystart.ToString(Mirror.AxessDateFormat)}' ORDER BY tokenkey, transdate DESC", "ARTrans");
                 //build and print "UNBILLED RESORT CHARGES"   (rcunbilled)
             }
         }
@@ -463,7 +463,7 @@ namespace Calc_Billing
                     DataRow ARTransRow = CF.LoadDataRow(DW.dwConn, $"SELECT arcustid, transtype, debitamt, creditamt, authcode, tokenkey from {DW.ActiveDatabase}.{ARTransTable} WHERE transtype <> 'C' AND transkey='{mkey}'");
                     if (ARTransRow["arcustid"].ToString() != string.Empty)
                     {
-                        if ((marcustid != ARTransRow["arcustid"].ToString()) || (mtranstype != ARTransRow["transtype"].ToString()) || (mdebitamt != ARTransRow.Field<decimal>("debitamt")) || (mcreditamt != ARTransRow.Field<decimal>("creditamt")) ||  (ARTransRow.Field<int?>("authcode").Value < 1  && mtoken != ARTransRow.Field<int>("tokenkey")))
+                        if ((marcustid != ARTransRow["arcustid"].ToString()) || (mtranstype != ARTransRow["transtype"].ToString()) || (mdebitamt != ARTransRow.Field<decimal>("debitamt")) || (mcreditamt != ARTransRow.Field<decimal>("creditamt")) ||  (ARTransRow["authcode"].ToString() == string.Empty  && mtoken != ARTransRow.Field<int>("tokenkey")))
                         {
                             ARTrans_Update(ARTransRow, PmtRowX, SalesRow);
                         }
@@ -509,22 +509,8 @@ namespace Calc_Billing
                     }
                     mdesc = SalesRow["tickdesc"].ToString();
                     mauthcode = marcustid;
-                    if (SalesRow["fname"].ToString().Trim() == string.Empty)
-                    {
-                        mfname = string.Empty;
-                    }
-                    else
-                    {
-                        mfname = CF.EscapeChar(SalesRow["fname"].ToString());
-                    }
-                    if (SalesRow["lname"].ToString().Trim() == string.Empty)
-                    {
-                        mlname = string.Empty;
-                    }
-                    else
-                    {
-                        mlname = CF.EscapeChar(SalesRow["lname"].ToString());
-                    }
+                    mfname = CF.EscapeChar(SalesRow["fname"].ToString());
+                    mlname = CF.EscapeChar(SalesRow["lname"].ToString());
                     if (SalesRow.Field<int>("tfactor") == 1)
                     {
                         mcreditamt = SalesRow.Field<decimal>("tariff");
@@ -536,9 +522,9 @@ namespace Calc_Billing
                     }
 
                     DataRow ARTransRow = CF.LoadDataRow(DW.dwConn, $"SELECT arcustid, transtype, debitamt, creditamt, authcode, tokenkey from {DW.ActiveDatabase}.{ARTransTable} WHERE transtype <> 'C' AND transkey='{mkey}'");
-                    if (ARTransRow != null)
+                    if (ARTransRow["arcustid"].ToString() != string.Empty)
                     {
-                        if ((marcustid != ARTransRow["arcustid"].ToString()) || (mtranstype != ARTransRow["transtype"].ToString()) || (ARTransRow.Field<int?>("authcode").Value < 1 && mtoken != ARTransRow.Field<int>("tokenkey")))
+                        if ((marcustid != ARTransRow["arcustid"].ToString()) || (mtranstype != ARTransRow["transtype"].ToString()) || (ARTransRow["authcode"].ToString() == string.Empty && mtoken != ARTransRow.Field<int>("tokenkey")))
                         {
                             ARTrans_Update(ARTransRow, PmtRow, SalesRow);
                         }
@@ -581,233 +567,236 @@ namespace Calc_Billing
             {
                 //calc_charges  update express and goldcard files with usage
                 DataTable SPCharges = CF.LoadTable(DW.dwConn, $"SELECT * FROM {DW.ActiveDatabase}.spcards WHERE tgroup IN ('CC','EX','MC') AND (saledate >= '{sxStart}' AND expdate >= '{sxStart}' AND useflag = 'Y' ORDER BY serialkey", "SPCharges");
-                foreach (DataRow SPChargeRow in SPCharges.Rows)
+                if (SPCharges != null)
                 {
-                    if (SPChargeRow["cardstatus"].ToString() == "A" || (SPChargeRow["tgroup"].ToString() == "CC" && (SPChargeRow["cardstatus"].ToString().IndexOfAny(new char[] { 'A', 'P', 'X' }) > 0)))
+                    foreach (DataRow SPChargeRow in SPCharges.Rows)
                     {
-                        mkey = (SPChargeRow.Field<int>("nticktype") + 10000).ToString() + (SPChargeRow.Field<int>("nperstype") + 1000);
-                        DataRow ExpressType = CF.LoadDataRow(DW.dwConn, $"SELECT * FROM {DW.ActiveDatabase}.expresstype WHERE ticktype = {SPChargeRow["nticktype"].ToString()} AND perstype = {SPChargeRow["nperstype"].ToString()}");
-                        if (ExpressType != null)
+                        if (SPChargeRow["cardstatus"].ToString() == "A" || (SPChargeRow["tgroup"].ToString() == "CC" && (SPChargeRow["cardstatus"].ToString().IndexOfAny(new char[] { 'A', 'P', 'X' }) > 0)))
                         {
-                            int mticktype = 0;
-                            if ((SPChargeRow["cardstatus"].ToString() == "A" && SPChargeRow["useflag"].ToString() == "Y") || (SPChargeRow["tgroup"].ToString() == "CC" && (SPChargeRow["cardstatus"].ToString().IndexOfAny(new char[] { 'A', 'P', 'X' }) > 0)))
+                            mkey = (SPChargeRow.Field<int>("nticktype") + 10000).ToString() + (SPChargeRow.Field<int>("nperstype") + 1000);
+                            DataRow ExpressType = CF.LoadDataRow(DW.dwConn, $"SELECT * FROM {DW.ActiveDatabase}.expresstype WHERE ticktype = {SPChargeRow["nticktype"].ToString()} AND perstype = {SPChargeRow["nperstype"].ToString()}");
+                            if (ExpressType != null)
                             {
-                                DateTime msaledate = SPChargeRow.Field<DateTime>("saledate");
-                                //calc_amt_due
-                                string mski3free = "N";
-                                decimal mmaxamt = 0;
-                                decimal msbupamt = 0;
-                                string msbdesc = string.Empty;
-                                //SELECT spcards
-                                if (ExpressType.Field<bool>("dayonly"))
+                                int mticktype = 0;
+                                if ((SPChargeRow["cardstatus"].ToString() == "A" && SPChargeRow["useflag"].ToString() == "Y") || (SPChargeRow["tgroup"].ToString() == "CC" && (SPChargeRow["cardstatus"].ToString().IndexOfAny(new char[] { 'A', 'P', 'X' }) > 0)))
                                 {
-                                    mticktype = 1; //&& Area Day
-                                }
-                                else
-                                {
-                                    if ((SPChargeRow["lateflag"].ToString() == "Y") && (SPChargeRow["sbflag"].ToString() == "N"))
+                                    DateTime msaledate = SPChargeRow.Field<DateTime>("saledate");
+                                    //calc_amt_due
+                                    string mski3free = "N";
+                                    decimal mmaxamt = 0;
+                                    decimal msbupamt = 0;
+                                    string msbdesc = string.Empty;
+                                    //SELECT spcards
+                                    if (ExpressType.Field<bool>("dayonly"))
                                     {
-                                        mticktype = 14; //&& Late pass only
-                                        if ((SPChargeRow["at3flag"].ToString() == "Y") && SPChargeRow["begflag"].ToString() == "Y")
-                                        {
-                                            mticktype = 130;
-                                            int nticktype = SPChargeRow.Field<int>("nticktype");
-                                            if ((nticktype == 2016 || nticktype == 2018 || nticktype == 2019) && mticktype == 130)
-                                            {
-                                                mski3free = "Y";
-                                            }
-                                        }
+                                        mticktype = 1; //&& Area Day
                                     }
                                     else
                                     {
-                                        if ((SPChargeRow["begflag"].ToString() == "Y") && (SPChargeRow["sbflag"].ToString() == "N"))
+                                        if ((SPChargeRow["lateflag"].ToString() == "Y") && (SPChargeRow["sbflag"].ToString() == "N"))
                                         {
-                                            mticktype = 4; //&& Beginner Lifts Only
+                                            mticktype = 14; //&& Late pass only
+                                            if ((SPChargeRow["at3flag"].ToString() == "Y") && SPChargeRow["begflag"].ToString() == "Y")
+                                            {
+                                                mticktype = 130;
+                                                int nticktype = SPChargeRow.Field<int>("nticktype");
+                                                if ((nticktype == 2016 || nticktype == 2018 || nticktype == 2019) && mticktype == 130)
+                                                {
+                                                    mski3free = "Y";
+                                                }
+                                            }
                                         }
                                         else
                                         {
-                                            if ((SPChargeRow["amflag"].ToString() == "N") && (SPChargeRow["sbflag"].ToString() == "N"))
+                                            if ((SPChargeRow["begflag"].ToString() == "Y") && (SPChargeRow["sbflag"].ToString() == "N"))
                                             {
-                                                mticktype = 3; //&& PM Only
+                                                mticktype = 4; //&& Beginner Lifts Only
                                             }
                                             else
                                             {
-                                                mticktype = 1; //&& Area Day
-                                                if (ExpressType.Field<bool>("multiflag"))
+                                                if ((SPChargeRow["amflag"].ToString() == "N") && (SPChargeRow["sbflag"].ToString() == "N"))
                                                 {
-                                                    //DO check_multiday_use  
-                                                    string msqlcmd = $"SELECT readdate, altaflag, amflag, sbflag FROM applications.skivisits WHERE serialkey = '{SPChargeRow["serialkey"].ToString()}' ORDER BY readdate DESC";
-                                                    DataTable CardUse = CF.LoadTable(DW.dwConn, msqlcmd, "CardUse");
-                                                    if (CardUse.Rows.Count > 0)
+                                                    mticktype = 3; //&& PM Only
+                                                }
+                                                else
+                                                {
+                                                    mticktype = 1; //&& Area Day
+                                                    if (ExpressType.Field<bool>("multiflag"))
                                                     {
-                                                        bool mckflag = true;
-                                                        int mxdays = 0;
-                                                        DateTime mcurdate = mxstart;
-                                                        bool mfreedayused = false;
-                                                        foreach (DataRow CardUseRow in CardUse.Rows)
+                                                        //DO check_multiday_use  
+                                                        string msqlcmd = $"SELECT readdate, altaflag, amflag, sbflag FROM applications.skivisits WHERE serialkey = '{SPChargeRow["serialkey"].ToString()}' ORDER BY readdate DESC";
+                                                        DataTable CardUse = CF.LoadTable(DW.dwConn, msqlcmd, "CardUse");
+                                                        if (CardUse.Rows.Count > 0)
                                                         {
-                                                            if (!mckflag)
-                                                                break;
-                                                            if (CardUseRow.Field<DateTime>("readdate") > (mcurdate.AddDays(-3)))
+                                                            bool mckflag = true;
+                                                            int mxdays = 0;
+                                                            DateTime mcurdate = mxstart;
+                                                            bool mfreedayused = false;
+                                                            foreach (DataRow CardUseRow in CardUse.Rows)
                                                             {
-                                                                if (CardUseRow.Field<DateTime>("readdate") == (mcurdate.AddDays(-1)))
+                                                                if (!mckflag)
+                                                                    break;
+                                                                if (CardUseRow.Field<DateTime>("readdate") > (mcurdate.AddDays(-3)))
                                                                 {
-                                                                    if (CardUseRow["altaflag"].ToString() == "Y" && (CardUseRow["amflag"].ToString() == "Y" || CardUseRow["sbflag"].ToString() == "Y"))
-                                                                    {
-                                                                        mxdays += 1;
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        mfreedayused = true;
-                                                                    }
-                                                                    mcurdate = CardUseRow.Field<DateTime>("readdate");
-                                                                }
-                                                                else
-                                                                {
-                                                                    //****allow free days ****
-                                                                    if ((CardUseRow.Field<DateTime>("readdate") == mcurdate.AddDays(-2)) && !mfreedayused)
+                                                                    if (CardUseRow.Field<DateTime>("readdate") == (mcurdate.AddDays(-1)))
                                                                     {
                                                                         if (CardUseRow["altaflag"].ToString() == "Y" && (CardUseRow["amflag"].ToString() == "Y" || CardUseRow["sbflag"].ToString() == "Y"))
                                                                         {
-                                                                            mxdays = mxdays + 1;
-                                                                            mcurdate = CardUseRow.Field<DateTime>("readdate");
-                                                                            mfreedayused = true;
+                                                                            mxdays += 1;
                                                                         }
                                                                         else
                                                                         {
-                                                                            mckflag = false;
+                                                                            mfreedayused = true;
+                                                                        }
+                                                                        mcurdate = CardUseRow.Field<DateTime>("readdate");
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        //****allow free days ****
+                                                                        if ((CardUseRow.Field<DateTime>("readdate") == mcurdate.AddDays(-2)) && !mfreedayused)
+                                                                        {
+                                                                            if (CardUseRow["altaflag"].ToString() == "Y" && (CardUseRow["amflag"].ToString() == "Y" || CardUseRow["sbflag"].ToString() == "Y"))
+                                                                            {
+                                                                                mxdays = mxdays + 1;
+                                                                                mcurdate = CardUseRow.Field<DateTime>("readdate");
+                                                                                mfreedayused = true;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                mckflag = false;
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
+                                                                else
+                                                                {
+                                                                    mckflag = false;
+                                                                }
                                                             }
-                                                            else
+                                                            if (mxdays > 1)
                                                             {
-                                                                mckflag = false;
+                                                                mticktype = 33; // && Multiday 3 - 4 Day Pass
+                                                                if (mxdays == 4 || mxdays == 5)
+                                                                {
+                                                                    mticktype = 35; // && Multiday 5 - 6 Pass
+                                                                }
+                                                                if (mxdays > 5)
+                                                                {
+                                                                    mticktype = 37; // && Multiday 7 days plus
+                                                                }
                                                             }
                                                         }
-                                                        if (mxdays > 1)
-                                                        {
-                                                            mticktype = 33; // && Multiday 3 - 4 Day Pass
-                                                            if (mxdays == 4 || mxdays == 5)
-                                                            {
-                                                                mticktype = 35; // && Multiday 5 - 6 Pass
-                                                            }
-                                                            if (mxdays > 5)
-                                                            {
-                                                                mticktype = 37; // && Multiday 7 days plus
-                                                            }
-                                                        }
-                                                    }
-                                                }   //end check_multiday_use
+                                                    }   //end check_multiday_use
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                //** Mountain Collective
-                                if (SPChargeRow["tgroup"].ToString() == "MC")
-                                {
-                                    mticktype = 1; //&& Alta
-                                }
-                                DataTable ExpPrices = CF.LoadTable(DW.dwConn, $"SELECT nticktype, tickdesc, aprice, cprice, sba, sbc, pos, 0 AS amtdue, 0 as sbamtdue, aprice2, cprice2 FROM {DW.ActiveDatabase}.expprices", "ExpPrices");
-                                DataRow ExpCfg = CF.LoadDataRow(DW.dwConn, $"SELECT * FROM {DW.ActiveDatabase}.expcfg");
-                                //    ***load prices based on date range
-                                string mfield = $"{ExpressType["ratecode"].ToString()}price2";
-                                string mfield2 = "disc2amt";
-                                if (mxstart < ExpCfg.Field<DateTime>("sdate") || mxstart > ExpCfg.Field<DateTime>("edate"))
-                                {
-                                    mfield.Replace("2", "");
-                                    mfield2.Replace("2", "");
-                                }
-                                string msbfield = $"sb{ExpressType["ratecode"]}";
-                                DataRow ExpPrice = CF.LoadDataRow(DW.dwConn, $"SELECT * FROM {DW.ActiveDatabase}.expprices WHERE nticktype={mticktype.ToString()}");
-                                decimal Field1Val = ExpPrice.Field<decimal>(mfield);
-                                decimal Field2Val = ExpressType.Field<decimal>(mfield2);
-                                decimal maxdayrate = Field1Val * (Field2Val / 100);
-                                //*** caculate amount due ***
-                                decimal mamtdue = 0;
-                                if (ExpressType["disctype"].ToString() == "P")
-                                {
-                                    mamtdue = maxdayrate;
-                                }
-                                else
-                                {
-                                    mamtdue = Field1Val + Field2Val;
-                                }
-                                decimal msbamtdue = ExpPrice.Field<decimal>(msbfield);
-                                //* **check if Montain Collective Free Day***
-                                if (SPChargeRow.Field<int>("freedays") > 0 && SPChargeRow["tgroup"].ToString() == "MC")
-                                {
-                                    // DO check_card_use
-                                    mkey = SPChargeRow["mcpnbr"].ToString();
-                                    int DaysSkied = Convert.ToInt32(CF.GetSQLField(DW.dwConn, $"SELECT COUNT(*) AS daysskied FROM (SELECT mcpnbr, readdate FROM {DW.ActiveDatabase}.skivisits WHERE mcpnbr LIKE 'MCP%' AND readdate <= '{sxStart}' WHERE mcpnbr='{mkey}' GROUP BY mcpnbr, readdate ORDER BY mcpnbr) AS mcpuses GROUP BY mcpnbr ORDER BY mcpnbr"));
-                                    if (DaysSkied <= SPChargeRow.Field<int>("freedays"))
+                                    //** Mountain Collective
+                                    if (SPChargeRow["tgroup"].ToString() == "MC")
+                                    {
+                                        mticktype = 1; //&& Alta
+                                    }
+                                    DataTable ExpPrices = CF.LoadTable(DW.dwConn, $"SELECT nticktype, tickdesc, aprice, cprice, sba, sbc, pos, 0 AS amtdue, 0 as sbamtdue, aprice2, cprice2 FROM {DW.ActiveDatabase}.expprices", "ExpPrices");
+                                    DataRow ExpCfg = CF.LoadDataRow(DW.dwConn, $"SELECT * FROM {DW.ActiveDatabase}.expcfg");
+                                    //    ***load prices based on date range
+                                    string mfield = $"{ExpressType["ratecode"].ToString()}price2";
+                                    string mfield2 = "disc2amt";
+                                    if (mxstart < ExpCfg.Field<DateTime>("sdate") || mxstart > ExpCfg.Field<DateTime>("edate"))
+                                    {
+                                        mfield.Replace("2", "");
+                                        mfield2.Replace("2", "");
+                                    }
+                                    string msbfield = $"sb{ExpressType["ratecode"]}";
+                                    DataRow ExpPrice = CF.LoadDataRow(DW.dwConn, $"SELECT * FROM {DW.ActiveDatabase}.expprices WHERE nticktype={mticktype.ToString()}");
+                                    decimal Field1Val = ExpPrice.Field<decimal>(mfield);
+                                    decimal Field2Val = ExpressType.Field<decimal>(mfield2);
+                                    decimal maxdayrate = Field1Val * (Field2Val / 100);
+                                    //*** caculate amount due ***
+                                    decimal mamtdue = 0;
+                                    if (ExpressType["disctype"].ToString() == "P")
+                                    {
+                                        mamtdue = maxdayrate;
+                                    }
+                                    else
+                                    {
+                                        mamtdue = Field1Val + Field2Val;
+                                    }
+                                    decimal msbamtdue = ExpPrice.Field<decimal>(msbfield);
+                                    //* **check if Montain Collective Free Day***
+                                    if (SPChargeRow.Field<int>("freedays") > 0 && SPChargeRow["tgroup"].ToString() == "MC")
+                                    {
+                                        // DO check_card_use
+                                        mkey = SPChargeRow["mcpnbr"].ToString();
+                                        int DaysSkied = Convert.ToInt32(CF.GetSQLField(DW.dwConn, $"SELECT COUNT(*) AS daysskied FROM (SELECT mcpnbr, readdate FROM {DW.ActiveDatabase}.skivisits WHERE mcpnbr LIKE 'MCP%' AND readdate <= '{sxStart}' WHERE mcpnbr='{mkey}' GROUP BY mcpnbr, readdate ORDER BY mcpnbr) AS mcpuses GROUP BY mcpnbr ORDER BY mcpnbr"));
+                                        if (DaysSkied <= SPChargeRow.Field<int>("freedays"))
+                                        {
+                                            mamtdue = 0;
+                                        }
+                                    }
+                                    //* deduct reload rate for convenience cards
+                                    if (ExpressType.Field<int>("ticktype") == 30037 && (mticktype < 30 || mticktype > 39))
+                                    {
+                                        mamtdue = mamtdue - 3;
+                                    }
+                                    if (mamtdue < 0)
                                     {
                                         mamtdue = 0;
                                     }
-                                }
-                                //* deduct reload rate for convenience cards
-                                if (ExpressType.Field<int>("ticktype") == 30037 && (mticktype < 30 || mticktype > 39))
-                                {
-                                    mamtdue = mamtdue - 3;
-                                }
-                                if (mamtdue < 0)
-                                {
-                                    mamtdue = 0;
-                                }
-                                //* ski at three free
-                                if (mski3free == "Y")
-                                {
-                                    mamtdue = 0;
-                                }
-                                //*** calcualte alta snowbird upgrades for convenience cards ****
-                                if (SPChargeRow["sbflag"].ToString() == "Y" && SPChargeRow["tgroup"].ToString() != "MC")
-                                {
-                                    mticktype = (SPChargeRow["sbflag"].ToString() == "Y" && SPChargeRow["altaflag"].ToString() == "N") ? 50 : 30014;
-                                    if (mxstart >= ExpCfg.Field<DateTime>("sdate") && mxstart <= ExpCfg.Field<DateTime>("edate"))
+                                    //* ski at three free
+                                    if (mski3free == "Y")
                                     {
-                                        mfield = "expprices." + ExpressType.Field<decimal>("ratecode") + "price2";
-                                        mfield2 = "expresstype.disc2amt";
+                                        mamtdue = 0;
                                     }
-                                    else
+                                    //*** calcualte alta snowbird upgrades for convenience cards ****
+                                    if (SPChargeRow["sbflag"].ToString() == "Y" && SPChargeRow["tgroup"].ToString() != "MC")
                                     {
-                                        mfield = "expprices." + ExpressType.Field<decimal>("ratecode") + "price";
-                                        mfield2 = "expresstype.discamt";
-                                    }
-                                    msbfield = "expprices.sb" + ExpressType["ratecode"].ToString();
-                                    maxdayrate = ExpPrice.Field<decimal>(mfield) * (ExpressType.Field<decimal>(mfield2) / 100);
-                                    if (mticktype == 30014)
-                                    {
-                                        mmaxamt = maxdayrate; //&& altasnowbird max
-                                        mticktype = 30032; //&& Alta Snowbird Upgrade
-                                        ExpPrice = CF.LoadDataRow(DW.dwConn, $"SELECT * FROM {DW.ActiveDatabase}.expprices WHERE nticktype={mticktype}");
-                                        if (!(ExpPrice is null))
+                                        mticktype = (SPChargeRow["sbflag"].ToString() == "Y" && SPChargeRow["altaflag"].ToString() == "N") ? 50 : 30014;
+                                        if (mxstart >= ExpCfg.Field<DateTime>("sdate") && mxstart <= ExpCfg.Field<DateTime>("edate"))
                                         {
-                                            msbupamt = maxdayrate;
-                                            msbdesc = ExpPrice["tickdesc"].ToString();
+                                            mfield = "expprices." + ExpressType.Field<decimal>("ratecode") + "price2";
+                                            mfield2 = "expresstype.disc2amt";
                                         }
-                                        mamtdue = mamtdue + msbupamt;
-                                        if (mamtdue > mmaxamt)
+                                        else
                                         {
-                                            mamtdue = mmaxamt;
+                                            mfield = "expprices." + ExpressType.Field<decimal>("ratecode") + "price";
+                                            mfield2 = "expresstype.discamt";
+                                        }
+                                        msbfield = "expprices.sb" + ExpressType["ratecode"].ToString();
+                                        maxdayrate = ExpPrice.Field<decimal>(mfield) * (ExpressType.Field<decimal>(mfield2) / 100);
+                                        if (mticktype == 30014)
+                                        {
+                                            mmaxamt = maxdayrate; //&& altasnowbird max
+                                            mticktype = 30032; //&& Alta Snowbird Upgrade
+                                            ExpPrice = CF.LoadDataRow(DW.dwConn, $"SELECT * FROM {DW.ActiveDatabase}.expprices WHERE nticktype={mticktype}");
+                                            if (!(ExpPrice is null))
+                                            {
+                                                msbupamt = maxdayrate;
+                                                msbdesc = ExpPrice["tickdesc"].ToString();
+                                            }
+                                            mamtdue = mamtdue + msbupamt;
+                                            if (mamtdue > mmaxamt)
+                                            {
+                                                mamtdue = mmaxamt;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            mamtdue = maxdayrate; //&& snowbird only
                                         }
                                     }
-                                    else
+                                    //* copper card deal - spring of 2016 04 / 04 / 2016 - 04 / 08 / 2016 * *********************
+                                    if (SPChargeRow.Field<int>("nticktype") == 2018 && (mticktype == 3 || mticktype == 4 || mticktype == 14) && (mxstart >= new DateTime(2016, 04, 04) && mxstart <= new DateTime(2016, 04, 08)))
                                     {
-                                        mamtdue = maxdayrate; //&& snowbird only
+                                        mamtdue = 10;
                                     }
+                                    CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.expprices SET amtdue={mamtdue.ToString()}, sbamtdue={msbamtdue.ToString()} WHERE nticktype = {mticktype}");
+                                    string Expfield = string.Empty;
+                                    if (SPChargeRow.Field<bool>("sbflag"))
+                                    {
+                                        Expfield = ", sb" + ExpressType["ratecode"].ToString();
+                                    }
+                                    CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.spcards SET aramt = {ExpPrice["amtdue"].ToString()}, sbamt={ExpPrice["sbamtdue"].ToString()}, usedesc='{ExpPrice["tickdesc"].ToString()}', usedate='{sxStart}', uticktype={ExpPrice["nticktype"].ToString()}{Expfield}");
                                 }
-                                //* copper card deal - spring of 2016 04 / 04 / 2016 - 04 / 08 / 2016 * *********************
-                                if (SPChargeRow.Field<int>("nticktype") == 2018 && (mticktype == 3 || mticktype == 4 || mticktype == 14) && (mxstart >= new DateTime(2016, 04, 04) && mxstart <= new DateTime(2016, 04, 08)))
-                                {
-                                    mamtdue = 10;
-                                }
-                                CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.expprices SET amtdue={mamtdue.ToString()}, sbamtdue={msbamtdue.ToString()} WHERE nticktype = {mticktype}");
-                                string Expfield = string.Empty;
-                                if (SPChargeRow.Field<bool>("sbflag"))
-                                {
-                                    Expfield = ", sb" + ExpressType["ratecode"].ToString();
-                                }
-                                CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.spcards SET aramt = {ExpPrice["amtdue"].ToString()}, sbamt={ExpPrice["sbamtdue"].ToString()}, usedesc='{ExpPrice["tickdesc"].ToString()}', usedate='{sxStart}', uticktype={ExpPrice["nticktype"].ToString()}{Expfield}");
                             }
                         }
                     }
