@@ -20,7 +20,7 @@ namespace WasatchBenefits
 
         private string CurrentFunction = string.Empty;
 
-        private string[,] WB_Resorts = new string[,] { { "snowbird", "20" } }; //, { "deer valley", "30" }, { "solitude", "40" } };
+        private string[,] WB_Resorts = new string[,] { { "snowbird", "20" }, { "deer valley", "30" }, { "solitude", "40" } };
         private DateTime WBDateEnd = new DateTime(2018, 5, 31);
 
         public WABA(string[] args = null)
@@ -38,6 +38,11 @@ namespace WasatchBenefits
                 string tResortFilter = WB_Resorts[I, 1];
                 string tWBEnd = WBDateEnd.ToString(Mirror.AxessDateFormat);
                 string tSeason = CF.SeasonShort;
+                //string TickDesc = "Wasatch Benefit";
+                string PersDesc = string.Empty;
+                string MediaType = (tResortFilter == "20" ? "AB SB Upgrade" : "One Use");
+                decimal Price = 0;
+
                 CF.ExecuteSQL(DW.dwConn, $"UPDATE {DW.ActiveDatabase}.clistperm SET okayflag=0 WHERE passcat='WB' AND company='{tResortName}'");
                 string tFileName = $"{CF.DataFolder}{tResortName.Replace(" ", "")}.csv";
                 File.Copy(tFileName, $"{CF.ITDataFolder}{tResortName.Replace(" ", "")}.csv", true);
@@ -67,6 +72,7 @@ namespace WasatchBenefits
                     tDS2.Tables[tTableName].Columns.Add("CardStatus");
                     foreach (DataRow tRow in tDS2.Tables[tTableName].Rows)
                     {
+                        System.Diagnostics.Debug.Print($"{tDS2.Tables[tTableName].Rows.IndexOf(tRow).ToString()} of {tDS2.Tables[tTableName].Rows.Count}");
                         string tFName = tRow["FirstName"].ToString();
                         string tLName = tRow["LastName"].ToString().ToString();
                         if (((tRow["Perskey"] != null) || (tRow["ResortID"].ToString().Trim() != tResortFilter)) && (tFName.Length != 0) && (tLName.Length != 0))
@@ -80,10 +86,16 @@ namespace WasatchBenefits
                             else
                             {   //insert
                                 Int32 tAge = tRow.Field<Int32?>("age") == null ? 0 : tRow.Field<Int32>("age");
+                                PersDesc = $"WB {((tAge <= 12) && (tAge > 0) ? "CHILD" : "ADULT")}";
+                                if (tResortFilter == "30")
+                                {
+                                    PersDesc = $"DV {PersDesc}";
+                                }
+                                
                                 string tQuery2 = $"INSERT INTO {DW.ActiveDatabase}.clistperm (dexpires,season,lname,fname,category,reason,passkey,passcat,dent,passtype,tickets,barcode,passnbr,tickdesc,media,appby,dept,okayflag,company,maxuses,price,tickpers,uses,extuses) VALUES ('";
                                 tQuery2 += $"{tWBEnd}','{tSeason}','{CF.EscapeChar(tRow["LastName"].ToString().ToUpper().Trim())}','{CF.EscapeChar(tRow["FirstName"].ToString().ToUpper().Trim())}','{tResortName}','WASATCH BENEFIT','{tPassKey}','WB','";
-                                tQuery2 += $"{DateTime.Now.ToString(Mirror.AxessDateFormat)}','AD',2,'{tRow["barcode"].ToString().Trim()}','{tRow["PassNbr"].ToString().Trim()}','ALTA AREA DAY','ALTA ONE USE','WASATCH BENEFIT','ADMIN',True,'";
-                                tQuery2 += $"{tResortName}',2,0,'WB {((tAge <= 12) && (tAge > 0) ? "CHILD" : "ADULT")}',0,0)";
+                                tQuery2 += $"{DateTime.Now.ToString(Mirror.AxessDateFormat)}','AD',2,'{tRow["barcode"].ToString().Trim()}','{tRow["PassNbr"].ToString().Trim()}','Wasatch Benefit','{MediaType}','WASATCH BENEFIT','ADMIN',True,'";
+                                tQuery2 += $"{tResortName}',2,{Price.ToString("#0.00")},'{PersDesc}',0,0)";
                                 CF.ExecuteSQL(DW.dwConn, tQuery2);
                             }
                         }
@@ -108,8 +120,8 @@ namespace WasatchBenefits
         {
             LblStartTime.Text = DateTime.Now.ToString(Mirror.AxessDateTimeFormat);
             UpdateWasatchBenefit();
-            statusStrip1.Items[0].Text = "COMPLETE";
-            SetTaskStatus("", DateTime.Now.ToString(Mirror.AxessDateTimeFormat));
+            //statusStrip1.Items[0].Text = "COMPLETE";
+            //SetTaskStatus("", DateTime.Now.ToString(Mirror.AxessDateTimeFormat));
             Application.Exit();
         }
 
@@ -130,7 +142,7 @@ namespace WasatchBenefits
                 PB1.Refresh();
                 return;
             }
-            ASG.SetTaskStatus(Application.ProductName, CurrentFunction, statusStrip1.Items[0].Text, Description, Extra);
+            //ASG.SetTaskStatus(Application.ProductName, CurrentFunction, statusStrip1.Items[0].Text, Description, Extra);
         }
 
     }

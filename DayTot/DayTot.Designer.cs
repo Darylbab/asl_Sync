@@ -31,10 +31,10 @@
             this.LblStartTime = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.SslStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.txtStart = new System.Windows.Forms.TextBox();
+            this.txtEnd = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.txtCurrent = new System.Windows.Forms.TextBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
@@ -71,19 +71,19 @@
             this.SslStatus.Name = "SslStatus";
             this.SslStatus.Size = new System.Drawing.Size(0, 17);
             // 
-            // textBox1
+            // txtStart
             // 
-            this.textBox1.Location = new System.Drawing.Point(14, 36);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(119, 20);
-            this.textBox1.TabIndex = 2;
+            this.txtStart.Location = new System.Drawing.Point(14, 36);
+            this.txtStart.Name = "txtStart";
+            this.txtStart.Size = new System.Drawing.Size(119, 20);
+            this.txtStart.TabIndex = 2;
             // 
-            // textBox2
+            // txtEnd
             // 
-            this.textBox2.Location = new System.Drawing.Point(155, 36);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(117, 20);
-            this.textBox2.TabIndex = 3;
+            this.txtEnd.Location = new System.Drawing.Point(155, 36);
+            this.txtEnd.Name = "txtEnd";
+            this.txtEnd.Size = new System.Drawing.Size(117, 20);
+            this.txtEnd.TabIndex = 3;
             // 
             // label1
             // 
@@ -94,12 +94,12 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Processing:";
             // 
-            // textBox3
+            // txtCurrent
             // 
-            this.textBox3.Location = new System.Drawing.Point(99, 65);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 20);
-            this.textBox3.TabIndex = 5;
+            this.txtCurrent.Location = new System.Drawing.Point(99, 65);
+            this.txtCurrent.Name = "txtCurrent";
+            this.txtCurrent.Size = new System.Drawing.Size(100, 20);
+            this.txtCurrent.TabIndex = 5;
             // 
             // checkBox1
             // 
@@ -203,10 +203,10 @@
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.txtCurrent);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtEnd);
+            this.Controls.Add(this.txtStart);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.LblStartTime);
             this.Name = "DayTot";
@@ -224,10 +224,10 @@
         private System.Windows.Forms.Label LblStartTime;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel SslStatus;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txtStart;
+        private System.Windows.Forms.TextBox txtEnd;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox txtCurrent;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox checkBox3;

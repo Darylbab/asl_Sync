@@ -32,7 +32,7 @@ namespace Liftopia
         private Mirror AM = new Mirror();
         private BUY_ALTA_COM Buy = new BUY_ALTA_COM();
 
-        private bool Alta = false;
+        private bool Alta = true;
         private bool MTC = true;
 
         private string CurrentFunction = "";
@@ -74,19 +74,24 @@ namespace Liftopia
             DataSet tDS = CF.CSV2DS(AltaDataPath, AltaDataFile, new DataSet());
             int tRowCount = tDS.Tables[AltaDataFile].Rows.Count;
             pbAlta.Maximum = tRowCount;
+            DataTable Willcall = CF.LoadTable(DW.dwConn, $"SELECT res_no, itemstatus, arr_date FROM {DW.ActiveDatabase}.willcall", "Willcall");
+            DataColumn[] WillcallKey = new DataColumn[1];
+            WillcallKey[0] = Willcall.Columns["res_no"];
+            Willcall.PrimaryKey = WillcallKey;
             foreach (DataRow tRow in tDS.Tables[AltaDataFile].Rows)
             {
+                tQuery = string.Empty;
                 pbAlta.Value = tDS.Tables[AltaDataFile].Rows.IndexOf(tRow) + 1;
                 SetTaskStatus("", "", pbAlta);
-                if (tRow["guest_first_name"].ToString().Trim() != "ADULT 1" && tRow["guest_last_name"].ToString().Trim() != "ADULT 1 ")
+                if (tRow["guest_first_name"].ToString().Trim() != "ADULT 1" && tRow["guest_last_name"].ToString().Trim() != "ADULT 1 " && tRow["net_rate_revenue"].ToString() != string.Empty)
                 {
                     bool isPaid = (tRow["order_status"].ToString().ToUpper() == "PAID");
                     DateTime TripDate = Convert.ToDateTime(tRow["trip_date"].ToString());
                     string TickID = tRow["ticket_id"].ToString();
-                    DataRow oldRow = CF.LoadDataRow(DW.dwConn, $"SELECT 'itemstatus','arr_date' FROM {DW.ActiveDatabase}.willcall WHERE res_no='{TickID}' LIMIT 1");
-                    if (oldRow[0].ToString() != string.Empty)
+                    //DataRow oldRow = CF.LoadDataRow(DW.dwConn, $"SELECT itemstatus, arr_date FROM {DW.ActiveDatabase}.willcall WHERE res_no='{TickID}' LIMIT 1");
+                    DataRow oldRow = Willcall.Rows.Find(TickID);
+                    if (CF.RowHasData(oldRow))
                     {
-                        tQuery = string.Empty; // $"UPDATE {DW.ActiveDatabase}.willcall SET ";
                         if (!isPaid)
                         {
                             string oldStatus = oldRow["itemstatus"].ToString().Trim();
@@ -131,6 +136,7 @@ namespace Liftopia
                         }
                     }
                 }
+
                 if (tQuery.Length != 0)
                 {
                     if (!CF.ExecuteSQL(DW.dwConn, tQuery))
@@ -170,7 +176,7 @@ namespace Liftopia
             response.Dispose();
             reader.Close();
             reader.Dispose();
-            statusStrip1.Items[0].Text = "Updating MTC_Sales and Willcall...";
+            statusStrip1.Items[0].Text = "Updating MTC_Sales...";
             SetTaskStatus();
             CommonFunctions cf = new CommonFunctions();
             DataWarehouse dw = new DataWarehouse();
@@ -179,39 +185,65 @@ namespace Liftopia
             pbMTC.Maximum = tRowCount;
             foreach (DataRow myRow in myDS.Tables[MTCDataFile].Rows)
             {
-                System.Diagnostics.Debug.Print(myDS.Tables[MTCDataFile].Rows.IndexOf(myRow).ToString() + " of " + myDS.Tables[MTCDataFile].Rows.Count.ToString());
                 pbMTC.Value = myDS.Tables[MTCDataFile].Rows.IndexOf(myRow) + 1;
-                SetTaskStatus("", "", pbMTC);
-                string GFN = myRow["guest first name"].ToString().Replace("â€™", "'").Replace("Ã©", "e").Replace("Ã¤","a").Replace("/","");
-                string GLN = myRow["guest last name"].ToString().Replace("â€™", "'").Replace("Ã©", "e").Replace("Ã¤", "a").Replace("/", "");
-                string GN = GFN + " " + GLN;
-                string dob = myRow["guest birth date"].ToString();
-                bool legalName = (myRow["guest last name"].ToString().ToUpper().Trim() != "INVALID");
-                foreach (char a in GN)
+                System.Diagnostics.Debug.Print(pbMTC.Value.ToString() + " of " + myDS.Tables[MTCDataFile].Rows.Count.ToString());
+                //if (myRow["Order Id"].ToString() == "11490976")
+                //if (pbMTC.Value > 59999  || myRow.Field<string>("pre arrival approved").ToUpper() == "YES" || myRow.Field<string>("order status").ToUpper() == "CANCELLED") // || myRow["estimated arrival date"].ToString() != string.Empty)
                 {
-                    legalName |= ((int)a <= 127);
-                }
-                if (myRow["product name"].ToString().Contains(cf.Season.Replace("-", "/")) && legalName)
-                {
-                    if (myRow["Order ID"].ToString().Trim() != "11694421")
+                    //SetTaskStatus("", "", pbMTC);
+                    string GFN = myRow["guest first name"].ToString().Replace("â€™", "'").Replace("Ã©", "e").Replace("Ã¤", "a").Replace("/", "").Replace(@"&","").Trim();
+                    string GLN = myRow["guest last name"].ToString().Replace("â€™", "'").Replace("Ã©", "e").Replace("Ã¤", "a").Replace("/", "").Trim();
+                    string GEM = myRow["guest email"].ToString();
+                    string GN = GFN + " " + GLN;
+                    string dob = myRow["guest birth date"].ToString();
+                    bool legalName = (myRow["guest last name"].ToString().ToUpper().Trim() != "INVALID");
+                    foreach (char a in GN)
                     {
-                        if (Buy.SalesFromMTC(myRow))    //test for row existing and either update or insert 
+                        legalName |= ((int)a <= 127);
+                    }
+                    if (myRow["product name"].ToString().Contains(cf.Season.Replace("-", "/")) && legalName)
+                    {
+                        //if (myRow.Field<int>("recid") > 572739)
                         {
-                            DataSet tDS = CF.LoadDataSet(AM.MirrorConn, "SELECT * FROM axess_cwc.tabpersonen WHERE SZNAME = '" + CF.EscapeChar(GLN) + "' AND dtgeburt = '" + dob + "'", new DataSet(), "tabPersonen");
-                            if (tDS.Tables.Contains("tabPersonen"))
+                            if (Buy.SalesFromMTC(myRow))    //test for row existing and either update or insert 
                             {
-                                if (tDS.Tables["tabPersonen"].Rows.Count != 0)
+                                DataSet tDS = CF.LoadDataSet(AM.MirrorConn, $"SELECT * FROM axess_cwc.tabpersonen WHERE SZNAME = '{CF.EscapeChar(GLN)}' AND dtgeburt = '{dob}' AND nperskassanr <= 40", new DataSet(), "tabPersonen");
+                                if (tDS.Tables.Contains("tabPersonen"))
                                 {
-                                    int nPersNr = tDS.Tables["tabPersonen"].Rows[0].Field<int>("nPersNr");
-                                    int nKassaNr = tDS.Tables["tabPersonen"].Rows[0].Field<Int16>("nPersKassaNr");
-                                    cf.ExecuteSQL(Buy.Buy_Alta_ComConn, $"UPDATE asbshared.mtncol_sales SET axess_perskassa={nKassaNr.ToString()}, axess_persnr={nPersNr.ToString()} WHERE mcpnbr = '{myRow.Field<string>("Barcode")}'");
+                                    if (tDS.Tables["tabPersonen"].Rows.Count != 0)
+                                    {
+                                        int FoundRow = 0;
+                                        bool IsFound = (tDS.Tables["tabPersonen"].Rows.Count == 1);
+                                        if (!IsFound)
+                                        {
+                                            foreach (DataRow Personen in tDS.Tables["tabPersonen"].Rows)
+                                            {
+                                                if (Personen["szvorname"].ToString().ToUpper() == GFN.ToUpper())
+                                                {
+                                                    FoundRow = tDS.Tables["tabPersonen"].Rows.IndexOf(Personen);
+                                                    IsFound = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        if (IsFound)
+                                        {
+                                            int nPersNr = tDS.Tables["tabPersonen"].Rows[FoundRow].Field<int>("nPersNr");
+                                            int nKassaNr = tDS.Tables["tabPersonen"].Rows[FoundRow].Field<Int16>("nPersKassaNr");
+                                            if (nKassaNr <= 40 || (nKassaNr >= 117 && nKassaNr <= 120))
+                                            {
+                                                cf.ExecuteSQL(Buy.Buy_Alta_ComConn, $"UPDATE asbshared.mtncol_sales SET axess_perskassa={nKassaNr.ToString()}, axess_persnr={nPersNr.ToString()} WHERE mcpnbr = '{myRow.Field<string>("Barcode")}'");
+                                            }
+                                        }
+                                    }
                                 }
+                                //dw.WillcallFromMTC(myRow);
                             }
-                            //dw.WillcallFromMTC(myRow);
                         }
                     }
                 }
-            }
+                }
             return true;
         }
 

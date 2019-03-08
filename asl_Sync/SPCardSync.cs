@@ -20,7 +20,7 @@ namespace asl_SyncLibrary
         private DateTime mdatetime;
         private DataSet spcDS = new DataSet();
         private string mirrorDatabase = string.Empty;
-        private string appsDatabase = string.Empty;
+        //private string dw.ActiveDatabase = string.Empty;
         private const string mdatadir = @"g:\fpdata\altaax\";
 
         private const string DependentTypes = "500,510,520,530,540,550";
@@ -39,7 +39,7 @@ namespace asl_SyncLibrary
                 am.TestMode = false;
                 mirrorDatabase = am.ActiveDatabase;
                 dw.TestMode = tTestMode;
-                appsDatabase = dw.ActiveDatabase;
+                //dw.ActiveDatabase = dw.ActiveDatabase;
             }
         }
 
@@ -49,7 +49,7 @@ namespace asl_SyncLibrary
             {
                 if (OpenFiles())
                 {
-                    mdatetime = ((aRunStart == null) ? (Convert.ToDateTime(cf.GetSQLField(dw.dwConn, $"SELECT MAX(dtupdate) FROM {appsDatabase}.spcards WHERE saledate = DATE(dtupdate)")).AddDays(-days_history)) : (mdatetime = Convert.ToDateTime(aRunStart)));
+                    mdatetime = ((aRunStart == null) ? (Convert.ToDateTime(cf.GetSQLField(dw.dwConn, $"SELECT MAX(dtupdate) FROM {dw.ActiveDatabase}.spcards WHERE saledate = DATE(dtupdate)")).AddDays(-days_history)) : (Convert.ToDateTime(aRunStart)));
                     Initialized = true;
                 }
             }
@@ -77,22 +77,22 @@ namespace asl_SyncLibrary
         public void Update_mediaid()
         {
             Init();
-            DataTable tTable = cf.LoadTable(dw.dwConn, $"SELECT * FROM {appsDatabase}.spcards WHERE cardstatus='A' AND arcustid='' AND LENGTH(mediaid) != 16 AND tgroup IN ('EX','SP','PC')", "spcheck");
+            DataTable tTable = cf.LoadTable(dw.dwConn, $"SELECT * FROM {dw.ActiveDatabase}.spcards WHERE cardstatus='A' AND arcustid='' AND LENGTH(mediaid) != 16 AND tgroup IN ('EX','SP','PC')", "spcheck");
             int tRowCount = tTable.Rows.Count;
             foreach (DataRow tRow in tTable.Rows)
             {
-                DataRow sRow = cf.LoadDataRow(dw.dwConn, $"SELECT * FROM {appsDatabase}.salesdata WHERE nlfdzaehler='{tRow["nlfdzaehle"].ToString()}'");
+                DataRow sRow = cf.LoadDataRow(dw.dwConn, $"SELECT * FROM {dw.ActiveDatabase}.salesdata WHERE nlfdzaehler='{tRow["nlfdzaehle"].ToString()}'");
                 if (sRow["mediaid"].ToString().Length == 16)
                 {
-                    cf.ExecuteSQL(dw.dwConn, $"UPDATE {appsDatabase}.spcards SET mediaid='{sRow["mediaid"].ToString()}', wtp64='{sRow["wtp64"].ToString()}', wtp32='{sRow["wtp32"].ToString()}', cardacct='{ax.Hex2cardacct(sRow["wtp32"].ToString())}' WHERE nlfdzaehle='{tRow["nlfdzaehle"].ToString()}'");
+                    cf.ExecuteSQL(dw.dwConn, $"UPDATE {dw.ActiveDatabase}.spcards SET mediaid='{sRow["mediaid"].ToString()}', wtp64='{sRow["wtp64"].ToString()}', wtp32='{sRow["wtp32"].ToString()}', cardacct='{ax.Hex2cardacct(sRow["wtp32"].ToString())}' WHERE nlfdzaehle='{tRow["nlfdzaehle"].ToString()}'");
                 }
             }
             //remove dups in spcards
-            tTable = cf.LoadTable(dw.dwConn, $"SELECT serialkey, MAX(recid) AS recid, COUNT(*) AS cnt FROM {appsDatabase}.spcards GROUP BY serialkey HAVING cnt>1", "spcheck");
+            tTable = cf.LoadTable(dw.dwConn, $"SELECT serialkey, MAX(recid) AS recid, COUNT(*) AS cnt FROM {dw.ActiveDatabase}.spcards GROUP BY serialkey HAVING cnt>1", "spcheck");
             tRowCount = tTable.Rows.Count;
             foreach (DataRow sRow in tTable.Rows)
             {
-                cf.ExecuteSQL(dw.dwConn, $"DELETE FROM {appsDatabase}.spcards WHERE serialkey='{sRow["serialkey"].ToString()}' AND recid < {sRow["recid"].ToString()}");
+                cf.ExecuteSQL(dw.dwConn, $"DELETE FROM {dw.ActiveDatabase}.spcards WHERE serialkey='{sRow["serialkey"].ToString()}' AND recid < {sRow["recid"].ToString()}");
             }
             tTable.Dispose();
         }
@@ -106,20 +106,31 @@ namespace asl_SyncLibrary
             spcDS.Tables["tickettypes"].PrimaryKey = keys;
             keys[0] = spcDS.Tables["persontypes"].Columns["perskey"];
             spcDS.Tables["persontypes"].PrimaryKey = keys;
+            //mdatetime = new DateTime(2018, 11, 1);
             try
             {
-                string tQry = $"SELECT a.*, b.arcustid, b.arname FROM {appsDatabase}.salesdata AS a INNER JOIN {appsDatabase}.pmtdata AS b ON a.transkey = b.transkey WHERE a.dtupdate > '{mdatetime.ToString(Mirror.AxessDateTimeFormat)}' AND a.nkassanr != 33 AND a.tgroup in ('SP','EX','PC','CC','MC') AND NOT (a.TGROUP='SP' AND a.NTICKTYPE=123) ORDER BY a.dtinsert";
+                string tQry = $"SELECT a.*, b.arcustid, b.arname FROM {dw.ActiveDatabase}.salesdata AS a INNER JOIN {dw.ActiveDatabase}.pmtdata AS b ON a.transkey = b.transkey WHERE a.dtupdate > '{mdatetime.ToString(Mirror.AxessDateTimeFormat)}' AND a.nkassanr != 33 AND a.tgroup in ('SP','EX','PC','CC','MC') AND NOT (a.TGROUP='SP' AND a.NTICKTYPE=123) ORDER BY a.dtinsert";
                 DataTable tTable = cf.LoadTable(dw.dwConn, tQry, "salesdata");
                 int tRowCount = tTable.Rows.Count;
                 foreach (DataRow tRow in tTable.Rows)
                 {
+                    System.Diagnostics.Debug.Print(tTable.Rows.IndexOf(tRow).ToString() + " of " + tRowCount.ToString());
                     string mserialkey = tRow["serialkey"].ToString();
-                    DataRow tSPCheckRow = cf.LoadDataRow(dw.dwConn, $"SELECT * FROM {appsDatabase}.spcards WHERE serialkey ='{mserialkey}'");
+                    DataRow tSPCheckRow = cf.LoadDataRow(dw.dwConn, $"SELECT * FROM {dw.ActiveDatabase}.spcards WHERE serialkey ='{mserialkey}'");
                     bool mnewrec = (tSPCheckRow == null);
 
-                    string mtokenkey = (tRow["tokenkey"].ToString().Length != 0) ? tRow["tokenkey"].ToString() : "0";
-                    string mpmtprofile = (tRow["pmtprofile"].ToString().Length != 0) ? tRow["pmtprofile"].ToString() : "0";
-                    string mauthnet_custid = (tRow["authnet_custid"].ToString().Length != 0) ? tRow["authnet_custid"].ToString() : "0";
+                    string nMediaID = tRow["mediaid"].ToString().Trim();
+                    bool ValidMediaID = (nMediaID.Length != 8);
+                    string nKassaNr = tRow["nkassanr"].ToString().Trim();
+                    string nSerialNr = tRow["nseriennr"].ToString().Trim();
+                    string nUnicodeNr = tRow["nunicodenr"].ToString().Trim();
+                    string mtokenkey = "0"; // (tRow["tokenkey"].ToString().Length != 0) ? tRow["tokenkey"].ToString() : "0";
+                    string mpmtprofile = "0"; // (tRow["pmtprofile"].ToString().Length != 0) ? tRow["pmtprofile"].ToString() : "0";
+                    string mauthnet_custid = "0"; // (tRow["authnet_custid"].ToString().Length != 0) ? tRow["authnet_custid"].ToString() : "0";
+                    string TokenWhere = (ValidMediaID ? $"mediaid='{nMediaID}'" : $"posnr={nKassaNr} AND serialnr={nSerialNr} AND nunicodenr={nUnicodeNr}");
+
+                    //pass tap, find serial data
+
 
                     bool skiprec = false;
                     if (!mnewrec)
@@ -191,7 +202,7 @@ namespace asl_SyncLibrary
                             if (tRow.Field<int?>("npersnr") > 0)
                             {
                                 //get_axcust
-                                DataRow custRow = cf.LoadDataRow(am.MirrorConn, $"SELECT * FROM {mirrorDatabase}.tabaxcust WHERE nperskassa={tRow["nperskassa"].ToString()} AND npersnr={tRow["npersnr"].ToString()}");
+                                DataRow custRow = cf.LoadDataRow(am.MirrorConn, $"SELECT * FROM {am.ActiveDatabase}.tabaxcust WHERE nperskassa={tRow["nperskassa"].ToString()} AND npersnr={tRow["npersnr"].ToString()}");
                                 if (custRow != null)
                                 {
                                     mfamkey = custRow["famkassa"].ToString() + "-" + custRow["fampersnr"].ToString();
@@ -294,6 +305,8 @@ namespace asl_SyncLibrary
                             if ((tRow["promptkey"].ToString() == "3-1") || (tRow["promptkey"].ToString() == "2008-1"))
                             {
                                 string mkey = tSzPrompt1;
+                                if (mkey == "DAV2106")
+                                    mkey = mkey.Trim();
                                 DataRow empRow = cf.LoadDataRow(dw.dwConn, $"SELECT empchrg FROM payroll.empfile WHERE emp_id='{cf.EscapeChar(mkey)}' LIMIT 1");
                                 if (empRow != null)
                                 {
@@ -347,9 +360,9 @@ namespace asl_SyncLibrary
                                 { mmcpnbr = tSzPrompt1; }
                                 else
                                 { mmcpnbr = tRow["szprompt2"].ToString().Trim(); }
-                                if (cf.RowExists(dw.dwConn, $"{appsDatabase}.willcall", $"res_no='{mmcpnbr}'"))
+                                if (cf.RowExists(dw.dwConn, $"{dw.ActiveDatabase}.willcall", $"res_no='{mmcpnbr}'"))
                                 {
-                                    mfreedays = Convert.ToInt32(cf.GetSQLField(dw.dwConn, $"SELECT qty FROM {appsDatabase}.willcall WHERE res_no='{mmcpnbr}'"));
+                                    mfreedays = Convert.ToInt32(cf.GetSQLField(dw.dwConn, $"SELECT qty FROM {dw.ActiveDatabase}.willcall WHERE res_no='{mmcpnbr}'"));
                                 }
                                 if (mrecpresent)
                                     mupdate |= (tSPCheckRow["mcpnbr"].ToString() != mmcpnbr);
@@ -414,14 +427,14 @@ namespace asl_SyncLibrary
                         }
                         else
                         {
-                            DataRow tDR = cf.LoadDataRow(am.MirrorConn, $"SELECT baktiv FROM {mirrorDatabase}.tabkartensperre WHERE nkassanr={tRow["nkassanr"].ToString()} AND nseriennr={tRow["nseriennr"].ToString()} AND nunicodenr={tRow["nunicodenr"].ToString()} LIMIT 1");
+                            DataRow tDR = cf.LoadDataRow(am.MirrorConn, $"SELECT baktiv FROM {am.ActiveDatabase}.tabkartensperre WHERE nkassanr={tRow["nkassanr"].ToString()} AND nseriennr={tRow["nseriennr"].ToString()} AND nunicodenr={tRow["nunicodenr"].ToString()} LIMIT 1");
                             if (tDR[0].ToString().Trim() == "-1")
                             {
                                 mcardstatus = "B";
                             }
                             else
                             {
-                                mcardstatus = cf.GetSQLField(dw.dwConn, $"SELECT spcardstatus FROM {appsDatabase}.transtype WHERE trantype={tRow["ntranstype"].ToString().Trim()}");
+                                mcardstatus = cf.GetSQLField(dw.dwConn, $"SELECT spcardstatus FROM {dw.ActiveDatabase}.transtype WHERE trantype={tRow["ntranstype"].ToString().Trim()}");
                             }
                         }
                         if (mrecpresent)
@@ -445,10 +458,10 @@ namespace asl_SyncLibrary
                         {
                             if (tRow["ttype"].ToString() == "S")
                             {
-                                msqlcmd = $"UPDATE {appsDatabase}.spcards SET ";
+                                msqlcmd = $"UPDATE {dw.ActiveDatabase}.spcards SET ";
                                 msqlcmd += $"tgroup = '{tTickRow["tgroup"].ToString()}', ";
                                 msqlcmd += $"cardstatus = '{mcardstatus}', ";
-                                msqlcmd += $"mcpnbr = '{mmcpnbr}', ";
+                                msqlcmd += $"mcpnbr = '{mmcpnbr.Replace("'","")}', ";
                                 msqlcmd += $"wtp32 = {mwtp32}, ";
                                 msqlcmd += $"wtp64 = {mwtp64}, ";
                                 msqlcmd += $"dob = '{mdob}', ";
@@ -491,18 +504,18 @@ namespace asl_SyncLibrary
                             }
                             else
                             {
-                                msqlcmd = $"UPDATE {appsDatabase}.spcards set cardstatus = '{tRow["ttype"].ToString()}' where serialkey = '{tRow["serialkey"].ToString()}'";
+                                msqlcmd = $"UPDATE {dw.ActiveDatabase}.spcards set cardstatus = '{tRow["ttype"].ToString()}' where serialkey = '{tRow["serialkey"].ToString()}'";
                             }
                         }
                         else
                         {
                             if (mnewrec)
                             {
-                                //if (cf.RowExists(dw.dwConn, $"{appsDatabase}.SPCARDS", $"SERIALKEY='{tRow["serialkey"].ToString()}'"))
-                                //    cf.ExecuteSQL(dw.dwConn, $"DELETE FROM {appsDatabase}.spcards WHERE serialkey = '{tRow["serialkey"].ToString()}'");
+                                //if (cf.RowExists(dw.dwConn, $"{dw.ActiveDatabase}.SPCARDS", $"SERIALKEY='{tRow["serialkey"].ToString()}'"))
+                                //    cf.ExecuteSQL(dw.dwConn, $"DELETE FROM {dw.ActiveDatabase}.spcards WHERE serialkey = '{tRow["serialkey"].ToString()}'");
                                 if (tRow["ttype"].ToString() == "S")
                                 {
-                                    msqlcmd = $"INSERT INTO {appsDatabase}.spcards (";
+                                    msqlcmd = $"INSERT INTO {dw.ActiveDatabase}.spcards (";
                                     msqlcmd += "serialkey,nkassanr,saledate,transkey,transtype,cardstatus,acctnbr,tgroup,mcpnbr,";
                                     msqlcmd += "lastname,firstname,tokenkey,authnet_custid,pmtprofile,empid,nticktype,tickdesc,nperstype,persdesc,";
                                     msqlcmd += "perskey,wtp32,wtp64,mediaid,cardacct,nlfdzaehle,familykey,rserialkey,";
@@ -510,8 +523,8 @@ namespace asl_SyncLibrary
                                     msqlcmd += "utaflag,mtnrepflag,wasbenflag,osaflag,expdate,";
                                     msqlcmd += "dob,height,gender,street,city,state,zip,email,pic,dtupdate,arcustid,arname,";
                                     msqlcmd += "freedays,useflag,testflag,rptkey) Values('";
-                                    msqlcmd += $"{tRow["serialkey"].ToString()}','{tRow["nkassanr"].ToString()}','{tRow.Field<DateTime>("saledate").ToString(Mirror.AxessDateFormat)}','{tRow["transkey"].ToString()}','{tRow["ttype"].ToString()}','A','{tTickRow["acct"].ToString()}','{tTickRow["tgroup"].ToString()}','{mmcpnbr}'";
-                                    msqlcmd += $",'{mlname}','{mfname}','{mtokenkey}','{mauthnet_custid}','{mpmtprofile}','{mempid}','{tRow["nticktype"].ToString()}','{tRow["tickdesc"].ToString()}','{tRow["nperstype"].ToString()}','{tRow["persdesc"].ToString()}'";
+                                    msqlcmd += $"{tRow["serialkey"].ToString()}','{tRow["nkassanr"].ToString()}','{tRow.Field<DateTime>("saledate").ToString(Mirror.AxessDateFormat)}','{tRow["transkey"].ToString()}','{tRow["ttype"].ToString()}','A','{tTickRow["acct"].ToString()}','{tTickRow["tgroup"].ToString()}','{mmcpnbr.Replace("'","")}'";
+                                    msqlcmd += $",'{mlname}','{mfname}','{mtokenkey}','{mauthnet_custid}','{mpmtprofile}','{cf.EscapeChar(mempid)}','{tRow["nticktype"].ToString()}','{tRow["tickdesc"].ToString()}','{tRow["nperstype"].ToString()}','{tRow["persdesc"].ToString()}'";
                                     msqlcmd += $",'{mperskey}',{mwtp32}, {mwtp64},{mmediaid},{mcardacct},'{tRow["nlfdzaehler"].ToString()}','{mfamkey}','{mserialkey}'";
                                     msqlcmd += $",'{mchrgflag}','{mempchrg}','{mmgmtflag}','{mconvflag}','{mforgotflag}','{mmcpflag}','{mdiscflag}','{mdisctype}'";
                                     msqlcmd += $",'{mutaflag}','{mmtnrepflag}','{mwasbenflag}','{mosaflag}','{mexpdate}'";
@@ -534,13 +547,13 @@ namespace asl_SyncLibrary
             Init();
             string mcardstatus = string.Empty;
             string mblockdate = (new DateTime(DateTime.Now.Year - (DateTime.Now.Month <= 6 ? 1 : 0), 7 , 1)).ToString(Mirror.AxessDateFormat);
-            spcDS = cf.LoadDataSet(dw.dwConn, $"SELECT * FROM {appsDatabase}.spcards WHERE saledate > '{mblockdate}' GROUP BY serialkey", spcDS, "spcards");
+            spcDS = cf.LoadDataSet(dw.dwConn, $"SELECT * FROM {dw.ActiveDatabase}.spcards WHERE saledate > '{mblockdate}' GROUP BY serialkey", spcDS, "spcards");
             DataColumn[] keys = new DataColumn[1];
             keys[0] = spcDS.Tables["spcards"].Columns["serialkey"];
             try
             {
                 spcDS.Tables["spcards"].PrimaryKey = keys;
-                spcDS = cf.LoadDataSet(am.MirrorConn, $"SELECT * FROM {mirrorDatabase}.tabkartensperre WHERE DATE(dtsperrzeitpunkt) >= '{mblockdate}' AND dtsperrzeitpunkt <= '{DateTime.Now.ToString(Mirror.AxessDateTimeFormat)}' AND nkassanr < 100", spcDS, "axblkd");
+                spcDS = cf.LoadDataSet(am.MirrorConn, $"SELECT * FROM {am.ActiveDatabase}.tabkartensperre WHERE DATE(dtsperrzeitpunkt) >= '{mblockdate}' AND dtsperrzeitpunkt <= '{DateTime.Now.ToString(Mirror.AxessDateTimeFormat)}' AND nkassanr < 100", spcDS, "axblkd");
                 int tRowCount = spcDS.Tables["axblkd"].Rows.Count;
                 foreach (DataRow tRow in spcDS.Tables["axblkd"].Rows)
                 {
@@ -577,7 +590,7 @@ namespace asl_SyncLibrary
                     DataRow sRow = spcDS.Tables["spcards"].Rows.Find(mkey);
                     if (sRow != null)
                         if ((sRow["cardstatus"].ToString() != mcardstatus) && (sRow["cardstatus"].ToString() != "C"))
-                            cf.ExecuteSQL(dw.dwConn, $"UPDATE {appsDatabase}.spcards SET cardstatus='{sRow["cardstatus"].ToString()}' WHERE serialkey='{mkey}'");
+                            cf.ExecuteSQL(dw.dwConn, $"UPDATE {dw.ActiveDatabase}.spcards SET cardstatus='{sRow["cardstatus"].ToString()}' WHERE serialkey='{mkey}'");
                 }
             }
             finally
@@ -588,14 +601,14 @@ namespace asl_SyncLibrary
         public void Update_tokenkey()
         {
             Init();
-            spcDS = cf.LoadDataSet(dw.dwConn, $"SELECT * FROM {appsDatabase}.spcards WHERE cardstatus='A' AND LENGTH(mediaID)=16", spcDS, "spcards");
+            spcDS = cf.LoadDataSet(dw.dwConn, $"SELECT * FROM {dw.ActiveDatabase}.spcards WHERE cardstatus='A' AND LENGTH(mediaID)=16", spcDS, "spcards");
             spcDS = cf.LoadDataSet(buy.Buy_Alta_ComConn, "SELECT * FROM axessutility.tokenxref WHERE (serialnr > 99) AND (LENGTH(mediaID)=16) GROUP BY mediaID", spcDS, "tokendata");
             DataColumn[] keys = new DataColumn[1];
             keys[0] = spcDS.Tables["tokendata"].Columns["mediaid"];
             try
             {
                 spcDS.Tables["tokendata"].PrimaryKey = keys;
-                spcDS = cf.LoadDataSet(dw.dwConn, $"SELECT * FROM {appsDatabase}.arcust WHERE remotepos > 0", spcDS, "arcust");
+                spcDS = cf.LoadDataSet(dw.dwConn, $"SELECT * FROM {dw.ActiveDatabase}.arcust WHERE remotepos > 0", spcDS, "arcust");
                 keys[0] = spcDS.Tables["arcust"].Columns["remotepos"];
                 spcDS.Tables["arcust"].PrimaryKey = keys;
                 int tRowCount = spcDS.Tables["spcards"].Rows.Count;
@@ -626,7 +639,7 @@ namespace asl_SyncLibrary
                     }
                     if (tVals != string.Empty)
                     {
-                        cf.ExecuteSQL(dw.dwConn, $"UPDATE {appsDatabase}.spcards SET {tVals} WHERE recid={tRow["recid"].ToString()}");
+                        cf.ExecuteSQL(dw.dwConn, $"UPDATE {dw.ActiveDatabase}.spcards SET {tVals} WHERE recid={tRow["recid"].ToString()}");
                         System.Diagnostics.Debug.Print("XXX");
                     }
                 }

@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://teamaxess.com/" elementFormDefault="qualified" targetNamespace="http://teamaxess.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://cwc.teamaxess.com:16351/DCI4CRM/DCI4CRMService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/AxWebServices" />
+  <xs:element name="getConfigFile">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getConfigFileResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="getConfigFileResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getBOCVersion">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getBOCVersionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="getBOCVersionResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getBOCUniversalTime">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getBOCUniversalTimeResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="getBOCUniversalTimeResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getServerVersion">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getServerVersionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="getServerVersionResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getModulVersion">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getModulVersionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="getModulVersionResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="login">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_szUserName" type="xs:string" />
+        <xs:element minOccurs="1" name="i_szPassword" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="loginResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="loginResult" nillable="true" type="q1:DCI4CRMLOGINRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="logout">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_szUserName" type="xs:string" />
+        <xs:element minOccurs="1" name="i_szPassword" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="logoutResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="logoutResult" nillable="true" type="q2:DCI4CRMLOGOUTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getLogList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nLogNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nMaxCount" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getLogListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getLogListResult" nillable="true" type="q3:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="setEntitySnapshot">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_szTableName" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="setEntitySnapshotResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="setEntitySnapshotResult" nillable="true" type="q4:DCI4CRMSNAPSHOTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getSnapshotList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nRownum" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nMaxRows" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getSnapshotListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getSnapshotListResult" nillable="true" type="q5:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="setEntityDML">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="1" name="i_ctDCI4CRMLogLine" type="q6:DCI4CRMLOGLINE" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="setEntityDMLResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="setEntityDMLResult" nillable="true" type="q7:DCI4CRMDMLRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getSalesList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nLfdZaehler" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nMaxCount" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFertigeFilterNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getSalesListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getSalesListResult" nillable="true" type="q8:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getMediaID">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_szWTPNr" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getMediaIDResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getMediaIDResult" nillable="true" type="q9:DCI4CRMWTPCONVRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getWTPNr">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_szMediaID" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getWTPNrResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getWTPNrResult" nillable="true" type="q10:DCI4CRMWTPCONVRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getUsageList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nLfdLeserTransNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nMaxCount" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFertigeFilterNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getUsageListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getUsageListResult" nillable="true" type="q11:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getUsageOnlineList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nLfdLeserTransOnlineNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nMaxCount" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFertigeFilterNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getUsageOnlineListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getUsageOnlineListResult" nillable="true" type="q12:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getForeignPersonData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_szPrenome" type="xs:string" />
+        <xs:element minOccurs="1" name="i_szName" type="xs:string" />
+        <xs:element minOccurs="1" name="i_dtBirthDate" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getForeignPersonDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getForeignPersonDataResult" nillable="true" type="q13:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getForeignSalesList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nVerkProjNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nKassaNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nSerienNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nLfdLeserTransNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getForeignSalesListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getForeignSalesListResult" nillable="true" type="q14:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getChipOwner">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_szMediaID" type="xs:string" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getChipOwnerResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getChipOwnerResult" nillable="true" type="q15:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getBarcodeSalesList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_szBarcode" type="xs:string" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getBarcodeSalesListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q16="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getBarcodeSalesListResult" nillable="true" type="q16:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getBarcodeOwner">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_szBarcode" type="xs:string" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getBarcodeOwnerResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getBarcodeOwnerResult" nillable="true" type="q17:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getViewDetails4RecordList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element xmlns:q18="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="1" name="i_ctDCI4CRMRecordList" type="q18:DCI4CRMDETAIL" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getViewDetails4RecordListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q19="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getViewDetails4RecordListResult" nillable="true" type="q19:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getNamedSalesList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nLfdZaehler" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nMaxCount" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFertigeFilterNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getNamedSalesListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q20="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getNamedSalesListResult" nillable="true" type="q20:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getNamedUsageList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nLfdLeserTransNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nMaxCount" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFertigeFilterNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getNamedUsageListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q21="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getNamedUsageListResult" nillable="true" type="q21:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getPaymentData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nProjNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nKassaNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nTransNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nKassierID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nKassierAbrechNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getPaymentDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q22="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getPaymentDataResult" nillable="true" type="q22:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getPaymentModifyList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nPaymentModifyLogNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nMaxCount" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFertigeFilterNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getPaymentModifyListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q23="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getPaymentModifyListResult" nillable="true" type="q23:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getSalesModifyList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nSalesModifyLogNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nMaxCount" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFertigeFilterNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getSalesModifyListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q24="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getSalesModifyListResult" nillable="true" type="q24:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getPackageProductionList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nLfdPackageZaehler" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nMaxCount" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFertigeFilterNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getPackageProductionListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q25="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getPackageProductionListResult" nillable="true" type="q25:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getPackageProductionData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nLfdPackageZaehler" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nProjNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nKassaNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nTransNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nBlockNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nPackageNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getPackageProductionDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q26="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getPackageProductionDataResult" nillable="true" type="q26:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getDiscountDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nLfdZaehler" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getDiscountDetailsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q27="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getDiscountDetailsResult" nillable="true" type="q27:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="clearLogListFilter">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="clearLogListFilterResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q28="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="clearLogListFilterResult" nillable="true" type="q28:DCI4CRMRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addLogListFilter">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element xmlns:q29="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="1" name="i_ctAddLogListFilterReq" type="q29:DCI4CRMADDLOGLISTFILTERREQ" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addLogListFilterResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q30="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="addLogListFilterResult" nillable="true" type="q30:DCI4CRMADDLOGLISTFILTERESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getLogNr">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_dtDate" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getLogNrResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q31="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getLogNrResult" nillable="true" type="q31:DCI4CRMGETLOGNRRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getFilteredLoglist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="i_nSessionID" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nLogNrStart" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nLogNrMax" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nMaxCount" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterNr" type="xs:decimal" />
+        <xs:element minOccurs="1" name="i_nFilterOptionNr" type="xs:decimal" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getFilteredLoglistResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q32="http://schemas.datacontract.org/2004/07/AxWebServices" minOccurs="0" name="getFilteredLoglistResult" nillable="true" type="q32:DCI4CRMLOGLISTRESULT" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

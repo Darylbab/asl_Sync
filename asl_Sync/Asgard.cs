@@ -107,7 +107,8 @@ namespace asl_SyncLibrary
             bool RtnVal = false;
 
             DataRow tDR = cf.LoadDataRow(AsgardCon, $"SELECT * FROM sync.task_status WHERE name='{aName}'");
-            if (tDR[0].ToString() == string.Empty)
+
+            if (tDR == null)
             {
                 //insert
                 RtnVal = cf.ExecuteSQL(AsgardCon, $"INSERT INTO sync.task_status (name, timestamp, function, action, description, extra, current_record, max_records, current_record_2, max_records_2) VALUES ('{aName}', '{DateTime.Now.ToString(Mirror.AxessDateTimeFormat)}', '{aFunction}', '{aAction}', '{aDescription}', '{aExtra}', {bCurrentRecord}, {bMaxRecords}, {bCurrentRecord2}, {bMaxRecords2})");

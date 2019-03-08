@@ -22,6 +22,7 @@ namespace POS_Sync
         private Mirror AM = new Mirror();
         private AltaSync ASy = new AltaSync();
         private DataWarehouse DW = new DataWarehouse();
+        private SPCardSync SP = new SPCardSync();
 
         private string ArgList = string.Empty;
         private string ArgDateStart = string.Empty;
@@ -113,6 +114,11 @@ namespace POS_Sync
 
         private void SyncNow()
         {
+            //for (int i = 3; i <= 768; i++)
+            //{
+            //    ASy.SyncSale($"27-{i.ToString()}");
+            //    System.Diagnostics.Debug.Print(i.ToString());
+            //}
             foreach (ListViewItem POSItem in POSListView.Items)
             {
                 if (POSItem.Checked)
@@ -131,7 +137,11 @@ namespace POS_Sync
             SSLStatus.Text = "Updating SPCard Uses.";
             Application.DoEvents();
             DW.UpdateSPCardsUses();
-            SSLStatus.Text = "";
+            SSLStatus.Text = "Updating SPCards";
+            //SP.RunAll();
+            //SP.Update_spcards();
+            SSLStatus.Text = "Updating MtnCol_Issued.";
+
             Application.DoEvents();
         }
 
@@ -218,7 +228,7 @@ namespace POS_Sync
                     tItem.Checked = true;
                 }
                 SyncNow();
-                Int32 TotTime = Convert.ToInt32(DateTime.Now.Ticks - StartTime.Ticks)/10000;
+                Int32 TotTime = Convert.ToInt32((DateTime.Now.Ticks - StartTime.Ticks) / 10000);
                 if (TotTime >= 899900)
                 {
                     TotTime = 899900;

@@ -41,32 +41,36 @@ namespace SportsRental
         public SportsRental()
         {
             InitializeComponent();
-            TaskTemplate = ASG.GetTaskTemplate(TaskName);
-            if (TaskTemplate["Name"].ToString() != TaskName)
-            {
-                // no template for this task, just run
-                txtLastRun.Text = "No Template";
-                txtNextRun.Text = "No Template";
-                txtLastRunResults.Text = "Unknown";
+            //TaskTemplate = ASG.GetTaskTemplate(TaskName);
+            //if (TaskTemplate["Name"].ToString() != TaskName)
+            //{
+            //    // no template for this task, just run
+            //    txtLastRun.Text = "No Template";
+            //    txtNextRun.Text = "No Template";
+            //    txtLastRunResults.Text = "Unknown";
+            //}
+            //else
+            //{
+            //    TaskHistory = ASG.GetTaskHistory(TaskName);
+            //    ASG.SetTaskStatus(TaskName);
+            //    TaskStatus = ASG.GetTaskStatus(TaskName);
+            //    if (TaskHistory != null)
+            //    {
+            //        txtLastRun.Text = TaskHistory.Field<DateTime>("StartTime").ToString(Mirror.AxessDateTimeFormat);
+            //    }
+            //    else
+            //    {
+            //        txtLastRun.Text = string.Empty;
+            //    }
+             //   txtNextRun.Text = TaskHistory.Field<DateTime>("StartTime").AddMinutes(TaskTemplate.Field<Int32>("period")).ToString(Mirror.AxessDateTimeFormat);
             }
-            else
-            {
-                TaskHistory = ASG.GetTaskHistory(TaskName);
-                ASG.SetTaskStatus(TaskName);
-                TaskStatus = ASG.GetTaskStatus(TaskName);
-                if (TaskHistory != null)
-                {
-                    txtLastRun.Text = TaskHistory.Field<DateTime>("StartTime").ToString(Mirror.AxessDateTimeFormat);
-                }
-                else
-                {
-                    txtLastRun.Text = string.Empty;
-                }
-                txtNextRun.Text = TaskHistory.Field<DateTime>("StartTime").AddMinutes(TaskTemplate.Field<Int32>("period")).ToString(Mirror.AxessDateTimeFormat);
-            }
-        }
 
         private void BtnRunNow_Click(object sender, EventArgs e)
+        {
+            Run();
+        }
+
+        private void Run()
         {
             txtLastRun.Enabled = false;
             txtLastRunResults.Enabled = false;
@@ -85,14 +89,23 @@ namespace SportsRental
         public bool SPCards2Kunde()
         {
             //  New cards and changes
-            string tQuery = $"SELECT * FROM {DW.ActiveDatabase}.spcards AS A WHERE tgroup <> 'CC' AND lastname<>'TEST' AND firstname<>'TEST' AND LENGTH(mediaid) = 16 AND concat(lastname , firstname) <> '' AND (SELECT COUNT(*)FROM {DW.ActiveDatabase}.spcards WHERE mediaid=A.mediaid AND cardstatus = 'A') = 1 ORDER BY mediaid, nlfdzaehle";
+            string tQuery = $"SELECT * FROM {DW.ActiveDatabase}.spcards AS A WHERE tgroup <> 'CC' AND lastname<>'TEST' AND firstname<>'TEST' AND LENGTH(mediaid) = 16 AND concat(lastname , firstname) <> '' AND (SELECT COUNT(*)FROM {DW.ActiveDatabase}.spcards WHERE mediaid=A.mediaid AND cardstatus = 'A') = 1 ORDER BY nlfdzaehle";
             //tQuery = $"SELECT* FROM { DW.ActiveDatabase}.spcards WHERE serialkey IN  ('14-71314-1','18-66436-2')";
             DataSet tDS = CF.LoadDataSet(DW.dwConn, tQuery, new DataSet(), "spcards");
             if (tDS.Tables.Contains("spcards"))
             {
+                ssProgressBar.Maximum = tDS.Tables["spcards"].Rows.Count;
+                statusStrip1.Items[0].Text = "New Cards and Charges.";
                 foreach (DataRow tRow in tDS.Tables["spcards"].Rows)
                 {
-                    ASG.SetTaskStatus("SportsRental", "SPCards2Kunde", "", "", "", tDS.Tables["spcards"].Rows.IndexOf(tRow), tDS.Tables["spcards"].Rows.Count);
+                    ssProgressBar.Value = tDS.Tables["SPCards"].Rows.IndexOf(tRow);
+                    Application.DoEvents();
+                    if (tRow["mediaid"].ToString().Trim() == "E004010802F6CEB1")
+                    {
+                        string a = "";
+                    }
+
+                    //ASG.SetTaskStatus("SportsRental", "SPCards2Kunde", "", "", "", tDS.Tables["spcards"].Rows.IndexOf(tRow), tDS.Tables["spcards"].Rows.Count);
                     string tSBCode = tRow["mediaid"].ToString().Trim();
                     bool PassActive = (tRow["cardstatus"].ToString().Trim().ToUpper() == "A");
                     tZIMMER = ((tRow["chrgflag"].ToString().Trim() == "Y") && (tRow["tokenkey"].ToString().Trim() != string.Empty)) ? "Yes" : "No";
@@ -114,6 +127,14 @@ namespace SportsRental
                     string tSQL = string.Empty;
                     string tWhere = $"WHERE name='{tLastname}' AND vorname='{tFirstname}' AND geburtsdatum='{tDOB}'";
                     SetDiscounts(tRow["disctype"].ToString().Trim());
+                    string PersKey = tRow["perskey"].ToString().Trim();
+                    if (tLastname == "LAUGHLIN" && tFirstname == "PAUL")
+                        tSQL = tSQL;
+                    if (",17-1022,17-6371,17-10276,17-10274,17-8292,17-1074,".Contains($",{PersKey},"))
+                    {
+                        tRabattP = "100";
+                    }
+
                     tDS = CF.LoadDataSet(new SqlConnection(SRConnectionString), $"SELECT ZIMMER, RabattP, RabattVerkaufP, Gruppe_ID, v_kunde_id FROM Kunde {tWhere}", tDS, "Zimmer");
                     if (tDS.Tables["Zimmer"].Rows.Count != 0)
                     {
@@ -150,7 +171,7 @@ namespace SportsRental
                     {
                         CF.ExecuteSQL(new SqlConnection(SRConnectionString), tSQL);
                     }
-                    //now clean up blocked cards.
+                    //todo now clean up blocked cards.
                 }
             }
             if (tDS.Tables.Contains("Zimmer"))
@@ -163,11 +184,14 @@ namespace SportsRental
             {
                 if (tDT.Rows.Count != 0)
                 {
+                    ssProgressBar.Maximum = tDT.Rows.Count;
+                    statusStrip1.Items[0].Text = "Updating Inactive Cards.";
                     foreach (DataRow tDR in tDT.Rows)
                     {
-                        ASG.SetTaskStatus("SportsRental", "Asb_Passholder2Kunde", "", "", "", tDS.Tables["spcards"].Rows.IndexOf(tDR), tDT.Rows.Count);
+                        ssProgressBar.Value =  tDT.Rows.IndexOf(tDR);
+                        Application.DoEvents();
                         string tWhere = $"V_Kunde_ID ='{tDR[0].ToString().Trim()}'";
-                        if (CF.RowExists(new SqlConnection(SRConnectionString), "[sr.db].[dbo].[Kunde]", tWhere))
+                        if (CF.RowCount(new SqlConnection(SRConnectionString), "[sr.db].[dbo].[Kunde]", tWhere) > 0)
                         {
                             CF.ExecuteSQL(new SqlConnection(SRConnectionString), $"UPDATE [sr.db].[dbo].[Kunde] SET bemerkung = 'NON CHARGE', RabattP=0, RabattVerkaufP=0, Gruppe_ID=0, ZIMMER='No' WHERE {tWhere}");
                         }
@@ -175,16 +199,19 @@ namespace SportsRental
                 }
             }
             //clear expired cards
-            tQuery = $"SELECT mediaid FROM {DW.ActiveDatabase}.spcards AS A WHERE cardstatus='X'";
+            tQuery = $"SELECT mediaid FROM {DW.ActiveDatabase}.spcards AS A WHERE cardstatus='X' AND (SELECT COUNT(*)FROM {DW.ActiveDatabase}.spcards WHERE mediaid=A.mediaid AND mediaid <> '' AND cardstatus = 'A' AND nlfdzaehle > A.nlfdzaehle) = 0";
             using (DataTable tDT = CF.LoadTable(DW.dwConn, tQuery, "ExpiredCards"))
             {
                 if (tDT.Rows.Count != 0)
                 {
+                    statusStrip1.Items[0].Text = "Clear Expired Cards.";
+                    ssProgressBar.Maximum = tDT.Rows.Count;
                     foreach (DataRow tDR in tDT.Rows)
                     {
-                        ASG.SetTaskStatus("SportsRental", "Asb_Passholder2Kunde", "Clear Expired Cards", "", "", tDT.Rows.IndexOf(tDR), tDT.Rows.Count);
+                        ssProgressBar.Value = tDT.Rows.IndexOf(tDR);
+                        Application.DoEvents();
                         string tWhere = $"V_Kunde_ID ='{tDR[0].ToString().Trim()}'";
-                        if (CF.RowExists(new SqlConnection(SRConnectionString), "[sr.db].[dbo].[Kunde]", tWhere))
+                        if (CF.RowCount(new SqlConnection(SRConnectionString), "[sr.db].[dbo].[Kunde]", tWhere) > 0)
                         {
                             CF.ExecuteSQL(new SqlConnection(SRConnectionString), $"UPDATE [sr.db].[dbo].[Kunde] SET bemerkung = 'NON CHARGE', RabattP=0, RabattVerkaufP=0, Gruppe_ID=0, ZIMMER='No' WHERE {tWhere}");
                         }
@@ -210,7 +237,7 @@ namespace SportsRental
             //    }
             //}
 
-            ASG.SetTaskStatus("", "", "", "", "");
+            //ASG.SetTaskStatus("", "", "", "", "");
             return true;
         }
 
@@ -305,7 +332,7 @@ namespace SportsRental
                 string tSQL = string.Empty;
                 bool tZimmer = (Convert.ToInt32(tTokenkey) != '0') && (tChrgflag == "Y") && (tPassStatus == "A");
                 tDS = CF.LoadDataSet(new SqlConnection(SRConnectionString), "SELECT ZIMMER FROM Kunde WHERE V_Kunde_ID='" + tSBCode + "'", tDS, "Zimmer");
-                if (!CF.RowExists(new SqlConnection(SRConnectionString), "Kunde", $"V_Kunde_ID='{tSBCode}'"))
+                if (CF.RowCount(new SqlConnection(SRConnectionString), "Kunde", $"V_Kunde_ID='{tSBCode}'") == 0)
                 {
                     string tInvoice = (Convert.ToInt64(CF.GetSQLField(new SqlConnection(SRConnectionString), "SELECT TOP 1 Kunde_ID FROM [sr.db].[dbo].[Kunde] WHERE Kunde_ID < 999000000000000000 ORDER BY Kunde_ID DESC")) + 1).ToString();
                     string dateinsertval = DateTime.Now.ToString(Mirror.AxessDateTimeFormat);
@@ -553,6 +580,9 @@ namespace SportsRental
             //MessageBox.Show(Ucount.ToString() + "<Counts>" + Icount.ToString());
         }
 
-
+        private void SportsRental_Shown(object sender, EventArgs e)
+        {
+            Run();
+        }
     }
 }

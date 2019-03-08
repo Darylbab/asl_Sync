@@ -149,7 +149,7 @@ namespace ServerMonitor
             }
             if (Server_Asgard.Status == Serverstatus.Active)
             {
-                //check dci4crm
+                //check dci4crm  http://cwc.teamaxess.com:16351/DCI4CRM/DCI4CRMService.svc?wsdl
                 toolStripStatusLabel1.Text = "Checking DCI4CRM";
                 ASG.SetTaskStatus("ServerMonitor", "CheckWebServices", toolStripStatusLabel1.Text, "", "", toolStripProgressBar1.Value, toolStripProgressBar1.Maximum);
                 Application.DoEvents();

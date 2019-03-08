@@ -75,164 +75,185 @@ namespace asl_SyncLibrary
             }
         }
 
-        public void Update_tokenxref()
+        private void BuildTokenRow(DataRow TokenRow)
         {
-            txrDS = cf.LoadDataSet(buy.Buy_Alta_ComConn, "SELECT * FROM axessutility.tokenxref ", txrDS, "tokens");
-            txrDS = cf.LoadDataSet(dw.dwConn, $"SELECT * FROM {appsDatabase}.salesdata WHERE saledate>'{msaledate.ToString(Mirror.AxessDateFormat)}' AND LENGTH(mediaid) > 0 ORDER BY nlfdzaehler DESC", txrDS, "axsales");
-            txrDS = cf.LoadDataSet(dw.dwConn, $"SELECT * FROM {appsDatabase}.salesdata WHERE saledate>'{msaledate.ToString(Mirror.AxessDateFormat)}' AND LENGTH(mediaid) > 0 AND esorderid > 0 AND ntranstype=0 ORDER BY nlfdzaehler DESC", txrDS, "axsales2");
-
-            DataColumn[] keys = new DataColumn[1];
-            keys[0] = txrDS.Tables["axsales2"].Columns["esorderid"];
-            txrDS.Tables["axsales2"].PrimaryKey = keys;
-            int tRowCount = txrDS.Tables["tokens"].Rows.Count;
-;            foreach (DataRow tRow in txrDS.Tables["tokens"].Rows)
+            string mrecid = TokenRow["id"].ToString();
+            bool msales_update = false;
+            bool mtoken_update = false;
+            bool mtoken_cancel = false;
+            string mposnr = string.Empty;
+            string mserialkey = string.Empty;
+            string mkassanr = string.Empty;
+            string mserialnr = string.Empty;
+            string municodenr = string.Empty;
+            string mfirstname = TokenRow["firstname"].ToString().Trim();
+            string mlastname = TokenRow["lastname"].ToString().Trim();
+            string mtoken = string.Empty;
+            string mpmtprofile = string.Empty;
+            string mauthnet_custid = string.Empty;
+            string municode = string.Empty;
+            string mmediaid = string.Empty;
+            string mwtp32 = string.Empty;
+            string mwtp64 = string.Empty;
+            DataRow sRow = txrDS.Tables["axsales2"].Rows.Find(TokenRow["orderid"].ToString());
+            if (sRow != null)
             {
-                string mrecid = tRow["id"].ToString();
-                bool msales_update = false;
-                bool mtoken_update = false;
-                bool mtoken_cancel = false;
-                string mposnr = string.Empty;
-                string mserialkey = string.Empty;
-                string mkassanr = string.Empty;
-                string mserialnr = string.Empty;
-                string municodenr = string.Empty;
-                string mfirstname = tRow["firstname"].ToString().Trim();
-                string mlastname = tRow["lastname"].ToString().Trim();
-                string mtoken = string.Empty;
-                string mpmtprofile = string.Empty;
-                string mauthnet_custid = string.Empty;
-                string municode = string.Empty;
-                string mmediaid = string.Empty;
-                string mwtp32 = string.Empty;
-                string mwtp64 = string.Empty;
-                DataRow sRow = txrDS.Tables["axsales2"].Rows.Find(tRow["orderid"].ToString());
-                if (sRow != null)
-                {
-                    mserialkey = sRow["serialkey"].ToString();
-                }
-                else
-                {
+                mserialkey = sRow["serialkey"].ToString();
+            }
+            else
+            {
 
-                }
-                //if (tRow["mediaid"].ToString() == "E004010801B7AAF4")
-                //    mserialkey = mserialkey + string.Empty;
+            }
+            //if (tRow["mediaid"].ToString() == "E004010801B7AAF4")
+            //    mserialkey = mserialkey + string.Empty;
 
-                switch (tRow["webid"].ToString().ToUpper().Trim())
-                {
-                    case "WEBORDER":    //*** web orders ***
-                        if (sRow != null)
+            switch (TokenRow["webid"].ToString().ToUpper().Trim())
+            {
+                case "WEBORDER":    //*** web orders ***
+                    if (sRow != null)
+                    {
+                        if (sRow["tokenkey"].ToString() == "0" || sRow["tokenkey"].ToString() == null)
                         {
-                            if (sRow["tokenkey"].ToString() == "0"  || sRow["tokenkey"].ToString() == null)
-                            {
-                                msales_update = true;
-                                mtoken = tRow["associatedtokenid"].ToString();
-                                mpmtprofile = tRow["customerpaymentprofileid"].ToString();
-                                mauthnet_custid = tRow["authnet_custid"].ToString();
-                            }
-                            if (tRow["serialnr"].ToString() == "0" || tRow["serialnr"].ToString() == null)
-                            {
-                                mwtp32 = sRow["wtp32"].ToString();
-                                mmediaid = sRow["mediaid"].ToString();
-                                mwtp64 = sRow["wtp64"].ToString().Replace(" ", "");
-                                mserialnr = sRow["nseriennr"].ToString();
-                                mkassanr = sRow["nkassanr"].ToString();
-                                mposnr = mkassanr;
-                                municodenr = sRow["nunicodenr"].ToString();
-                                if (sRow["lname"].ToString() != mlastname)
-                                {
-                                    mfirstname = sRow["fname"].ToString().Replace("'", "''");
-                                    mlastname = sRow["lname"].ToString().Replace("'", "''");
-                                }
-                                mtoken_update = true;
-                            }
+                            msales_update = true;
+                            mtoken = TokenRow["associatedtokenid"].ToString();
+                            mpmtprofile = TokenRow["customerpaymentprofileid"].ToString();
+                            mauthnet_custid = TokenRow["authnet_custid"].ToString();
                         }
-                        break;
-                    case "PREORDER":  // *** prepaids and sales at the POS entered via serial number * ***
-                        if (sRow == null)
-                            sRow = cf.LoadDataRow(dw.dwConn, $"SELECT * FROM {appsDatabase}.salesdata WHERE serialkey LIKE ('{tRow["posNr"].ToString()}-{tRow["serialNr"].ToString()}-%')");
-                        if (sRow != null)
+                        if (TokenRow["serialnr"].ToString() == "0" || TokenRow["serialnr"].ToString() == null)
                         {
-                            if (sRow["mediaid"].ToString().Length > 10)
+                            mwtp32 = sRow["wtp32"].ToString();
+                            mmediaid = sRow["mediaid"].ToString();
+                            mwtp64 = sRow["wtp64"].ToString().Replace(" ", "");
+                            mserialnr = sRow["nseriennr"].ToString();
+                            mkassanr = sRow["nkassanr"].ToString();
+                            mposnr = mkassanr;
+                            municodenr = sRow["nunicodenr"].ToString();
+                            if (sRow["lname"].ToString() != mlastname)
                             {
-                                mkassanr = tRow["posnr"].ToString();
-                                mserialnr = tRow["serialnr"].ToString();
-                                mtoken_update = true;
-                                mwtp32 = sRow["wtp32"].ToString();
-                                mmediaid = sRow["mediaid"].ToString();
-                                mwtp64 = sRow["wtp64"].ToString().Replace(" ", "");
                                 mfirstname = sRow["fname"].ToString().Replace("'", "''");
                                 mlastname = sRow["lname"].ToString().Replace("'", "''");
                             }
-                            if (sRow["tokenkey"].ToString() == "0")
+                            mtoken_update = true;
+                        }
+                    }
+                    break;
+                case "PREORDER":  // *** prepaids and sales at the POS entered via serial number * ***
+                    if (sRow == null)
+                        sRow = cf.LoadDataRow(dw.dwConn, $"SELECT * FROM {appsDatabase}.salesdata WHERE serialkey LIKE ('{TokenRow["posNr"].ToString()}-{TokenRow["serialNr"].ToString()}-%')");
+                    if (sRow != null)
+                    {
+                        if (sRow["mediaid"].ToString().Length > 10)
+                        {
+                            mkassanr = TokenRow["posnr"].ToString();
+                            mserialnr = TokenRow["serialnr"].ToString();
+                            mtoken_update = true;
+                            mwtp32 = sRow["wtp32"].ToString();
+                            mmediaid = sRow["mediaid"].ToString();
+                            mwtp64 = sRow["wtp64"].ToString().Replace(" ", "");
+                            mfirstname = sRow["fname"].ToString().Replace("'", "''");
+                            mlastname = sRow["lname"].ToString().Replace("'", "''");
+                        }
+                        if (sRow["tokenkey"].ToString() == "0")
+                        {
+                            mserialkey = sRow["serialkey"].ToString();
+                            msales_update = true;
+                            mtoken = TokenRow["associatedtokenid"].ToString();
+                            mpmtprofile = TokenRow["customerpaymentprofileid"].ToString();
+                            mauthnet_custid = TokenRow["authnet_custid"].ToString();
+                        }
+                    }
+                    break;
+                default:
+                    //**** web reloads 32 bit ****
+                    if ((TokenRow["posnr"].ToString() == "20") && (TokenRow["webid"].ToString().Trim().Length != 0) && (TokenRow["mediaID"].ToString().Trim().Length == 0))
+                    {
+                        int tVal = 0;
+                        if (TokenRow["webid"].ToString().Trim().Length != 0)
+                            tVal = 1;
+                        if (TokenRow["wtp64"].ToString().Trim().Length != 0)
+                            tVal = 2;
+                        if (tVal != 0)
+                        {
+                            foreach (DataRow xRow in txrDS.Tables["axsales"].Rows)
                             {
-                                mserialkey = sRow["serialkey"].ToString();
-                                msales_update = true;
-                                mtoken = tRow["associatedtokenid"].ToString();
-                                mpmtprofile = tRow["customerpaymentprofileid"].ToString();
-                                mauthnet_custid = tRow["authnet_custid"].ToString();
+                                bool tMatch = false;
+                                if (tVal == 1)
+                                {
+                                    tMatch = ((xRow["wtp32"].ToString() == TokenRow["webid"].ToString().Substring(0, 8)) && (xRow["nkassanr"].ToString() == TokenRow["workpos"].ToString()));
+                                }
+                                else
+                                    if (tVal == 2)
+                                    tMatch = ((xRow["wtp64"].ToString() == TokenRow["wtp64"].ToString()) && (xRow["nkassanr"].ToString() == TokenRow["workpos"].ToString()));
+                                if (tMatch)
+                                {
+                                    mserialkey = xRow["serialkey"].ToString();
+                                    mwtp32 = xRow["wtp32"].ToString();
+                                    mmediaid = xRow["mediaid"].ToString();
+                                    mwtp64 = xRow["wtp64"].ToString().Replace(" ", "");
+                                    mserialnr = xRow["nseriennr"].ToString();
+                                    mkassanr = xRow["nkassanr"].ToString();
+                                    mposnr = xRow["nkassanr"].ToString();
+                                    municode = xRow["nunicodenr"].ToString();
+                                    mtoken_update = true;
+
+                                    if (xRow["lname"].ToString() != mlastname)
+                                    {
+                                        mfirstname = xRow["fname"].ToString().Replace("'", "''");
+                                        mlastname = xRow["lname"].ToString().Replace("'", "''");
+                                    }
+
+                                    if (xRow["tokenkey"].ToString() == "0")
+                                    {
+                                        msales_update = true;
+                                        mtoken = TokenRow["associatedtokenid"].ToString();
+                                        mpmtprofile = TokenRow["customerpaymentprofileid"].ToString();
+                                        mauthnet_custid = TokenRow["authnet_custid"].ToString();
+                                    }
+                                    break;
+                                }
                             }
                         }
                         break;
-                    default:
-                        //**** web reloads 32 bit ****
-                        if ((tRow["posnr"].ToString() == "20") && (tRow["webid"].ToString().Trim().Length != 0) && (tRow["mediaID"].ToString().Trim().Length == 0))
+                    }
+                    else
+                    {
+                        //**** pos sales with media id captured via tap ****
+                        if ((TokenRow["mediaid"].ToString().Trim().Length > 0) && (TokenRow["serialnr"].ToString() == "99"))
                         {
-                            int tVal = 0;
-                            if (tRow["webid"].ToString().Trim().Length != 0)
-                                tVal = 1;
-                            if (tRow["wtp64"].ToString().Trim().Length != 0)
-                                tVal = 2;
-                            if (tVal != 0)
+                            foreach (DataRow xRow in txrDS.Tables["axsales"].Rows)
                             {
-                                foreach (DataRow xRow in txrDS.Tables["axsales"].Rows)
+                                if (xRow["mediaid"].ToString() == TokenRow["mediaid"].ToString())
                                 {
-                                    bool tMatch = false;
-                                    if (tVal == 1)
-                                    {
-                                        tMatch = ((xRow["wtp32"].ToString() == tRow["webid"].ToString().Substring(0, 8)) && (xRow["nkassanr"].ToString() == tRow["workpos"].ToString()));
-                                    }
-                                    else
-                                        if (tVal == 2)
-                                        tMatch = ((xRow["wtp64"].ToString() == tRow["wtp64"].ToString()) && (xRow["nkassanr"].ToString() == tRow["workpos"].ToString()));
-                                    if (tMatch)
-                                    {
-                                        mserialkey = xRow["serialkey"].ToString();
-                                        mwtp32 = xRow["wtp32"].ToString();
-                                        mmediaid = xRow["mediaid"].ToString();
-                                        mwtp64 = xRow["wtp64"].ToString().Replace(" ", "");
-                                        mserialnr = xRow["nseriennr"].ToString();
-                                        mkassanr = xRow["nkassanr"].ToString();
-                                        mposnr = xRow["nkassanr"].ToString();
-                                        municode = xRow["nunicodenr"].ToString();
-                                        mtoken_update = true;
+                                    mtoken_update = true;
+                                    mserialkey = xRow["serialkey"].ToString();
+                                    mwtp32 = xRow["wtp32"].ToString();
+                                    mmediaid = xRow["mediaid"].ToString();
+                                    mwtp64 = xRow["wtp64"].ToString().Replace(" ", "");
+                                    mserialnr = xRow["nseriennr"].ToString();
+                                    mkassanr = xRow["nkassanr"].ToString();
+                                    mfirstname = xRow["fname"].ToString().Replace("'", "''");
+                                    mlastname = xRow["lname"].ToString().Replace("'", "''");
 
-                                        if (xRow["lname"].ToString() != mlastname)
-                                        {
-                                            mfirstname = xRow["fname"].ToString().Replace("'", "''");
-                                            mlastname = xRow["lname"].ToString().Replace("'", "''");
-                                        }
-
-                                        if (xRow["tokenkey"].ToString() == "0")
-                                        {
-                                            msales_update = true;
-                                            mtoken = tRow["associatedtokenid"].ToString();
-                                            mpmtprofile = tRow["customerpaymentprofileid"].ToString();
-                                            mauthnet_custid = tRow["authnet_custid"].ToString();
-                                        }
-                                        break;
+                                    if (xRow["tokenkey"].ToString() == "0")
+                                    {
+                                        msales_update = true;
+                                        mtoken = TokenRow["associatedtokenid"].ToString();
+                                        mpmtprofile = TokenRow["customerpaymentprofileid"].ToString();
+                                        mauthnet_custid = TokenRow["authnet_custid"].ToString();
                                     }
+                                    break;
                                 }
                             }
                             break;
                         }
                         else
                         {
-                            //**** pos sales with media id captured via tap ****
-                            if ((tRow["mediaid"].ToString().Trim().Length > 0) && (tRow["serialnr"].ToString() == "99"))
+                            //****pos sales with media id captured via serial number ****
+                            if ((TokenRow.Field<int>("posnr") > 0) && (TokenRow.Field<int>("posnr") != 99) && (TokenRow.Field<int>("serialnr") > 0) && (TokenRow.Field<int>("serialnr") != 99) && (TokenRow["serialnr"].ToString() == "NULL"))
                             {
                                 foreach (DataRow xRow in txrDS.Tables["axsales"].Rows)
                                 {
-                                    if (xRow["mediaid"].ToString() == tRow["mediaid"].ToString())
+                                    if ((xRow["nseriennr"].ToString() == TokenRow["serialnr"].ToString()) && (xRow["nkassanr"].ToString() == TokenRow["posnr"].ToString()) && (xRow["lname"].ToString() == TokenRow["lastname"].ToString()))
                                     {
                                         mtoken_update = true;
                                         mserialkey = xRow["serialkey"].ToString();
@@ -244,12 +265,12 @@ namespace asl_SyncLibrary
                                         mfirstname = xRow["fname"].ToString().Replace("'", "''");
                                         mlastname = xRow["lname"].ToString().Replace("'", "''");
 
-                                        if (xRow["tokenkey"].ToString() == "0")
+                                        if (TokenRow["tokenkey"].ToString() == "0")
                                         {
                                             msales_update = true;
-                                            mtoken = tRow["associatedtokenid"].ToString();
-                                            mpmtprofile = tRow["customerpaymentprofileid"].ToString();
-                                            mauthnet_custid = tRow["authnet_custid"].ToString();
+                                            mtoken = TokenRow["associatedtokenid"].ToString();
+                                            mpmtprofile = xRow["customerpaymentprofileid"].ToString();
+                                            mauthnet_custid = xRow["authnet_custid"].ToString();
                                         }
                                         break;
                                     }
@@ -258,63 +279,47 @@ namespace asl_SyncLibrary
                             }
                             else
                             {
-                                //****pos sales with media id captured via serial number ****
-                                if ((tRow.Field<int>("posnr") > 0) && (tRow.Field<int>("posnr") != 99) && (tRow.Field<int>("serialnr") > 0) && (tRow.Field<int>("serialnr") != 99) && (tRow["serialnr"].ToString() == "NULL"))
+                                //**** check FOR CANCELLED name ***
+                                if ((TokenRow["lastname"].ToString().Length == 0) && (TokenRow["mediaid"].ToString().Trim().Length != 0))
                                 {
                                     foreach (DataRow xRow in txrDS.Tables["axsales"].Rows)
                                     {
-                                        if ((xRow["nseriennr"].ToString() == tRow["serialnr"].ToString()) && (xRow["nkassanr"].ToString() == tRow["posnr"].ToString()) && (xRow["lname"].ToString() == tRow["lastname"].ToString()))
+                                        if ((xRow["nseriennr"].ToString() == TokenRow["serialnr"].ToString()) && (xRow["nkassanr"].ToString() == TokenRow["posnr"].ToString()) && (xRow["ttype"].ToString() == "C"))
                                         {
-                                            mtoken_update = true;
-                                            mserialkey = xRow["serialkey"].ToString();
-                                            mwtp32 = xRow["wtp32"].ToString();
-                                            mmediaid = xRow["mediaid"].ToString();
-                                            mwtp64 = xRow["wtp64"].ToString().Replace(" ", "");
-                                            mserialnr = xRow["nseriennr"].ToString();
-                                            mkassanr = xRow["nkassanr"].ToString();
-                                            mfirstname = xRow["fname"].ToString().Replace("'", "''");
-                                            mlastname = xRow["lname"].ToString().Replace("'", "''");
-
-                                            if (tRow["tokenkey"].ToString() == "0")
-                                            {
-                                                msales_update = true;
-                                                mtoken = tRow["associatedtokenid"].ToString();
-                                                mpmtprofile = xRow["customerpaymentprofileid"].ToString();
-                                                mauthnet_custid = xRow["authnet_custid"].ToString();
-                                            }
+                                            mtoken_cancel = true;
                                             break;
-                                        }
-                                    }
-                                    break;
-                                }
-                                else
-                                {
-                                    //**** check FOR CANCELLED name ***
-                                    if ((tRow["lastname"].ToString().Length == 0) && (tRow["mediaid"].ToString().Trim().Length != 0))
-                                    {
-                                        foreach (DataRow xRow in txrDS.Tables["axsales"].Rows)
-                                        {
-                                            if ((xRow["nseriennr"].ToString() == tRow["serialnr"].ToString()) && (xRow["nkassanr"].ToString() == tRow["posnr"].ToString()) && (xRow["ttype"].ToString() == "C"))
-                                            {
-                                                mtoken_cancel = true;
-                                                break;
-                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                        break;
-                }
+                    }
+                    break;
+            }
 
-                if (mtoken_update)
-                    cf.ExecuteSQL(buy.Buy_Alta_ComConn, $"UPDATE axessutility.tokenxref SET firstname='{mfirstname}', lastname='{mlastname}', posnr={mkassanr}, serialnr={mserialnr},webid='{mwtp32}', wtp64='{mwtp64}', mediaid='{mmediaid}' WHERE id='{mrecid}'");
+            if (mtoken_update)
+                cf.ExecuteSQL(buy.Buy_Alta_ComConn, $"UPDATE axessutility.tokenxref SET firstname='{mfirstname}', lastname='{mlastname}', posnr={mkassanr}, serialnr={mserialnr},webid='{mwtp32}', wtp64='{mwtp64}', mediaid='{mmediaid}' WHERE id='{mrecid}'");
 
-                if (mtoken_cancel)
-                    cf.ExecuteSQL(buy.Buy_Alta_ComConn, $"DELETE FROM axessutility.tokenxref WHERE id='{mrecid}'");
+            if (mtoken_cancel)
+                cf.ExecuteSQL(buy.Buy_Alta_ComConn, $"DELETE FROM axessutility.tokenxref WHERE id='{mrecid}'");
 
-                if (msales_update) 
-                    cf.ExecuteSQL(dw.dwConn, $"UPDATE {appsDatabase}.salesdata SET tokenkey='{mtoken}', pmtprofile='{mpmtprofile}', authnet_custid='{mauthnet_custid}' WHERE serialkey='{mserialkey}'");
+            if (msales_update)
+                cf.ExecuteSQL(dw.dwConn, $"UPDATE {appsDatabase}.salesdata SET tokenkey='{mtoken}', pmtprofile='{mpmtprofile}', authnet_custid='{mauthnet_custid}' WHERE serialkey='{mserialkey}'");
+        }
+
+        public void Update_tokenxref()
+        {
+            txrDS = cf.LoadDataSet(buy.Buy_Alta_ComConn, "SELECT * FROM axessutility.tokenxref ", txrDS, "tokens");
+            txrDS = cf.LoadDataSet(dw.dwConn, $"SELECT * FROM {appsDatabase}.salesdata WHERE saledate>'{msaledate.ToString(Mirror.AxessDateFormat)}' AND LENGTH(mediaid) > 0 ORDER BY nlfdzaehler DESC", txrDS, "axsales");
+            txrDS = cf.LoadDataSet(dw.dwConn, $"SELECT * FROM {appsDatabase}.salesdata WHERE saledate>'{msaledate.ToString(Mirror.AxessDateFormat)}' AND LENGTH(mediaid) > 0 AND esorderid > 0 AND ntranstype=0 ORDER BY nlfdzaehler DESC", txrDS, "axsales2");
+
+            DataColumn[] keys = new DataColumn[1];
+            keys[0] = txrDS.Tables["axsales2"].Columns["esorderid"];
+            txrDS.Tables["axsales2"].PrimaryKey = keys;
+            int tRowCount = txrDS.Tables["tokens"].Rows.Count;
+;           foreach (DataRow tRow in txrDS.Tables["tokens"].Rows)
+            {
+                BuildTokenRow(tRow);
             }
         }
 

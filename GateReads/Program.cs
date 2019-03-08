@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GateReads
+namespace SkiVisits
 {
     static class Program
     {
@@ -16,7 +16,7 @@ namespace GateReads
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SkiVisits());
+            Application.Run(new GateReads());
         }
     }
 }

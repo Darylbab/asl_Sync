@@ -149,7 +149,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Yellow;
-            this.label1.Location = new System.Drawing.Point(9, 9);
+            this.label1.Location = new System.Drawing.Point(107, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(47, 17);
             this.label1.TabIndex = 0;
@@ -157,9 +157,13 @@
             // 
             // dtpWorkDate
             // 
-            this.dtpWorkDate.Location = new System.Drawing.Point(74, 7);
+            this.dtpWorkDate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtpWorkDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpWorkDate.Location = new System.Drawing.Point(172, 7);
             this.dtpWorkDate.Name = "dtpWorkDate";
-            this.dtpWorkDate.Size = new System.Drawing.Size(200, 20);
+            this.dtpWorkDate.Size = new System.Drawing.Size(102, 20);
             this.dtpWorkDate.TabIndex = 1;
             this.dtpWorkDate.ValueChanged += new System.EventHandler(this.DtpWorkDate_ValueChanged);
             // 
@@ -186,7 +190,7 @@
             // 
             // btnPreviousDay
             // 
-            this.btnPreviousDay.Location = new System.Drawing.Point(53, 6);
+            this.btnPreviousDay.Location = new System.Drawing.Point(151, 6);
             this.btnPreviousDay.Name = "btnPreviousDay";
             this.btnPreviousDay.Size = new System.Drawing.Size(21, 22);
             this.btnPreviousDay.TabIndex = 4;
@@ -393,7 +397,7 @@
             this.lblRCBillingTotal.Name = "lblRCBillingTotal";
             this.lblRCBillingTotal.Size = new System.Drawing.Size(145, 17);
             this.lblRCBillingTotal.TabIndex = 31;
-            this.lblRCBillingTotal.Text = "RC BILLING TOTAL";
+            this.lblRCBillingTotal.Text = "GC BILLING TOTAL";
             this.lblRCBillingTotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnAuthNetRefunds
@@ -465,6 +469,7 @@
             this.btnGiftCards.TabIndex = 21;
             this.btnGiftCards.Text = "View";
             this.btnGiftCards.UseVisualStyleBackColor = true;
+            this.btnGiftCards.Click += new System.EventHandler(this.btnGiftCards_Click);
             // 
             // txtGiftCards
             // 
@@ -491,6 +496,7 @@
             this.btnSkiSchoolSales.TabIndex = 18;
             this.btnSkiSchoolSales.Text = "View";
             this.btnSkiSchoolSales.UseVisualStyleBackColor = true;
+            this.btnSkiSchoolSales.Visible = false;
             this.btnSkiSchoolSales.Click += new System.EventHandler(this.BtnSkiSchoolSales_Click);
             // 
             // txtSkiSchoolSales
@@ -500,6 +506,7 @@
             this.txtSkiSchoolSales.Size = new System.Drawing.Size(100, 20);
             this.txtSkiSchoolSales.TabIndex = 17;
             this.txtSkiSchoolSales.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtSkiSchoolSales.Visible = false;
             // 
             // lblSkiSchoolSales
             // 
@@ -509,6 +516,7 @@
             this.lblSkiSchoolSales.TabIndex = 16;
             this.lblSkiSchoolSales.Text = "SKI SCHOOL SALES";
             this.lblSkiSchoolSales.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblSkiSchoolSales.Visible = false;
             // 
             // btnFamilyPackages
             // 
@@ -518,6 +526,7 @@
             this.btnFamilyPackages.TabIndex = 15;
             this.btnFamilyPackages.Text = "View";
             this.btnFamilyPackages.UseVisualStyleBackColor = true;
+            this.btnFamilyPackages.Visible = false;
             this.btnFamilyPackages.Click += new System.EventHandler(this.BtnFamilyPackages_Click);
             // 
             // txtFamilyPackages
@@ -527,6 +536,7 @@
             this.txtFamilyPackages.Size = new System.Drawing.Size(100, 20);
             this.txtFamilyPackages.TabIndex = 14;
             this.txtFamilyPackages.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtFamilyPackages.Visible = false;
             // 
             // lblFamilyPackages
             // 
@@ -536,10 +546,11 @@
             this.lblFamilyPackages.TabIndex = 13;
             this.lblFamilyPackages.Text = "FAMILY PACKAGES";
             this.lblFamilyPackages.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblFamilyPackages.Visible = false;
             // 
             // btnTicketReservations
             // 
-            this.btnTicketReservations.Location = new System.Drawing.Point(270, 129);
+            this.btnTicketReservations.Location = new System.Drawing.Point(270, 125);
             this.btnTicketReservations.Name = "btnTicketReservations";
             this.btnTicketReservations.Size = new System.Drawing.Size(50, 20);
             this.btnTicketReservations.TabIndex = 12;
@@ -549,7 +560,7 @@
             // 
             // txtTicketReservations
             // 
-            this.txtTicketReservations.Location = new System.Drawing.Point(164, 129);
+            this.txtTicketReservations.Location = new System.Drawing.Point(164, 125);
             this.txtTicketReservations.Name = "txtTicketReservations";
             this.txtTicketReservations.Size = new System.Drawing.Size(100, 20);
             this.txtTicketReservations.TabIndex = 11;
@@ -557,7 +568,7 @@
             // 
             // lblTicketReservations
             // 
-            this.lblTicketReservations.Location = new System.Drawing.Point(10, 130);
+            this.lblTicketReservations.Location = new System.Drawing.Point(10, 126);
             this.lblTicketReservations.Name = "lblTicketReservations";
             this.lblTicketReservations.Size = new System.Drawing.Size(145, 17);
             this.lblTicketReservations.TabIndex = 10;
@@ -593,7 +604,7 @@
             // 
             // btnPrepaidsReloads
             // 
-            this.btnPrepaidsReloads.Location = new System.Drawing.Point(270, 58);
+            this.btnPrepaidsReloads.Location = new System.Drawing.Point(270, 31);
             this.btnPrepaidsReloads.Name = "btnPrepaidsReloads";
             this.btnPrepaidsReloads.Size = new System.Drawing.Size(50, 20);
             this.btnPrepaidsReloads.TabIndex = 6;
@@ -603,7 +614,7 @@
             // 
             // txtPrepaidsReloads
             // 
-            this.txtPrepaidsReloads.Location = new System.Drawing.Point(164, 58);
+            this.txtPrepaidsReloads.Location = new System.Drawing.Point(164, 32);
             this.txtPrepaidsReloads.Name = "txtPrepaidsReloads";
             this.txtPrepaidsReloads.Size = new System.Drawing.Size(100, 20);
             this.txtPrepaidsReloads.TabIndex = 5;
@@ -611,7 +622,7 @@
             // 
             // lblPrepaidsReloads
             // 
-            this.lblPrepaidsReloads.Location = new System.Drawing.Point(10, 59);
+            this.lblPrepaidsReloads.Location = new System.Drawing.Point(10, 34);
             this.lblPrepaidsReloads.Name = "lblPrepaidsReloads";
             this.lblPrepaidsReloads.Size = new System.Drawing.Size(145, 17);
             this.lblPrepaidsReloads.TabIndex = 4;
@@ -626,6 +637,7 @@
             this.btnPassCardOrders.TabIndex = 3;
             this.btnPassCardOrders.Text = "View";
             this.btnPassCardOrders.UseVisualStyleBackColor = true;
+            this.btnPassCardOrders.Visible = false;
             this.btnPassCardOrders.Click += new System.EventHandler(this.BtnPassCardOrders_Click);
             // 
             // txtPassCardOrders
@@ -635,6 +647,7 @@
             this.txtPassCardOrders.Size = new System.Drawing.Size(100, 20);
             this.txtPassCardOrders.TabIndex = 2;
             this.txtPassCardOrders.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtPassCardOrders.Visible = false;
             // 
             // lblPassCardOrders
             // 
@@ -644,6 +657,7 @@
             this.lblPassCardOrders.TabIndex = 1;
             this.lblPassCardOrders.Text = "PASS/CARD ORDERS";
             this.lblPassCardOrders.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblPassCardOrders.Visible = false;
             // 
             // label3
             // 
@@ -669,12 +683,12 @@
             this.panel2.Controls.Add(this.label5);
             this.panel2.Location = new System.Drawing.Point(350, 34);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(349, 87);
+            this.panel2.Size = new System.Drawing.Size(349, 66);
             this.panel2.TabIndex = 7;
             // 
             // btnAxessPrepaidsReloads
             // 
-            this.btnAxessPrepaidsReloads.Location = new System.Drawing.Point(275, 47);
+            this.btnAxessPrepaidsReloads.Location = new System.Drawing.Point(276, 30);
             this.btnAxessPrepaidsReloads.Name = "btnAxessPrepaidsReloads";
             this.btnAxessPrepaidsReloads.Size = new System.Drawing.Size(50, 20);
             this.btnAxessPrepaidsReloads.TabIndex = 18;
@@ -684,7 +698,7 @@
             // 
             // txtAxessPrepaidsReloads
             // 
-            this.txtAxessPrepaidsReloads.Location = new System.Drawing.Point(169, 47);
+            this.txtAxessPrepaidsReloads.Location = new System.Drawing.Point(169, 30);
             this.txtAxessPrepaidsReloads.Name = "txtAxessPrepaidsReloads";
             this.txtAxessPrepaidsReloads.Size = new System.Drawing.Size(100, 20);
             this.txtAxessPrepaidsReloads.TabIndex = 17;
@@ -692,7 +706,7 @@
             // 
             // lblAxessPrepaidsReloads
             // 
-            this.lblAxessPrepaidsReloads.Location = new System.Drawing.Point(15, 48);
+            this.lblAxessPrepaidsReloads.Location = new System.Drawing.Point(15, 33);
             this.lblAxessPrepaidsReloads.Name = "lblAxessPrepaidsReloads";
             this.lblAxessPrepaidsReloads.Size = new System.Drawing.Size(145, 17);
             this.lblAxessPrepaidsReloads.TabIndex = 16;
@@ -701,29 +715,32 @@
             // 
             // btnAxessOrders
             // 
-            this.btnAxessOrders.Location = new System.Drawing.Point(275, 25);
+            this.btnAxessOrders.Location = new System.Drawing.Point(276, 29);
             this.btnAxessOrders.Name = "btnAxessOrders";
             this.btnAxessOrders.Size = new System.Drawing.Size(50, 20);
             this.btnAxessOrders.TabIndex = 15;
             this.btnAxessOrders.Text = "View";
             this.btnAxessOrders.UseVisualStyleBackColor = true;
+            this.btnAxessOrders.Visible = false;
             // 
             // txtAxessOrders
             // 
-            this.txtAxessOrders.Location = new System.Drawing.Point(169, 25);
+            this.txtAxessOrders.Location = new System.Drawing.Point(169, 30);
             this.txtAxessOrders.Name = "txtAxessOrders";
             this.txtAxessOrders.Size = new System.Drawing.Size(100, 20);
             this.txtAxessOrders.TabIndex = 14;
             this.txtAxessOrders.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtAxessOrders.Visible = false;
             // 
             // lblAxessOrders
             // 
-            this.lblAxessOrders.Location = new System.Drawing.Point(15, 26);
+            this.lblAxessOrders.Location = new System.Drawing.Point(15, 31);
             this.lblAxessOrders.Name = "lblAxessOrders";
             this.lblAxessOrders.Size = new System.Drawing.Size(145, 17);
             this.lblAxessOrders.TabIndex = 13;
             this.lblAxessOrders.Text = "AXESS ORDERS";
             this.lblAxessOrders.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblAxessOrders.Visible = false;
             // 
             // label5
             // 
@@ -747,7 +764,7 @@
             this.panel3.Controls.Add(this.txtWillcallDateSpecificReloads);
             this.panel3.Controls.Add(this.lblWillcallDateSpecificReloads);
             this.panel3.Controls.Add(this.label6);
-            this.panel3.Location = new System.Drawing.Point(350, 127);
+            this.panel3.Location = new System.Drawing.Point(347, 106);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(349, 81);
             this.panel3.TabIndex = 8;
@@ -837,70 +854,70 @@
             // 
             // txtBackInWillcall
             // 
-            this.txtBackInWillcall.Location = new System.Drawing.Point(173, 94);
+            this.txtBackInWillcall.Location = new System.Drawing.Point(249, 74);
             this.txtBackInWillcall.Name = "txtBackInWillcall";
-            this.txtBackInWillcall.Size = new System.Drawing.Size(100, 20);
+            this.txtBackInWillcall.Size = new System.Drawing.Size(95, 20);
             this.txtBackInWillcall.TabIndex = 23;
             this.txtBackInWillcall.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblBackInWillcall
             // 
-            this.lblBackInWillcall.Location = new System.Drawing.Point(19, 95);
+            this.lblBackInWillcall.Location = new System.Drawing.Point(176, 75);
             this.lblBackInWillcall.Name = "lblBackInWillcall";
-            this.lblBackInWillcall.Size = new System.Drawing.Size(145, 17);
+            this.lblBackInWillcall.Size = new System.Drawing.Size(74, 19);
             this.lblBackInWillcall.TabIndex = 22;
-            this.lblBackInWillcall.Text = "BACK IN WILLCALL";
+            this.lblBackInWillcall.Text = "BACK IN WC";
             this.lblBackInWillcall.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtCancelledByAxess
             // 
-            this.txtCancelledByAxess.Location = new System.Drawing.Point(173, 72);
+            this.txtCancelledByAxess.Location = new System.Drawing.Point(75, 75);
             this.txtCancelledByAxess.Name = "txtCancelledByAxess";
-            this.txtCancelledByAxess.Size = new System.Drawing.Size(100, 20);
+            this.txtCancelledByAxess.Size = new System.Drawing.Size(95, 20);
             this.txtCancelledByAxess.TabIndex = 20;
             this.txtCancelledByAxess.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblCancelledByAxess
             // 
-            this.lblCancelledByAxess.Location = new System.Drawing.Point(19, 73);
+            this.lblCancelledByAxess.Location = new System.Drawing.Point(-3, 54);
             this.lblCancelledByAxess.Name = "lblCancelledByAxess";
-            this.lblCancelledByAxess.Size = new System.Drawing.Size(145, 17);
+            this.lblCancelledByAxess.Size = new System.Drawing.Size(75, 60);
             this.lblCancelledByAxess.TabIndex = 19;
-            this.lblCancelledByAxess.Text = "CANCELLED BY AXESS";
+            this.lblCancelledByAxess.Text = "AXESS CANCELLED (21)";
             this.lblCancelledByAxess.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtSentFromWillcall
             // 
-            this.txtSentFromWillcall.Location = new System.Drawing.Point(173, 50);
+            this.txtSentFromWillcall.Location = new System.Drawing.Point(249, 32);
             this.txtSentFromWillcall.Name = "txtSentFromWillcall";
-            this.txtSentFromWillcall.Size = new System.Drawing.Size(100, 20);
+            this.txtSentFromWillcall.Size = new System.Drawing.Size(95, 20);
             this.txtSentFromWillcall.TabIndex = 17;
             this.txtSentFromWillcall.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblSentFromWillcall
             // 
-            this.lblSentFromWillcall.Location = new System.Drawing.Point(19, 51);
+            this.lblSentFromWillcall.Location = new System.Drawing.Point(171, 33);
             this.lblSentFromWillcall.Name = "lblSentFromWillcall";
-            this.lblSentFromWillcall.Size = new System.Drawing.Size(145, 17);
+            this.lblSentFromWillcall.Size = new System.Drawing.Size(80, 18);
             this.lblSentFromWillcall.TabIndex = 16;
-            this.lblSentFromWillcall.Text = "SENT FROM WILLCALL";
+            this.lblSentFromWillcall.Text = "WC SENT (21)";
             this.lblSentFromWillcall.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtReceivedByAxess21
             // 
-            this.txtReceivedByAxess21.Location = new System.Drawing.Point(173, 28);
+            this.txtReceivedByAxess21.Location = new System.Drawing.Point(74, 32);
             this.txtReceivedByAxess21.Name = "txtReceivedByAxess21";
-            this.txtReceivedByAxess21.Size = new System.Drawing.Size(100, 20);
+            this.txtReceivedByAxess21.Size = new System.Drawing.Size(95, 20);
             this.txtReceivedByAxess21.TabIndex = 14;
             this.txtReceivedByAxess21.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblReceivedByAxess21
             // 
-            this.lblReceivedByAxess21.Location = new System.Drawing.Point(19, 29);
+            this.lblReceivedByAxess21.Location = new System.Drawing.Point(3, 32);
             this.lblReceivedByAxess21.Name = "lblReceivedByAxess21";
-            this.lblReceivedByAxess21.Size = new System.Drawing.Size(145, 17);
+            this.lblReceivedByAxess21.Size = new System.Drawing.Size(64, 19);
             this.lblReceivedByAxess21.TabIndex = 13;
-            this.lblReceivedByAxess21.Text = "RECEIVED BY AXESS 21";
+            this.lblReceivedByAxess21.Text = "AXESS(21)";
             this.lblReceivedByAxess21.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label7
@@ -1004,6 +1021,7 @@
             this.txtAuthNetGiftCardUse.Size = new System.Drawing.Size(100, 20);
             this.txtAuthNetGiftCardUse.TabIndex = 42;
             this.txtAuthNetGiftCardUse.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtAuthNetGiftCardUse.Leave += new System.EventHandler(this.txtAuthNetGiftCardUse_Leave);
             // 
             // lblAuthNetGiftCardUse
             // 
@@ -1047,6 +1065,7 @@
             this.txtDiscover.Size = new System.Drawing.Size(100, 20);
             this.txtDiscover.TabIndex = 23;
             this.txtDiscover.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtDiscover.Leave += new System.EventHandler(this.TxtDiscover_Leave);
             // 
             // lblDiscover
             // 
@@ -1064,6 +1083,7 @@
             this.txtAMEX.Size = new System.Drawing.Size(100, 20);
             this.txtAMEX.TabIndex = 20;
             this.txtAMEX.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtAMEX.Leave += new System.EventHandler(this.TxtAMEX_Leave);
             // 
             // lblAMEX
             // 
@@ -1081,6 +1101,7 @@
             this.txtMastercard.Size = new System.Drawing.Size(100, 20);
             this.txtMastercard.TabIndex = 17;
             this.txtMastercard.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtMastercard.Leave += new System.EventHandler(this.TxtMastercard_Leave);
             // 
             // lblMastercard
             // 
@@ -1098,6 +1119,7 @@
             this.txtVISA.Size = new System.Drawing.Size(100, 20);
             this.txtVISA.TabIndex = 14;
             this.txtVISA.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtVISA.Leave += new System.EventHandler(this.TxtVISA_Leave);
             // 
             // lblVISA
             // 
@@ -1209,6 +1231,7 @@
             this.btnErrorsReport.TabIndex = 57;
             this.btnErrorsReport.Text = "&Errors Report";
             this.btnErrorsReport.UseVisualStyleBackColor = false;
+            this.btnErrorsReport.Visible = false;
             // 
             // btnExit
             // 
@@ -1248,7 +1271,6 @@
             this.Controls.Add(this.label1);
             this.Name = "WebCheckout";
             this.Text = "eStore Checkout";
-            this.Shown += new System.EventHandler(this.WebCheckout_Shown);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);

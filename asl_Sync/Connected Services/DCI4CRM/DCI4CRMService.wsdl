@@ -1,0 +1,1004 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://teamaxess.com/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="DCI4CRMService" targetNamespace="http://teamaxess.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="BasicHttpsBinding_IAxDCI4CRM_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <sp:HttpsToken RequireClientCertificate="false" />
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic256 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Strict />
+              </wsp:Policy>
+            </sp:Layout>
+          </wsp:Policy>
+        </sp:TransportBinding>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://teamaxess.com/Imports">
+      <xsd:import schemaLocation="http://cwc.teamaxess.com:16351/DCI4CRM/DCI4CRMService.svc?xsd=xsd0" namespace="http://teamaxess.com/" />
+      <xsd:import schemaLocation="http://cwc.teamaxess.com:16351/DCI4CRM/DCI4CRMService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://cwc.teamaxess.com:16351/DCI4CRM/DCI4CRMService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/AxWebServices" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IAxDCI4CRM_getConfigFile_InputMessage">
+    <wsdl:part name="parameters" element="tns:getConfigFile" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getConfigFile_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getConfigFileResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getBOCVersion_InputMessage">
+    <wsdl:part name="parameters" element="tns:getBOCVersion" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getBOCVersion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getBOCVersionResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getBOCUniversalTime_InputMessage">
+    <wsdl:part name="parameters" element="tns:getBOCUniversalTime" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getBOCUniversalTime_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getBOCUniversalTimeResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getServerVersion_InputMessage">
+    <wsdl:part name="parameters" element="tns:getServerVersion" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getServerVersion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getServerVersionResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getModulVersion_InputMessage">
+    <wsdl:part name="parameters" element="tns:getModulVersion" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getModulVersion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getModulVersionResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_login_InputMessage">
+    <wsdl:part name="parameters" element="tns:login" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_login_OutputMessage">
+    <wsdl:part name="parameters" element="tns:loginResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_logout_InputMessage">
+    <wsdl:part name="parameters" element="tns:logout" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_logout_OutputMessage">
+    <wsdl:part name="parameters" element="tns:logoutResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getLogList_InputMessage">
+    <wsdl:part name="parameters" element="tns:getLogList" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getLogList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getLogListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_setEntitySnapshot_InputMessage">
+    <wsdl:part name="parameters" element="tns:setEntitySnapshot" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_setEntitySnapshot_OutputMessage">
+    <wsdl:part name="parameters" element="tns:setEntitySnapshotResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getSnapshotList_InputMessage">
+    <wsdl:part name="parameters" element="tns:getSnapshotList" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getSnapshotList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getSnapshotListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_setEntityDML_InputMessage">
+    <wsdl:part name="parameters" element="tns:setEntityDML" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_setEntityDML_OutputMessage">
+    <wsdl:part name="parameters" element="tns:setEntityDMLResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getSalesList_InputMessage">
+    <wsdl:part name="parameters" element="tns:getSalesList" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getSalesList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getSalesListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getMediaID_InputMessage">
+    <wsdl:part name="parameters" element="tns:getMediaID" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getMediaID_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getMediaIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getWTPNr_InputMessage">
+    <wsdl:part name="parameters" element="tns:getWTPNr" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getWTPNr_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getWTPNrResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getUsageList_InputMessage">
+    <wsdl:part name="parameters" element="tns:getUsageList" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getUsageList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getUsageListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getUsageOnlineList_InputMessage">
+    <wsdl:part name="parameters" element="tns:getUsageOnlineList" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getUsageOnlineList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getUsageOnlineListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getForeignPersonData_InputMessage">
+    <wsdl:part name="parameters" element="tns:getForeignPersonData" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getForeignPersonData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getForeignPersonDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getForeignSalesList_InputMessage">
+    <wsdl:part name="parameters" element="tns:getForeignSalesList" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getForeignSalesList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getForeignSalesListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getChipOwner_InputMessage">
+    <wsdl:part name="parameters" element="tns:getChipOwner" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getChipOwner_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getChipOwnerResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getBarcodeSalesList_InputMessage">
+    <wsdl:part name="parameters" element="tns:getBarcodeSalesList" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getBarcodeSalesList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getBarcodeSalesListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getBarcodeOwner_InputMessage">
+    <wsdl:part name="parameters" element="tns:getBarcodeOwner" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getBarcodeOwner_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getBarcodeOwnerResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getViewDetails4RecordList_InputMessage">
+    <wsdl:part name="parameters" element="tns:getViewDetails4RecordList" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getViewDetails4RecordList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getViewDetails4RecordListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getNamedSalesList_InputMessage">
+    <wsdl:part name="parameters" element="tns:getNamedSalesList" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getNamedSalesList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getNamedSalesListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getNamedUsageList_InputMessage">
+    <wsdl:part name="parameters" element="tns:getNamedUsageList" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getNamedUsageList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getNamedUsageListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getPaymentData_InputMessage">
+    <wsdl:part name="parameters" element="tns:getPaymentData" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getPaymentData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getPaymentDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getPaymentModifyList_InputMessage">
+    <wsdl:part name="parameters" element="tns:getPaymentModifyList" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getPaymentModifyList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getPaymentModifyListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getSalesModifyList_InputMessage">
+    <wsdl:part name="parameters" element="tns:getSalesModifyList" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getSalesModifyList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getSalesModifyListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getPackageProductionList_InputMessage">
+    <wsdl:part name="parameters" element="tns:getPackageProductionList" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getPackageProductionList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getPackageProductionListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getPackageProductionData_InputMessage">
+    <wsdl:part name="parameters" element="tns:getPackageProductionData" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getPackageProductionData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getPackageProductionDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getDiscountDetails_InputMessage">
+    <wsdl:part name="parameters" element="tns:getDiscountDetails" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getDiscountDetails_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getDiscountDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_clearLogListFilter_InputMessage">
+    <wsdl:part name="parameters" element="tns:clearLogListFilter" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_clearLogListFilter_OutputMessage">
+    <wsdl:part name="parameters" element="tns:clearLogListFilterResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_addLogListFilter_InputMessage">
+    <wsdl:part name="parameters" element="tns:addLogListFilter" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_addLogListFilter_OutputMessage">
+    <wsdl:part name="parameters" element="tns:addLogListFilterResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getLogNr_InputMessage">
+    <wsdl:part name="parameters" element="tns:getLogNr" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getLogNr_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getLogNrResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getFilteredLoglist_InputMessage">
+    <wsdl:part name="parameters" element="tns:getFilteredLoglist" />
+  </wsdl:message>
+  <wsdl:message name="IAxDCI4CRM_getFilteredLoglist_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getFilteredLoglistResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IAxDCI4CRM">
+    <wsdl:operation name="getConfigFile">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxCommon/getConfigFile" message="tns:IAxDCI4CRM_getConfigFile_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxCommon/getConfigFileResponse" message="tns:IAxDCI4CRM_getConfigFile_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getBOCVersion">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxCommon/getBOCVersion" message="tns:IAxDCI4CRM_getBOCVersion_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxCommon/getBOCVersionResponse" message="tns:IAxDCI4CRM_getBOCVersion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getBOCUniversalTime">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxCommon/getBOCUniversalTime" message="tns:IAxDCI4CRM_getBOCUniversalTime_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxCommon/getBOCUniversalTimeResponse" message="tns:IAxDCI4CRM_getBOCUniversalTime_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getServerVersion">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getServerVersion" message="tns:IAxDCI4CRM_getServerVersion_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getServerVersionResponse" message="tns:IAxDCI4CRM_getServerVersion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getModulVersion">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getModulVersion" message="tns:IAxDCI4CRM_getModulVersion_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getModulVersionResponse" message="tns:IAxDCI4CRM_getModulVersion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="login">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/login" message="tns:IAxDCI4CRM_login_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/loginResponse" message="tns:IAxDCI4CRM_login_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="logout">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/logout" message="tns:IAxDCI4CRM_logout_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/logoutResponse" message="tns:IAxDCI4CRM_logout_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getLogList">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getLogList" message="tns:IAxDCI4CRM_getLogList_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getLogListResponse" message="tns:IAxDCI4CRM_getLogList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="setEntitySnapshot">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/setEntitySnapshot" message="tns:IAxDCI4CRM_setEntitySnapshot_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/setEntitySnapshotResponse" message="tns:IAxDCI4CRM_setEntitySnapshot_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getSnapshotList">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getSnapshotList" message="tns:IAxDCI4CRM_getSnapshotList_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getSnapshotListResponse" message="tns:IAxDCI4CRM_getSnapshotList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="setEntityDML">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/setEntityDML" message="tns:IAxDCI4CRM_setEntityDML_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/setEntityDMLResponse" message="tns:IAxDCI4CRM_setEntityDML_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getSalesList">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getSalesList" message="tns:IAxDCI4CRM_getSalesList_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getSalesListResponse" message="tns:IAxDCI4CRM_getSalesList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getMediaID">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getMediaID" message="tns:IAxDCI4CRM_getMediaID_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getMediaIDResponse" message="tns:IAxDCI4CRM_getMediaID_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getWTPNr">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getWTPNr" message="tns:IAxDCI4CRM_getWTPNr_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getWTPNrResponse" message="tns:IAxDCI4CRM_getWTPNr_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getUsageList">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getUsageList" message="tns:IAxDCI4CRM_getUsageList_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getUsageListResponse" message="tns:IAxDCI4CRM_getUsageList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getUsageOnlineList">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getUsageOnlineList" message="tns:IAxDCI4CRM_getUsageOnlineList_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getUsageOnlineListResponse" message="tns:IAxDCI4CRM_getUsageOnlineList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getForeignPersonData">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getForeignPersonData" message="tns:IAxDCI4CRM_getForeignPersonData_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getForeignPersonDataResponse" message="tns:IAxDCI4CRM_getForeignPersonData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getForeignSalesList">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getForeignSalesList" message="tns:IAxDCI4CRM_getForeignSalesList_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getForeignSalesListResponse" message="tns:IAxDCI4CRM_getForeignSalesList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getChipOwner">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getChipOwner" message="tns:IAxDCI4CRM_getChipOwner_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getChipOwnerResponse" message="tns:IAxDCI4CRM_getChipOwner_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getBarcodeSalesList">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getBarcodeSalesList" message="tns:IAxDCI4CRM_getBarcodeSalesList_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getBarcodeSalesListResponse" message="tns:IAxDCI4CRM_getBarcodeSalesList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getBarcodeOwner">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getBarcodeOwner" message="tns:IAxDCI4CRM_getBarcodeOwner_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getBarcodeOwnerResponse" message="tns:IAxDCI4CRM_getBarcodeOwner_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getViewDetails4RecordList">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getViewDetails4RecordList" message="tns:IAxDCI4CRM_getViewDetails4RecordList_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getViewDetails4RecordListResponse" message="tns:IAxDCI4CRM_getViewDetails4RecordList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getNamedSalesList">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getNamedSalesList" message="tns:IAxDCI4CRM_getNamedSalesList_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getNamedSalesListResponse" message="tns:IAxDCI4CRM_getNamedSalesList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getNamedUsageList">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getNamedUsageList" message="tns:IAxDCI4CRM_getNamedUsageList_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getNamedUsageListResponse" message="tns:IAxDCI4CRM_getNamedUsageList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getPaymentData">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getPaymentData" message="tns:IAxDCI4CRM_getPaymentData_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getPaymentDataResponse" message="tns:IAxDCI4CRM_getPaymentData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getPaymentModifyList">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getPaymentModifyList" message="tns:IAxDCI4CRM_getPaymentModifyList_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getPaymentModifyListResponse" message="tns:IAxDCI4CRM_getPaymentModifyList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getSalesModifyList">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getSalesModifyList" message="tns:IAxDCI4CRM_getSalesModifyList_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getSalesModifyListResponse" message="tns:IAxDCI4CRM_getSalesModifyList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getPackageProductionList">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getPackageProductionList" message="tns:IAxDCI4CRM_getPackageProductionList_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getPackageProductionListResponse" message="tns:IAxDCI4CRM_getPackageProductionList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getPackageProductionData">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getPackageProductionData" message="tns:IAxDCI4CRM_getPackageProductionData_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getPackageProductionDataResponse" message="tns:IAxDCI4CRM_getPackageProductionData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getDiscountDetails">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getDiscountDetails" message="tns:IAxDCI4CRM_getDiscountDetails_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getDiscountDetailsResponse" message="tns:IAxDCI4CRM_getDiscountDetails_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="clearLogListFilter">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/clearLogListFilter" message="tns:IAxDCI4CRM_clearLogListFilter_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/clearLogListFilterResponse" message="tns:IAxDCI4CRM_clearLogListFilter_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="addLogListFilter">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/addLogListFilter" message="tns:IAxDCI4CRM_addLogListFilter_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/addLogListFilterResponse" message="tns:IAxDCI4CRM_addLogListFilter_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getLogNr">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getLogNr" message="tns:IAxDCI4CRM_getLogNr_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getLogNrResponse" message="tns:IAxDCI4CRM_getLogNr_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getFilteredLoglist">
+      <wsdl:input wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getFilteredLoglist" message="tns:IAxDCI4CRM_getFilteredLoglist_InputMessage" />
+      <wsdl:output wsaw:Action="http://teamaxess.com/IAxDCI4CRM/getFilteredLoglistResponse" message="tns:IAxDCI4CRM_getFilteredLoglist_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IAxDCI4CRM" type="tns:IAxDCI4CRM">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getConfigFile">
+      <soap:operation soapAction="http://teamaxess.com/IAxCommon/getConfigFile" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBOCVersion">
+      <soap:operation soapAction="http://teamaxess.com/IAxCommon/getBOCVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBOCUniversalTime">
+      <soap:operation soapAction="http://teamaxess.com/IAxCommon/getBOCUniversalTime" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getServerVersion">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getServerVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getModulVersion">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getModulVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="login">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/login" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="logout">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/logout" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLogList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getLogList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setEntitySnapshot">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/setEntitySnapshot" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSnapshotList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getSnapshotList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setEntityDML">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/setEntityDML" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSalesList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getSalesList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMediaID">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getMediaID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getWTPNr">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getWTPNr" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUsageList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getUsageList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUsageOnlineList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getUsageOnlineList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getForeignPersonData">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getForeignPersonData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getForeignSalesList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getForeignSalesList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getChipOwner">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getChipOwner" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBarcodeSalesList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getBarcodeSalesList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBarcodeOwner">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getBarcodeOwner" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getViewDetails4RecordList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getViewDetails4RecordList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNamedSalesList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getNamedSalesList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNamedUsageList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getNamedUsageList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPaymentData">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getPaymentData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPaymentModifyList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getPaymentModifyList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSalesModifyList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getSalesModifyList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPackageProductionList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getPackageProductionList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPackageProductionData">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getPackageProductionData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDiscountDetails">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getDiscountDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="clearLogListFilter">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/clearLogListFilter" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addLogListFilter">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/addLogListFilter" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLogNr">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getLogNr" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFilteredLoglist">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getFilteredLoglist" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="BasicHttpsBinding_IAxDCI4CRM" type="tns:IAxDCI4CRM">
+    <wsp:PolicyReference URI="#BasicHttpsBinding_IAxDCI4CRM_policy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getConfigFile">
+      <soap:operation soapAction="http://teamaxess.com/IAxCommon/getConfigFile" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBOCVersion">
+      <soap:operation soapAction="http://teamaxess.com/IAxCommon/getBOCVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBOCUniversalTime">
+      <soap:operation soapAction="http://teamaxess.com/IAxCommon/getBOCUniversalTime" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getServerVersion">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getServerVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getModulVersion">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getModulVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="login">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/login" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="logout">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/logout" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLogList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getLogList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setEntitySnapshot">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/setEntitySnapshot" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSnapshotList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getSnapshotList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setEntityDML">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/setEntityDML" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSalesList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getSalesList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMediaID">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getMediaID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getWTPNr">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getWTPNr" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUsageList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getUsageList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUsageOnlineList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getUsageOnlineList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getForeignPersonData">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getForeignPersonData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getForeignSalesList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getForeignSalesList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getChipOwner">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getChipOwner" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBarcodeSalesList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getBarcodeSalesList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBarcodeOwner">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getBarcodeOwner" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getViewDetails4RecordList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getViewDetails4RecordList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNamedSalesList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getNamedSalesList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNamedUsageList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getNamedUsageList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPaymentData">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getPaymentData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPaymentModifyList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getPaymentModifyList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSalesModifyList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getSalesModifyList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPackageProductionList">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getPackageProductionList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPackageProductionData">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getPackageProductionData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDiscountDetails">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getDiscountDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="clearLogListFilter">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/clearLogListFilter" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addLogListFilter">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/addLogListFilter" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLogNr">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getLogNr" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFilteredLoglist">
+      <soap:operation soapAction="http://teamaxess.com/IAxDCI4CRM/getFilteredLoglist" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DCI4CRMService">
+    <wsdl:port name="BasicHttpBinding_IAxDCI4CRM" binding="tns:BasicHttpBinding_IAxDCI4CRM">
+      <soap:address location="http://cwc.teamaxess.com:16351/DCI4CRM/DCI4CRMService.svc/soap" />
+    </wsdl:port>
+    <wsdl:port name="BasicHttpsBinding_IAxDCI4CRM" binding="tns:BasicHttpsBinding_IAxDCI4CRM">
+      <soap:address location="https://cwc.teamaxess.com:16350/DCI4CRM/DCI4CRMService.svc/soap" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

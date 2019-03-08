@@ -129,6 +129,7 @@
             this.MaximizeBox = false;
             this.Name = "SportsRental";
             this.Text = "Sports Rental";
+            this.Shown += new System.EventHandler(this.SportsRental_Shown);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);

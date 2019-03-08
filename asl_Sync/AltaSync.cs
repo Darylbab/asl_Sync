@@ -166,12 +166,29 @@ namespace asl_SyncLibrary
             {
                 aRow.SetField("saledate", aRow.Field<DateTime>("dtinsert").AddDays(-1).ToString(Mirror.AxessDateFormat));
             }
-            DataRow tDR1 = cf.LoadDataRow(am.MirrorConn, $"SELECT DTPRODTIMESTAMP FROM {am.ActiveDatabase}.tabprepaidtickets WHERE nkassanr={aRow["nkassanr"].ToString()} AND nseriennr={aRow["nseriennr"].ToString()} AND nunicodenr={aRow["nunicodenr"].ToString()}");
             string tProdTimestamp = aRow.Field<DateTime>("saledate").ToString(Mirror.AxessDateFormat);
-            if (tDR1.Field<DateTime?>("DTPRODTIMESTAMP") != null)
+            string PrepaidMediaID = string.Empty;
+            DataRow PrePaid = cf.LoadDataRow(am.MirrorConn, $"SELECT DTPRODTIMESTAMP, nmediaid, SZAUFTRAGEXT, DTCODINGDAT FROM {am.ActiveDatabase}.tabprepaidtickets WHERE nkassanr={aRow["nskassanr"].ToString()} AND nseriennr={aRow["nseriennr"].ToString()} AND nunicodenr={aRow["nunicodenr"].ToString()}");
+            DateTime? IssueDate = aRow.Field<DateTime?>("issuedate");
+            if (cf.RowHasData(PrePaid))
             {
-                tProdTimestamp = tDR1.Field<DateTime>("DTPRODTIMESTAMP").ToString(Mirror.AxessDateFormat);
+                IssueDate = PrePaid.Field<DateTime?>("DTCODINGDAT");
+                if (aRow.Field<Int16>("NTRANSTYPE") == 0)
+                {
+                    if (PrePaid.Field<DateTime?>("DTPRODTIMESTAMP") != null)
+                    {
+                        tProdTimestamp = PrePaid.Field<DateTime>("DTPRODTIMESTAMP").ToString(Mirror.AxessDateFormat);
+                    }
+                }
+                //if (aRow["nkassanr"].ToString() == "20")
+                //{
+                //    if (PrePaid["SZAUFTRAGEXT"].ToString().Trim() != string.Empty)
+                //        aRow.SetField("esorderid", PrePaid["SZAUFTRAGEXT"].ToString());
+                //}
+                PrepaidMediaID = PrePaid["nmediaid"].ToString().Trim();
             }
+
+
             DataRow tRow;
 
             // update_passholder_name
@@ -189,7 +206,7 @@ namespace asl_SyncLibrary
             }
 
             //update_orderid
-            if (aRow["WTP32"].ToString() != String.Empty)
+            if (aRow["WTP32"].ToString() != String.Empty && aRow["WTP32"].ToString() != "215B5F7F")
             {
                 tRow = cf.LoadDataRow(am.MirrorConn, $"SELECT norderlistnr, nauftragnr, dtgiltab FROM {am.ActiveDatabase}.tabaxorderdata WHERE nkartennr='{aRow["wtp32"].ToString()}' AND ntransnr='{aRow["ntransnr"].ToString()}'");
                 if (tRow != null)
@@ -203,19 +220,9 @@ namespace asl_SyncLibrary
                 }
             }
 
-            if (aRow["nkassanr"].ToString() == "20")
-            {
-                tRow = cf.LoadDataRow(am.MirrorConn, $"SELECT id AS SZAUFTRAGEXT FROM {am.ActiveDatabase}.tabprepaidtickets WHERE nkassanr=20 AND nseriennr={aRow["nseriennr"].ToString()}");
-                if (tRow != null)
-                {
-                    if (tRow["esorderid"].ToString().Length != 0)
-                        aRow.SetField("esorderid", tRow["ESOrderID"].ToString());
-                }
-            }
-
-            //update_tokenkey
             if (aRow["mediaid"].ToString() != string.Empty)
             {
+                //update_tokenkey
                 tRow = cf.LoadDataRow(buy.Buy_Alta_ComConn, $"SELECT associatedtokenid, authnet_custid, customerpaymentprofileid FROM axessutility.tokenxref WHERE mediaid='{aRow["mediaid"].ToString().Trim()}' LIMIT 1");
                 if (tRow != null)
                 {
@@ -224,11 +231,12 @@ namespace asl_SyncLibrary
                     aRow.SetField("pmtprofile", tRow["customerpaymentprofileid"].ToString());
                 }
             }
+            
 
             //update_sales_prompts
 
             //***check for prompt
-            mwhere = $" WHERE nkassanr='{aRow["nkassanr"].ToString()}' AND ntransnr = '{aRow["ntransnr"].ToString()}'";
+            mwhere = $" WHERE nkassanr='{aRow["nkassanr"].ToString()}' AND ntransnr = '{aRow["ntransnr"].ToString()}' AND njournalnr";
             if (aRow["njournalnr"].ToString() != string.Empty)
             {
                 mwhere += $"={aRow["njournalnr"].ToString()}";
@@ -279,7 +287,7 @@ namespace asl_SyncLibrary
                             mcheckfield = dRow["checkfield"].ToString().Trim();
                             if (dRow["fieldtype"].ToString().ToUpper().Trim() == "C")
                             {
-                                msqlcmd = $"'{pRow["sztext"].ToString().Trim()}'";
+                                msqlcmd = $"'{cf.EscapeChar(pRow["sztext"].ToString().Trim())}'";
                             }
                             else
                             {
@@ -292,7 +300,7 @@ namespace asl_SyncLibrary
                                     msqlcmd = "-1";
                                 }
                             }
-                            tPMatch = cf.RowExists(dw.dwConn, mchecktable, $"{mcheckfield} = {msqlcmd.ToUpper()}")  ? "N" : "Y";
+                            tPMatch = cf.RowExists(dw.dwConn, mchecktable, $"{mcheckfield} = {msqlcmd.ToUpper()}")  ? "Y" : "N";
                         }
                         else
                         {
@@ -329,8 +337,8 @@ namespace asl_SyncLibrary
             string tTickDesc = "";
             if (aRow["nticktype"].ToString() != string.Empty)
             {
-                DataRow ticktypeRow = altasyncDS.Tables["tickettypes"].Rows.Find(aRow["nticktype"].ToString());
-                //ticktypeRow = altasyncDS.Tables["tickettypes"].Rows.Find(aRow["nticktype"].ToString());
+                DataRow ticktypeRow = altasyncDS.Tables["tickettypes"].Rows.Find(aRow["nticktype"].ToString().Trim());
+                //ticktypeRow = altasyncDS.Tables["tickettypes"].Rows.Find(aRow["nticktype"].ToString().Trim());
                 if (ticktypeRow != null)
                 {
                     tTGroup = ticktypeRow["tgroup"].ToString().Trim();
@@ -453,12 +461,16 @@ namespace asl_SyncLibrary
             string tPersType = "null";
             if (aRow["nperstyp"].ToString() != string.Empty)
                 tPersType = $"'{aRow["nperstyp"].ToString()}'";
+            if (tPersType == "'32767'")
+            {
+                tPersType = "'60007'";
+            }
             xtSQL += $"{tPersType},";//<{ NPERSTYPE: }>,
             string tPoolNr = "null";
             if (aRow["npoolnr"].ToString() != string.Empty)
                 tPoolNr = $"'{aRow["npoolnr"].ToString()}'";
             xtSQL += $"{tPoolNr},";//<{ NPOOLNR: }>,
-            if (cf.IsStringEmpty(tArtNr))
+            if (string.IsNullOrEmpty(tArtNr))
             {
                 tArtNr = "null";
             }
@@ -485,16 +497,18 @@ namespace asl_SyncLibrary
                 DataRow p1Row = altasyncDS.Tables["persontypes"].Rows.Find(aRow["nperstyp"].ToString());
                 if (p1Row != null)
                     tPersDesc = p1Row["descrip"].ToString().Trim();
+                if (tPersType == "'32767'")
+                {
+                    tPersType = "'60007'";
+                }
+                if (tPersType == "'60007'")
+                {
+                    tPersDesc = "General Pers Type IKON PA";
+                }
                 if (tPersDesc.Length > 20)
                     tPersDesc = tPersDesc.Substring(0, 20);
             }
             xtSQL += $"'{tPersDesc}',";//<{ PERSDESC: }>,
-            DateTime? IssueDate = aRow.Field<DateTime?>("issuedate");
-            DataRow Prepaid = cf.LoadDataRow(am.MirrorConn, $"SELECT DTCODINGDAT FROM axess_cwc.tabprepaidtickets WHERE NKASSANR={aRow["nskassanr"].ToString()} AND NSERIENNR={aRow["nseriennr"].ToString()}");
-            if (Prepaid != null)
-            {
-                IssueDate = Prepaid.Field<DateTime?>("DTCODINGDAT");
-            }
             string tIssueDate = (IssueDate == null) ? "null" : $"'{IssueDate.Value.ToString(Mirror.AxessDateFormat)}'"; 
             xtSQL += $"{tIssueDate},";//<{ ISSUEDATE: }>,
             xtSQL += $"'{Convert.ToDateTime(aRow["validfrom"].ToString()).ToString(Mirror.AxessDateFormat)}',";//<{ VALIDFROM: }>,
@@ -525,7 +539,13 @@ namespace asl_SyncLibrary
             }
             xtSQL += $"{tUses},";//<{ USES: }>,
             string tTemp = aRow["wtp32"].ToString();
-            if (tTemp == string.Empty)
+            if (tTemp == "215B5F7F")
+            {
+                xtSQL += "null, null, null,";
+            }
+            else
+            {
+                if (tTemp == string.Empty)
                 {
                     tTemp = "null";
                 }
@@ -533,28 +553,36 @@ namespace asl_SyncLibrary
                 {
                     tTemp = $"'{tTemp}'";
                 }
-            xtSQL += $"{tTemp},";//<{ WTP32: }>,
-            tTemp = aRow["wtp64"].ToString();
-            if (tTemp == string.Empty)
-            {
-                tTemp = "null";
-            }
-            else
-            {
-                tTemp = $"'{tTemp}'";
-            }
-            xtSQL += $"{tTemp},";//<{ WTP64: }>,
-            tTemp = aRow["mediaid"].ToString();
-            if (tTemp == string.Empty)
-            {
-                tTemp = "null";
-            }
-            else
-            {
-                tTemp = $"'{tTemp}'";
-            }
+                xtSQL += $"{tTemp},";//<{ WTP32: }>,
+                tTemp = aRow["wtp64"].ToString();
+                if (tTemp == string.Empty)
+                {
+                    tTemp = "null";
+                }
+                else
+                {
+                    tTemp = $"'{tTemp}'";
+                }
+                xtSQL += $"{tTemp},";//<{ WTP64: }>,
+                tTemp = aRow["mediaid"].ToString();
+                if (tTemp == string.Empty)
+                {
+                    if (PrepaidMediaID == string.Empty)
+                    {
+                        tTemp = "null";
+                    }
+                    else
+                    {
+                        tTemp = $"'{PrepaidMediaID}'";
+                    }
+                }
+                else
+                {
+                    tTemp = $"'{tTemp}'";
+                }
 
-            xtSQL += $"{tTemp},";//<{ MEDIAID: }>,
+                xtSQL += $"{tTemp},";//<{ MEDIAID: }>,
+            }
             string tRkassanr = "null";
             if (aRow["rkassanr"].ToString() != string.Empty)
                 tRkassanr = aRow["rkassanr"].ToString();
@@ -597,6 +625,8 @@ namespace asl_SyncLibrary
             string tESOrderID = "0";
             if (aRow["esorderid"].ToString() != string.Empty)
                 tESOrderID = aRow["esorderid"].ToString();
+            if (tESOrderID.Length > 12)
+                tESOrderID = tESOrderID.Substring(0, 12);
             xtSQL += $"'{tESOrderID}',";//<{ ESORDERID: }>,
             string tOrderDate = "null";
             if (DateTime.TryParse(aRow["orderdate"].ToString(), out DateTime tOut))
@@ -606,7 +636,7 @@ namespace asl_SyncLibrary
             xtSQL += $"'{tUpdateFlag}',";//<{ UPDATEFLAG: }>,
             xtSQL += $"'{aRow["email_send"].ToString()}',";//<{ email_send: N}>,
             xtSQL += $"'{aRow["email_sent"].ToString()}',";//<{ email_sent: N}>,
-            xtSQL += $"'{tEmail}',";//<{ email: }>,
+            xtSQL += $"'{tEmail.Replace("'","")}',";//<{ email: }>,
             xtSQL += $"'{Convert.ToDateTime(aRow["dtinsert"].ToString()).ToString(Mirror.AxessDateTimeFormat)}',";//<{ dtinsert: }>,
             string tTestFlag = "0";
             if (aRow["testflag"].ToString() == "1")
@@ -779,7 +809,7 @@ namespace asl_SyncLibrary
                                         msqlcmd = "-1";
                                     }
                                 }
-                                tPMatch = cf.RowExists(dw.dwConn, $"{mchecktable}", $"{mcheckfield} = {msqlcmd}") ? "N" : "Y";
+                                tPMatch = cf.RowExists(dw.dwConn, $"{mchecktable}", $"{mcheckfield} = {msqlcmd}") ? "Y" : "N";
                             }
                             else
                             {
@@ -1160,7 +1190,7 @@ namespace asl_SyncLibrary
                     for (int i = tMin; i <= tMax; i++)
                     {
                         Int32 CurRec = i - tMin;
-                        TProgress = new Tuple<string, int, int, int>($"Updating POS{dr["nactkassanr"].ToString()} ({CurRec} of {TotRecs}).", CurRec, TotRecs, 3);
+                        TProgress = new Tuple<string, int, int, int>($"Updating POS{tPOS} ({CurRec} of {TotRecs}).", CurRec, TotRecs, 3);
                         OnProgressChanged(TProgress);
                         SyncSale($"{tPOS}-{i.ToString()}");
                         SyncPurchase($"{tPOS}-{i.ToString()}");
@@ -1358,7 +1388,7 @@ namespace asl_SyncLibrary
 
         public void FixPrepaids()
         {
-            DataTable tTable = cf.LoadTable(am.MirrorConn, $"SELECT concat_ws('-',nkassanr,ntransnr) AS TransKey FROM {am.ActiveDatabase}.tabprepaidtickets", "Prepaids");
+            DataTable tTable = cf.LoadTable(am.MirrorConn, $"SELECT concat_ws('-',nkassanr,ntransnr) AS TransKey FROM {am.ActiveDatabase}.tabprepaidtickets WHERE dtgiltbis > '2018-11-23'", "Prepaids");
             foreach (DataRow tRow in tTable.Rows)
             {
                 Debug.Print((tTable.Rows.IndexOf(tRow) + 1).ToString() + " of " + tTable.Rows.Count.ToString() + "  " + tRow["TransKey"].ToString());

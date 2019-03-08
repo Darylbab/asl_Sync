@@ -336,8 +336,57 @@ namespace asl_SyncLibrary
         {
             string TNow = DateTime.Today.ToString(Mirror.AxessDateFormat);
             string t = $"UPDATE {ActiveDatabase}.spcards AS A INNER JOIN {ActiveDatabase}.salesdata AS B ON A.serialkey = B.SERIALKEY SET A.cardstatus=";
-            CF.ExecuteSQL(dwConn, $"{t}'X' WHERE A.cardstatus = 'A' AND B.VALIDTILL < '{TNow}' AND B.NTICKTYPE <> 505");
-            CF.ExecuteSQL(dwConn, $"{t}'P' WHERE A.cardstatus = 'A' AND B.VALIDFROM > '{TNow}'");
+            CF.ExecuteSQL(dwConn, $"{t}'X', utasent=0 WHERE A.cardstatus IN ('A','B') AND B.VALIDTILL < '{TNow}' AND B.NTICKTYPE <> 505");
+            CF.ExecuteSQL(dwConn, $"{t}'P', utasent=0 WHERE A.cardstatus = 'A' AND B.VALIDFROM >= '{TNow}'");
+            CF.ExecuteSQL(dwConn, $"{t}'A', utasent=0 WHERE A.cardstatus = 'P' AND B.VALIDFROM <= '{TNow}' AND B.VALIDTILL > '{TNow}'");
+
+            //unblocked cards
+            //first unblock cards that are not replacements
+            string Query = $"SELECT serialkey FROM {ActiveDatabase}.spcards WHERE cardstatus = 'B' AND SERIALKEY NOT IN (SELECT C.serialkey FROM applications.spcards AS C INNER JOIN applications.salesdata AS D ON CONCAT_WS('-', D.RKASSANR, D.RSERIENNR, D.RUNICODENR) = C.serialkey WHERE C.cardstatus = 'B' AND C.expdate > '{DateTime.Today.ToString(Mirror.AxessDateFormat)}') AND expdate > '{DateTime.Today.ToString(Mirror.AxessDateFormat)}'";
+            using (DataTable Blocked = CF.LoadTable(dwConn, Query, "Blocked"))
+            {
+                if (CF.TableHasData(Blocked))
+                {
+                    foreach (DataRow BRow in Blocked.Rows)
+                    {
+                        if (CF.RowExists(AM.MirrorConn, $"{AM.ActiveDatabase}.tabkartensperre", $"concat_ws('-',nkassanr,nseriennr, nunicodenr) ='{BRow["serialkey"].ToString()}' AND (baktiv=0 OR dtgiltbis <= '{TNow}')"))
+                        {
+                            CF.ExecuteSQL(dwConn, $"UPDATE {ActiveDatabase}.spcards SET cardstatus='A', utasent=0 WHERE serialkey = '{BRow["serialkey"].ToString()}'");
+                        }
+                    }
+                }
+            }
+            //next new blocks
+            Query = $"SELECT concat_ws('-',nkassanr,nseriennr, nunicodenr) AS serialkey FROM {AM.ActiveDatabase}.tabkartensperre WHERE nkassanr <=55 AND (baktiv=-1 AND dtgiltbis > '{TNow}')";
+            using (DataTable NewBlocks = CF.LoadTable(AM.MirrorConn, Query, "NewBlocks"))
+            {
+                if (CF.TableHasData(NewBlocks))
+                {
+                    foreach (DataRow NRow in NewBlocks.Rows)
+                    {
+                        if (CF.RowExists(dwConn, $"{ActiveDatabase}.spcards", $"serialkey='{NRow["SerialKey"].ToString()}' AND cardstatus <> 'B'"))
+                        {
+                            CF.ExecuteSQL(dwConn, $"UPDATE {ActiveDatabase}.spcards SET cardstatus='B', utasent=0 WHERE serialkey='{NRow["SerialKey"].ToString()}'");
+                        }
+                    }
+                }
+            }
+            //replaced cards
+            Query = $"SELECT DISTINCT concat_ws('-', RKASSANR, RSERIENNR, RUNICODENR) AS RSerialKey FROM {ActiveDatabase}.salesdata WHERE ntranstype = 8 AND Rseriennr > 3 AND VALIDTILL BETWEEN '2018-11-23' AND '2019-11-22'";
+            using (DataTable Replaced = CF.LoadTable(dwConn, Query, "Replaced"))
+            {
+                if (CF.TableHasData(Replaced))
+                {
+                    foreach(DataRow ReplaceRow in Replaced.Rows)
+                    {
+                        System.Diagnostics.Debug.Print($"{Replaced.Rows.IndexOf(ReplaceRow)} of {Replaced.Rows.Count}");
+                        if (CF.RowExists(dwConn, $"{ActiveDatabase}.spcards", $"serialkey='{ReplaceRow["RSerialKey"].ToString()}' AND cardstatus <> 'B'"))
+                        {
+                            CF.ExecuteSQL(dwConn, $"UPDATE {ActiveDatabase}.spcards SET cardstatus = 'B', utasent = 0 WHERE serialkey = '{ReplaceRow["RSerialKey"].ToString()}'");
+                        }
+                    }
+                }
+            }
         }
 
         public bool UpdateSPCardsUses() //updated uses field in SPCards based on Skivisits.  

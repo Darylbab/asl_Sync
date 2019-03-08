@@ -231,7 +231,7 @@ namespace SkierMessaging
                                 {
                                 EM.ToAddress = Purchaser["email"].ToString();
                                 EM.FromAddress = "info@alta.com";
-                                EM.BCCAddress = "darylb@alta.com";
+                                //EM.BCCAddress = "darylb@alta.com";
                                 EM.Subject = $"Alta Purchase ({Transaction["saledate"].ToString()})";
                                 EM.Body = EmailData;
                                 EM.CreateEmail();

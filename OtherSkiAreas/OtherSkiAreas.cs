@@ -21,6 +21,19 @@ namespace OtherSkiAreas
         {
             //standard object initialization
             InitializeComponent();
+
+            DataRow FormLocation = CF.GetFormLocation("OtherSkiAreas");
+            int StopReason = -1;
+            if (CF.RowHasData(FormLocation))
+            {
+                StartPosition = FormStartPosition.Manual;
+                Location = new System.Drawing.Point(FormLocation.Field<int>("left"), FormLocation.Field<int>("top"));
+                Height = FormLocation.Field<int>("height");
+                Width = FormLocation.Field<int>("width");
+                StopReason = FormLocation.Field<int>("stopReason");
+            }
+            CF.SaveFormData("OtherSkiAreas", Location.Y, Location.X, Height, Width, DateTime.Now, null, StopReason);
+
             //local initialization
             pbUpdateOtherSkiAreas.Step = 1;
             pbUpdateASBShared.Step = 1;
@@ -37,15 +50,15 @@ namespace OtherSkiAreas
             {
                 switch (args[0].ToUpper())    //args[0] value tells program which update(s) to run automatically
                 {
-                    case "OSA":     
-                        cbUpdateOtherSkiAreas.Checked = true;
-                        break;
                     case "ASB":
                         cbUpdateASBShared.Checked = true;
                         break;
-                    case "ALL":
+                    case "OSA":     
                         cbUpdateOtherSkiAreas.Checked = true;
+                        break;
+                    case "ALL":
                         cbUpdateASBShared.Checked = true;
+                        cbUpdateOtherSkiAreas.Checked = true;
                         break;
                 }
                 //all automated runs hide and disable the button for manual run.
@@ -74,8 +87,8 @@ namespace OtherSkiAreas
         private void UpdateOtherBG(object sender, DoWorkEventArgs e)
         {
             CurrentFunction = "UpdateOther";
-            double AdultPrice = 52.00;
-            double ChildPrice = 27.00;
+            double AdultPrice = 58.00;
+            double ChildPrice = 30.00;
 
             ((BackgroundWorker)sender).ReportProgress(1, "Loading Alta SPCards");
             string tQuery = $"SELECT firstname, lastname, wtp64, mediaid, city, CAST((DATEDIFF(now(), dob) / 365) AS signed) AS age, 'ALTA' as resortname, 1 as cardstatus FROM {DW.ActiveDatabase}.spcards WHERE cardstatus='A' AND osaflag='Y' AND testflag=false";
@@ -170,19 +183,50 @@ namespace OtherSkiAreas
 
         public void UpdateASBShared()
         {
-            pbUpdateOtherSkiAreas.Maximum = 6;
-            var bgw = new BackgroundWorker();
-            bgw.ProgressChanged += UpdateASBShared_ProgressChanged;
-            bgw.DoWork += UpdateASBSharedBG;
-            bgw.WorkerReportsProgress = true;
-            bgw.RunWorkerAsync();
+            using (DataTable tDS = CF.LoadTable(DW.dwConn, $"SELECT S.recid, S.serialkey, S.cardstatus, S.dob, S.firstname, S.lastname, S.city, S.saledate, S.expdate, S.wtp64 FROM {DW.ActiveDatabase}.spcards AS S INNER JOIN applications.salesdata AS D ON D.SERIALKEY=S.serialkey WHERE D.NPOOLNR IN (91, 92, 96, 98) AND NOT (S.wtp32 is null) AND NOT (S.lastname = 'TEST' OR S.firstname = 'TEST') AND S.saledate > '2018-04-23' GROUP BY S.recid", "spcards"))
+            {
+                pbUpdateASBShared.Maximum = 100;
+                foreach (DataRow tRow in tDS.Rows)
+                {
+                    //((BackgroundWorker)sender).ReportProgress(tDS.Tables["spcards"].Rows.IndexOf(tRow), "Updating asb_passholders");
+                    pbUpdateASBShared.Value = tDS.Rows.IndexOf(tRow) * 100 / tDS.Rows.Count;
+                    statusStrip1.Items[0].Text = $"{tDS.Rows.IndexOf(tRow).ToString()} of {tDS.Rows.Count.ToString()}";
+                    string tSQL = string.Empty;
+                    string mkey = tRow.Field<string>("serialkey");
+                    if (CF.RowExists(BUY.Buy_Alta_ComConn, "asbshared.asb_passholders", $"issued_by='ALTA' AND serialkey='{mkey}'"))
+                    {
+                        tSQL = $"UPDATE asbshared.asb_passholders SET pass_status='{tRow.Field<string>("cardstatus")}' WHERE recid={tRow.Field<int>("recid").ToString()}";
+                    }
+                    else
+                    {
+                        string mkassanr = mkey.Substring(0, mkey.IndexOf("-"));
+                        string mserialnr = mkey.Substring(mkey.IndexOf("-") + 1);
+                        string municodenr = mserialnr.Substring(mserialnr.IndexOf("-") + 1);
+                        mserialnr = mserialnr.Replace("-" + municodenr, "");
+                        int tAge = (tRow.Field<DateTime?>("dob") == null ? 0 : CF.CalcAge(tRow.Field<DateTime>("dob")));
+                        tSQL = "INSERT asbshared.asb_passholders (serialkey,nkassanr,nserialnr,nunicodenr,firstname,lastname,city,age,pass_status,issue_date,exp_date,wtp64,issued_by)";
+                        tSQL += $" Values ('{mkey}','{mkassanr}','{mserialnr}','{municodenr}','{CF.EscapeChar(tRow.Field<string>("firstname"))}','";
+                        tSQL += $"{CF.EscapeChar(tRow.Field<string>("lastname"))}','{tRow.Field<string>("city").Trim()}','{tAge.ToString()}','{tRow.Field<string>("cardstatus")}','";
+                        tSQL += $"{tRow.Field<DateTime>("saledate").ToString(Mirror.AxessDateTimeFormat)}','{tRow.Field<DateTime>("expdate").ToString(Mirror.AxessDateFormat)}','{tRow.Field<string>("wtp64")}','ALTA')";
+                    }
+                    CF.ExecuteSQL(BUY.Buy_Alta_ComConn, tSQL);
+                }
+            }
+            return;
+
+            //pbUpdateASBShared.Maximum = 2000;
+            //var bgw = new BackgroundWorker();
+            //bgw.ProgressChanged += UpdateASBShared_ProgressChanged;
+            //bgw.DoWork += UpdateASBSharedBG;
+            //bgw.WorkerReportsProgress = true;
+            //bgw.RunWorkerAsync();
         }
 
         private void UpdateASBShared_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            pbUpdateOtherSkiAreas.Value = e.ProgressPercentage;
+            pbUpdateASBShared.Value = e.ProgressPercentage;
             lblStatus.Text = e.UserState.ToString();
-            SetTaskStatus("", "", pbUpdateOtherSkiAreas);
+            SetTaskStatus("", "", pbUpdateASBShared);
         }
 
 
@@ -254,5 +298,22 @@ namespace OtherSkiAreas
             ASG.SetTaskStatus(Application.ProductName, CurrentFunction, statusStrip1.Items[0].Text, Description, Extra);
         }
 
+        private void BtnRunSelectedUpdates_Click(object sender, EventArgs e)
+        {
+            LblStartTime.Text = DateTime.Now.ToString(Mirror.AxessDateTimeFormat);
+            if (cbUpdateASBShared.Checked)
+            {
+                UpdateASBShared();
+            }
+            if (cbUpdateOtherSkiAreas.Checked)
+            {
+                UpdateOther();
+            }
+        }
+
+        private void OtherSkiAreas_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            CF.SaveFormData("OtherSkiAreas", Location.Y, Location.X, Height, Width, null, DateTime.Now, (int)e.CloseReason);
+        }
     }
 }

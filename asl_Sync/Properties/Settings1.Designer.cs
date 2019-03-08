@@ -27,7 +27,7 @@ namespace asl_SyncLibrary.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("server= buy.alta.com; username= syncron; password= debut-drift-dream; Convert Zer" +
-            "o Datetime= True; Pooling=False;")]
+            "o Datetime= True; Pooling=False;SslMode=None;")]
         public string MySQLWS {
             get {
                 return ((string)(this["MySQLWS"]));
@@ -459,7 +459,7 @@ namespace asl_SyncLibrary.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("snowbird,=20;deer valley,=30;solitude,=40")]
+        [global::System.Configuration.DefaultSettingValueAttribute("snowbird,=20;deer valley,=30;")]
         public string WasatchBenefits {
             get {
                 return ((string)(this["WasatchBenefits"]));
@@ -639,7 +639,7 @@ namespace asl_SyncLibrary.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("server=web-database.alta.com;username=keyhole;password=MightyM0use;Convert Zero D" +
-            "atetime=True;")]
+            "atetime=True;SslMode=None;")]
         public string MySQLDW {
             get {
                 return ((string)(this["MySQLDW"]));
@@ -685,6 +685,16 @@ namespace asl_SyncLibrary.Properties {
         public string SharedDataFolder {
             get {
                 return ((string)(this["SharedDataFolder"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://cwc.teamaxess.com:16351/DCI4CRM/DCI4CRMService.svc?wsdl")]
+        public string Axess_DCI4CRM_IIS {
+            get {
+                return ((string)(this["Axess_DCI4CRM_IIS"]));
             }
         }
     }

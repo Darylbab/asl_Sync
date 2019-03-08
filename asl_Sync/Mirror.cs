@@ -16,6 +16,8 @@ namespace asl_SyncLibrary
         private const string OrderEntryPOSFilter = "((POSFilter>=117) AND-(POSFilter<=121))";
         private const string SkiSaltLakePOSFilter = "((POSFilter>=100) AND (POSFilter<=105))";
         public const string AllAltaPOSFilter = "(" + AltaPOSFilter + " OR " + OrderEntryPOSFilter + "OR" + SkiSaltLakePOSFilter + ")";
+        public const string LodgePOSFilter = "(POSFilter BETWEEN 50 AND 55)";
+        public const string IKONPOSFilter = "(POSFilter = 27)";
 
         public const string AxessDateTimeFormat = "yyyy-MM-dd HH:mm:ss";
         public const string AxessDateFormat = "yyyy-MM-dd";
@@ -1073,7 +1075,7 @@ namespace asl_SyncLibrary
             long lastLogNo = curLogNo;
             string OrderNrList = string.Empty;
 
-            XmlDocument localXML = AxessSource.GetLogList(curLogNo, 1000);
+            XmlDocument localXML = AxessSource.GetLogList(curLogNo, 1);
             if (AxessSource.ErrorNo != 0)
             {
                 goto cleanout;

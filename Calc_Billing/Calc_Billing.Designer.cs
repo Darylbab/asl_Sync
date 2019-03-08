@@ -179,6 +179,7 @@
             this.Controls.Add(this.label1);
             this.Name = "Calc_Billing";
             this.Text = "Calc Billing";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Calc_Billing_FormClosed);
             this.Shown += new System.EventHandler(this.Calc_Billing_Shown);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();

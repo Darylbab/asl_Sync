@@ -5,9 +5,9 @@
     <Setting Name="MySQLWS" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;server= buy.alta.com; username= syncron; password= debut-drift-dream; Convert Zero Datetime= True; Pooling=False;&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;server= buy.alta.com; username= syncron; password= debut-drift-dream; Convert Zero Datetime= True; Pooling=False;SslMode=None;&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">server= buy.alta.com; username= syncron; password= debut-drift-dream; Convert Zero Datetime= True; Pooling=False;</Value>
+      <Value Profile="(Default)">server= buy.alta.com; username= syncron; password= debut-drift-dream; Convert Zero Datetime= True; Pooling=False;SslMode=None;</Value>
     </Setting>
     <Setting Name="Axess" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
@@ -156,7 +156,7 @@
       <Value Profile="(Default)">Chilkat.Email2</Value>
     </Setting>
     <Setting Name="WasatchBenefits" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">snowbird,=20;deer valley,=30;solitude,=40</Value>
+      <Value Profile="(Default)">snowbird,=20;deer valley,=30;</Value>
     </Setting>
     <Setting Name="SyncFTPDir" Type="System.String" Scope="Application">
       <Value Profile="(Default)">\\taskman\c$\acctg\winscp\data</Value>
@@ -224,9 +224,9 @@
     <Setting Name="MySQLDW" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;server=web-database.alta.com;username=keyhole;password=MightyM0use;Convert Zero Datetime=True;&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;server=web-database.alta.com;username=keyhole;password=MightyM0use;Convert Zero Datetime=True;SslMode=None;&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">server=web-database.alta.com;username=keyhole;password=MightyM0use;Convert Zero Datetime=True;</Value>
+      <Value Profile="(Default)">server=web-database.alta.com;username=keyhole;password=MightyM0use;Convert Zero Datetime=True;SslMode=None;</Value>
     </Setting>
     <Setting Name="AsgardRW" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
@@ -251,6 +251,9 @@
     </Setting>
     <Setting Name="SharedDataFolder" Type="System.String" Scope="Application">
       <Value Profile="(Default)">\\taskman\c$\acctg\winscp\data\</Value>
+    </Setting>
+    <Setting Name="Axess_DCI4CRM_IIS" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://cwc.teamaxess.com:16351/DCI4CRM/DCI4CRMService.svc?wsdl</Value>
     </Setting>
   </Settings>
 </SettingsFile>

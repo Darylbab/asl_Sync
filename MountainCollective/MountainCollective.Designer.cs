@@ -37,8 +37,10 @@
             this.LblMTCUsage = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.PBFixMTCWillcallNames = new System.Windows.Forms.ProgressBar();
-            this.lblFixMTCWillcallName = new System.Windows.Forms.Label();
+            this.PBFixMTCSerialKeys = new System.Windows.Forms.ProgressBar();
+            this.lblFixMTCSerialKeys = new System.Windows.Forms.Label();
+            this.pbMTCIssued = new System.Windows.Forms.ProgressBar();
+            this.lblMTCIssued = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -86,7 +88,7 @@
             // 
             // PbMTCUsage
             // 
-            this.PbMTCUsage.Location = new System.Drawing.Point(112, 93);
+            this.PbMTCUsage.Location = new System.Drawing.Point(112, 146);
             this.PbMTCUsage.Name = "PbMTCUsage";
             this.PbMTCUsage.Size = new System.Drawing.Size(160, 20);
             this.PbMTCUsage.TabIndex = 10;
@@ -94,7 +96,7 @@
             // LblMTCUsage
             // 
             this.LblMTCUsage.AutoSize = true;
-            this.LblMTCUsage.Location = new System.Drawing.Point(15, 100);
+            this.LblMTCUsage.Location = new System.Drawing.Point(15, 153);
             this.LblMTCUsage.Name = "LblMTCUsage";
             this.LblMTCUsage.Size = new System.Drawing.Size(64, 13);
             this.LblMTCUsage.TabIndex = 9;
@@ -104,7 +106,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 156);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 180);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(284, 22);
             this.statusStrip1.TabIndex = 11;
@@ -115,29 +117,47 @@
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
             // 
-            // PBFixMTCWillcallNames
+            // PBFixMTCSerialKeys
             // 
-            this.PBFixMTCWillcallNames.Location = new System.Drawing.Point(112, 119);
-            this.PBFixMTCWillcallNames.Name = "PBFixMTCWillcallNames";
-            this.PBFixMTCWillcallNames.Size = new System.Drawing.Size(160, 20);
-            this.PBFixMTCWillcallNames.TabIndex = 13;
+            this.PBFixMTCSerialKeys.Location = new System.Drawing.Point(112, 93);
+            this.PBFixMTCSerialKeys.Name = "PBFixMTCSerialKeys";
+            this.PBFixMTCSerialKeys.Size = new System.Drawing.Size(160, 20);
+            this.PBFixMTCSerialKeys.TabIndex = 13;
             // 
-            // lblFixMTCWillcallName
+            // lblFixMTCSerialKeys
             // 
-            this.lblFixMTCWillcallName.AutoSize = true;
-            this.lblFixMTCWillcallName.Location = new System.Drawing.Point(15, 126);
-            this.lblFixMTCWillcallName.Name = "lblFixMTCWillcallName";
-            this.lblFixMTCWillcallName.Size = new System.Drawing.Size(92, 13);
-            this.lblFixMTCWillcallName.TabIndex = 12;
-            this.lblFixMTCWillcallName.Text = "Fix Willcall Names";
+            this.lblFixMTCSerialKeys.AutoSize = true;
+            this.lblFixMTCSerialKeys.Location = new System.Drawing.Point(15, 100);
+            this.lblFixMTCSerialKeys.Name = "lblFixMTCSerialKeys";
+            this.lblFixMTCSerialKeys.Size = new System.Drawing.Size(98, 13);
+            this.lblFixMTCSerialKeys.TabIndex = 12;
+            this.lblFixMTCSerialKeys.Text = "Fix MTC SerialKeys";
+            // 
+            // pbMTCIssued
+            // 
+            this.pbMTCIssued.Location = new System.Drawing.Point(112, 119);
+            this.pbMTCIssued.Name = "pbMTCIssued";
+            this.pbMTCIssued.Size = new System.Drawing.Size(160, 20);
+            this.pbMTCIssued.TabIndex = 15;
+            // 
+            // lblMTCIssued
+            // 
+            this.lblMTCIssued.AutoSize = true;
+            this.lblMTCIssued.Location = new System.Drawing.Point(15, 126);
+            this.lblMTCIssued.Name = "lblMTCIssued";
+            this.lblMTCIssued.Size = new System.Drawing.Size(64, 13);
+            this.lblMTCIssued.TabIndex = 14;
+            this.lblMTCIssued.Text = "MTC Issued";
             // 
             // MountainCollective
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 178);
-            this.Controls.Add(this.PBFixMTCWillcallNames);
-            this.Controls.Add(this.lblFixMTCWillcallName);
+            this.ClientSize = new System.Drawing.Size(284, 202);
+            this.Controls.Add(this.pbMTCIssued);
+            this.Controls.Add(this.lblMTCIssued);
+            this.Controls.Add(this.PBFixMTCSerialKeys);
+            this.Controls.Add(this.lblFixMTCSerialKeys);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.PbMTCUsage);
             this.Controls.Add(this.LblMTCUsage);
@@ -166,9 +186,11 @@
         private System.Windows.Forms.ProgressBar PbMTCUsage;
         private System.Windows.Forms.Label LblMTCUsage;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ProgressBar PBFixMTCWillcallNames;
-        private System.Windows.Forms.Label lblFixMTCWillcallName;
+        private System.Windows.Forms.ProgressBar PBFixMTCSerialKeys;
+        private System.Windows.Forms.Label lblFixMTCSerialKeys;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ProgressBar pbMTCIssued;
+        private System.Windows.Forms.Label lblMTCIssued;
     }
 }
 

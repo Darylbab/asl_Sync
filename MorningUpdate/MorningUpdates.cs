@@ -58,7 +58,7 @@ namespace MorningUpdate
             {
                 LiftopiaP.StartInfo.FileName = "Liftopia_Sync.EXE";
                 LiftopiaP.StartInfo.WorkingDirectory = @"C:\asl_Sync\programs\Liftopia\";
-                LiftopiaP.StartInfo.UseShellExecute = false;
+                LiftopiaP.StartInfo.UseShellExecute = true;
                 LiftopiaP.StartInfo.RedirectStandardError = false;
                 LiftopiaP.StartInfo.RedirectStandardInput = false;
                 LiftopiaP.StartInfo.RedirectStandardOutput = false;

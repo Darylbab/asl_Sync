@@ -100,6 +100,7 @@
             this.MaximizeBox = false;
             this.Name = "UTA";
             this.Text = "UTA";
+            this.Shown += new System.EventHandler(this.UTA_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

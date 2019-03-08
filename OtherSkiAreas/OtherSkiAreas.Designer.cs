@@ -30,12 +30,12 @@
         {
             this.LblStartTime = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.cbUpdateOtherSkiAreas = new System.Windows.Forms.CheckBox();
             this.pbUpdateOtherSkiAreas = new System.Windows.Forms.ProgressBar();
             this.cbUpdateASBShared = new System.Windows.Forms.CheckBox();
             this.pbUpdateASBShared = new System.Windows.Forms.ProgressBar();
             this.btnRunSelectedUpdates = new System.Windows.Forms.Button();
-            this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,6 +58,12 @@
             this.statusStrip1.Size = new System.Drawing.Size(284, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(118, 17);
+            this.lblStatus.Text = "toolStripStatusLabel1";
             // 
             // cbUpdateOtherSkiAreas
             // 
@@ -102,12 +108,7 @@
             this.btnRunSelectedUpdates.Text = "&Run Selected Updates";
             this.btnRunSelectedUpdates.UseVisualStyleBackColor = true;
             this.btnRunSelectedUpdates.Visible = false;
-            // 
-            // lblStatus
-            // 
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(118, 17);
-            this.lblStatus.Text = "toolStripStatusLabel1";
+            this.btnRunSelectedUpdates.Click += new System.EventHandler(this.BtnRunSelectedUpdates_Click);
             // 
             // OtherSkiAreas
             // 
@@ -123,6 +124,7 @@
             this.Controls.Add(this.LblStartTime);
             this.Name = "OtherSkiAreas";
             this.Text = "Other Ski Areas";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OtherSkiAreas_FormClosed);
             this.Shown += new System.EventHandler(this.OtherSkiAreas_Shown);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();

@@ -36,6 +36,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,8 +51,14 @@
     <Compile Include="Axess.cs" />
     <Compile Include="BUY_ALTA_COM.cs" />
     <Compile Include="CommonFunctions.cs" />
+    <Compile Include="Connected Services\DCI4CRM\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="DataWarehouse.cs" />
     <Compile Include="DCI4WTP.cs" />
+    <Compile Include="IKON.cs" />
     <Compile Include="Mirror.cs" />
     <Compile Include="OBI4POS.cs" />
     <Compile Include="POSSync.cs" />
@@ -70,9 +78,100 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.addLogListFilterResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.DCI4CRMADDLOGLISTFILTERESULT.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.DCI4CRMDMLRESULT.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.DCI4CRMGETLOGNRRESULT.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.DCI4CRMLOGINRESULT.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.DCI4CRMLOGLISTRESULT.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.DCI4CRMLOGOUTRESULT.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.DCI4CRMRESULT.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.DCI4CRMSNAPSHOTRESULT.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.DCI4CRMWTPCONVRESULT.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.getBarcodeOwnerResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.getBarcodeSalesListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.getChipOwnerResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.getForeignPersonDataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.getMediaIDResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.getViewDetails4RecordListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.getWTPNrResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.loginResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.logoutResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.setEntityDMLResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\asl_SyncLibrary.DCI4CRM.setEntitySnapshotResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DCI4CRM\DCI4CRMService.wsdl" />
+    <None Include="Connected Services\DCI4CRM\DCI4CRMService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\DCI4CRM\DCI4CRMService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\DCI4CRM\DCI4CRMService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\DCI4CRM\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\DCI4CRM\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\DCI4CRM\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\DCI4CRM\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

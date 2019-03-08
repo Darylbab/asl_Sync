@@ -1,6 +1,6 @@
-﻿namespace GateReads
+﻿namespace SkiVisits
 {
-    partial class SkiVisits
+    partial class GateReads
     {
         /// <summary>
         /// Required designer variable.
@@ -92,7 +92,7 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
-            // SkiVisits
+            // GateReads
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -101,8 +101,10 @@
             this.Controls.Add(this.LblGateReads);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.LblStartTime);
-            this.Name = "SkiVisits";
-            this.Text = "Gate Reads / Ski Visits";
+            this.Name = "GateReads";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.Text = "Gate Reads";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.GateReads_FormClosed);
             this.Shown += new System.EventHandler(this.Form_Shown);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();

@@ -33,6 +33,8 @@ namespace asl_SyncLibrary
         private const string prodDatabase = "asbshared";
         private const string testDatabase = "asbshared_test";
 
+        private DataTable MtnCol_Sales;
+
         public string ActiveDatabase
         {
             get
@@ -101,6 +103,13 @@ namespace asl_SyncLibrary
 
         public bool SalesFromMTC(DataRow aData)
         {
+            if (!cf.TableHasData(MtnCol_Sales))
+            {
+                MtnCol_Sales = cf.LoadTable(Buy_Alta_ComConn, $"SELECT * FROM {ActiveDatabase}.mtncol_sales", "MtnCol_Sales");
+                DataColumn[] MtnCol_Sales_Key = new DataColumn[1];
+                MtnCol_Sales_Key[0] = MtnCol_Sales.Columns["mcpnbr"];
+                MtnCol_Sales.PrimaryKey = MtnCol_Sales_Key;
+            }
             string tmpData = aData.Field<string>("custom response") + string.Empty;
             string tmpMCPNbr = aData.Field<string>("barcode");
             string sqlSales = string.Empty;
@@ -119,7 +128,7 @@ namespace asl_SyncLibrary
                 tTickType = "Child";
             }
             string tGFN = aData.Field<string>("guest first name").Trim().ToUpper();
-            tGFN = (tGFN == null) ? "" : cf.EscapeChar(tGFN.Replace("(", "").Replace(")", "").Replace("â€™", "'").Replace("Ã©", "e").Replace("Ã¤", "a").Replace("/", ""));
+            tGFN = (tGFN == null) ? "" : cf.EscapeChar(tGFN.Replace("(", "").Replace(")", "").Replace("â€™", "'").Replace("Ã©", "e").Replace("Ã¤", "a").Replace("/", "").Replace(@"&","").Trim());
             string tGLN = aData.Field<string>("guest last name").Trim().ToUpper();
             tGLN = (tGLN == null) ? "" : cf.EscapeChar(tGLN.Replace("(", "").Replace(")", "").Replace("â€™", "'").Replace("Ã©", "e").Replace("Ã¤", "a").Replace("/", ""));
             string tPFN = aData.Field<string>("purchaser first name");
@@ -131,10 +140,11 @@ namespace asl_SyncLibrary
             }
             else
                 tPLN = cf.EscapeChar(tPLN.Replace("(", "").Replace(")", "").Trim().ToUpper());
-            DataRow tDR = cf.LoadDataRow(Buy_Alta_ComConn, $"SELECT * FROM {ActiveDatabase}.mtncol_sales WHERE mcpnbr='{tmpMCPNbr}'");
-            if (tDR == null || tDR["recid"].ToString() == string.Empty)
+            //DataRow SaleRow = cf.LoadDataRow(Buy_Alta_ComConn, $"SELECT * FROM {ActiveDatabase}.mtncol_sales WHERE mcpnbr='{tmpMCPNbr}'");
+            DataRow SaleRow = MtnCol_Sales.Rows.Find(tmpMCPNbr);
+            if (!cf.RowHasData(SaleRow))
             {
-                sqlSales = $"INSERT INTO {ActiveDatabase}.mtncol_sales (order_id, mcpnbr, ticket_id, order_status, order_date, product, ticket_type, guest_first_name, guest_last_name,  guest_email, guest_birthdate, guest_height, guest_gender, guest_ability_level, guest_shoe_size, guest_shoe_style, guest_shoe_type, guest_equipment_choice, purchaser_first_name, purchaser_last_name, purchaser_email, marketing_opt_in, billing_address, billing_city, billing_state, billing_zip, billing_country, mailing_address, mailing_city, mailing_state, mailing_zip, mailing_country, image_url, store, avail_days, custom_response, custom_question, pre_arrival_approved, pre_arrival_submit_date, days_used) VALUES (";
+                sqlSales = $"INSERT INTO {ActiveDatabase}.mtncol_sales (order_id, mcpnbr, ticket_id, order_status, order_date, product, ticket_type, guest_first_name, guest_last_name,  guest_email, guest_birthdate, guest_height, guest_gender, guest_ability_level, guest_shoe_size, guest_shoe_style, guest_shoe_type, guest_equipment_choice, purchaser_first_name, purchaser_last_name, purchaser_email, marketing_opt_in, billing_address, billing_city, billing_state, billing_zip, billing_country, mailing_address, mailing_city, mailing_state, mailing_zip, mailing_country, image_url, store, avail_days, custom_response, custom_question, pre_arrival_approved, pre_arrival_submit_date, estimated_arrival_date ,days_used) VALUES (";
                 sqlSales += $"'{aData.Field<string>("order id").ToString()}',";
                 sqlSales += $"'{aData.Field<string>("barcode")}',";
                 sqlSales += $"'{aData.Field<string>("ticket id").ToString()}',";
@@ -174,22 +184,25 @@ namespace asl_SyncLibrary
                 sqlSales += $"'{aData.Field<string>("custom question")}',";
                 sqlSales += $"'{aData.Field<string>("pre arrival approved")}',";
                 sqlSales += $"'{aData.Field<string>("pre arrival approved date")}',";
+                sqlSales += $"'{aData.Field<string>("Estimated Arrival Date")}',";
                 sqlSales += $"'0')";
             }
             else
             {
                 sqlSales = String.Empty;
-                if (tTickType != tDR["ticket_type"].ToString())
+                if (aData.Field<string>("ticket id").ToString() != SaleRow["ticket_id"].ToString())
+                    sqlSales += $"ticket_id='{aData.Field<string>("ticket id").ToString()}',";
+                if (tTickType != SaleRow["ticket_type"].ToString())
                     sqlSales += $"ticket_type='{tTickType}',"; 
-                if (aData.Field<string>("order status") != tDR["order_status"].ToString())
+                if (aData.Field<string>("order status") != SaleRow["order_status"].ToString())
                     sqlSales += $"order_status='{aData.Field<string>("order status")}',";
-                if (tGFN != tDR["guest_first_name"].ToString().ToUpper())
+                if (tGFN != SaleRow["guest_first_name"].ToString().ToUpper())
                     sqlSales += $"guest_first_name='{tGFN}',";
-                if (tGLN != tDR["guest_last_name"].ToString().ToUpper())
+                if (tGLN != SaleRow["guest_last_name"].ToString().ToUpper())
                     sqlSales += $"guest_last_name='{tGLN}',";
-                if (cf.EscapeChar(aData.Field<string>("guest email")) != tDR["guest_email"].ToString())
+                if (cf.EscapeChar(aData.Field<string>("guest email")) != SaleRow["guest_email"].ToString())
                     sqlSales += $"guest_email='{cf.EscapeChar(aData.Field<string>("guest email"))}',";
-                if (aData.Field<string>("guest birth date") != tDR.Field<DateTime>("guest_birthdate").ToString(Mirror.AxessDateFormat))
+                if (aData.Field<string>("guest birth date") != SaleRow.Field<DateTime>("guest_birthdate").ToString(Mirror.AxessDateFormat))
                     sqlSales += $"guest_birthdate='{aData.Field<string>("guest birth date")}',";
                 //if (aData.Field<string>("guest height") != tDR["guest_height"].ToString())
                 //    sqlSales += $"guest_height='{aData.Field<string>("guest height")}',";
@@ -205,27 +218,28 @@ namespace asl_SyncLibrary
                 //    sqlSales += $"guest_shoe_type='{aData.Field<string>("guest shoe type")}',";
                 //if (aData.Field<string>("guest equipment choice") != tDR["guest_equipment_choice"].ToString())
                 //    sqlSales += $"guest_equipment_choice='{aData.Field<string>("guest equipment choice")}',";
-                if (tPFN != tDR["purchaser_first_name"].ToString().ToUpper().Trim())
+                if (tPFN != SaleRow["purchaser_first_name"].ToString().ToUpper().Trim())
                     sqlSales += $"purchaser_first_name='{cf.EscapeChar(tPFN.Trim())}',";
-                if (tPLN != tDR["purchaser_last_name"].ToString().ToUpper().Trim())
+                if (tPLN != SaleRow["purchaser_last_name"].ToString().ToUpper().Trim())
                     sqlSales += $"purchaser_last_name='{cf.EscapeChar(tPLN.Trim())}',";
-                if (cf.EscapeChar(aData.Field<string>("purchaser email")) != tDR["purchaser_email"].ToString().Trim())
+                if (cf.EscapeChar(aData.Field<string>("purchaser email")) != SaleRow["purchaser_email"].ToString().Trim())
                     sqlSales += $"purchaser_email='{cf.EscapeChar(aData.Field<string>("purchaser email"))}',";
                 //sqlSales += $"marketing_opt_in='{aData.Field<string>("marketing opt in")}',";
                 if (aData.Field<string>("image url") != null)
-                    if (tDR["image_url"].ToString().Trim() != aData.Field<string>("image url").Trim())
+                    if (SaleRow["image_url"].ToString().Trim() != aData.Field<string>("image url").Trim())
                         sqlSales += $"image_url='{aData.Field<string>("image url").Trim()}',";
                 //sqlSales += $"store='{aData.Field<string>("store")}',";
-                if (tmpData.ToUpper().Trim() != tDR["custom_response"].ToString().ToUpper().Trim())
+                if (tmpData.ToUpper().Trim() != SaleRow["custom_response"].ToString().ToUpper().Trim())
                 {
                     sqlSales += $"custom_response='{tmpData.Trim()}',";
                     sqlSales += $"avail_days='{(tmpData.Contains("alta") ? "3" : "2")}',";
                 }
                 //sqlSales += $"custom_question='{aData.Field<string>("custom question")}',";
-                if ((aData["pre arrival approved"].ToString().Trim() != tDR["pre_arrival_approved"].ToString().Trim()) || (aData["pre arrival approved"].ToString().Trim().ToUpper() == "YES"))
+                if (aData["pre arrival approved"].ToString().Trim() != SaleRow["pre_arrival_approved"].ToString().Trim())
                 {
                     sqlSales += $"pre_arrival_approved='{aData.Field<string>("pre arrival approved")}',";
                     sqlSales += $"pre_arrival_submit_date='{aData.Field<string>("pre arrival approved date")}',";
+                    sqlSales += $"estimated_arrival_date='{aData.Field<string>("estimated arrival date")}',";
                     sqlSales += $"billing_address='{cf.EscapeChar(aData.Field<string>("billing address"))}',";
                     sqlSales += $"billing_city='{cf.EscapeChar(aData.Field<string>("billing city"))}',";
                     sqlSales += $"billing_state='{aData.Field<string>("billing state")}',";
@@ -247,5 +261,7 @@ namespace asl_SyncLibrary
                 return false;
             return cf.ExecuteSQL(Buy_Alta_ComConn, sqlSales);
         }
+
     }
 }
+

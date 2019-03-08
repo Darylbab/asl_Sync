@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/AxWebServices" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/AxWebServices" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="DCI4CRMLOGINRESULT">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="NERRORNO" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="NKASSANR" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="NPROJNR" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="NSESSIONID" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SZERRORMESSAGE" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMLOGINRESULT" nillable="true" type="tns:DCI4CRMLOGINRESULT" />
+  <xs:complexType name="DCI4CRMLOGOUTRESULT">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="NERRORNO" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SZERRORMESSAGE" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMLOGOUTRESULT" nillable="true" type="tns:DCI4CRMLOGOUTRESULT" />
+  <xs:complexType name="DCI4CRMLOGLISTRESULT">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ACTLOGLINE" nillable="true" type="tns:ArrayOfDCI4CRMLOGLINE" />
+      <xs:element minOccurs="0" name="NERRORNO" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SZERRORMESSAGE" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMLOGLISTRESULT" nillable="true" type="tns:DCI4CRMLOGLISTRESULT" />
+  <xs:complexType name="ArrayOfDCI4CRMLOGLINE">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DCI4CRMLOGLINE" nillable="true" type="tns:DCI4CRMLOGLINE" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDCI4CRMLOGLINE" nillable="true" type="tns:ArrayOfDCI4CRMLOGLINE" />
+  <xs:complexType name="DCI4CRMLOGLINE">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ACTLOGVALUESNEW" nillable="true" type="tns:ArrayOfDCI4CRMLOGFIELD" />
+      <xs:element minOccurs="0" name="ACTLOGVALUESOLD" nillable="true" type="tns:ArrayOfDCI4CRMLOGFIELD" />
+      <xs:element minOccurs="0" name="DTTIMESTAMP" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NLOGNR" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SZKIND" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SZTABNAME" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMLOGLINE" nillable="true" type="tns:DCI4CRMLOGLINE" />
+  <xs:complexType name="ArrayOfDCI4CRMLOGFIELD">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DCI4CRMLOGFIELD" nillable="true" type="tns:DCI4CRMLOGFIELD" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDCI4CRMLOGFIELD" nillable="true" type="tns:ArrayOfDCI4CRMLOGFIELD" />
+  <xs:complexType name="DCI4CRMLOGFIELD">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="SZFIELDNAME" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SZFIELDVALUE" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMLOGFIELD" nillable="true" type="tns:DCI4CRMLOGFIELD" />
+  <xs:complexType name="DCI4CRMSNAPSHOTRESULT">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="NCOUNT" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="NERRORNO" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="NLOGNRAFTER" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="NLOGNRBEFORE" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SZERRORMESSAGE" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMSNAPSHOTRESULT" nillable="true" type="tns:DCI4CRMSNAPSHOTRESULT" />
+  <xs:complexType name="DCI4CRMDMLRESULT">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="NERRORNO" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="NLOGNR" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SZERRORMESSAGE" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMDMLRESULT" nillable="true" type="tns:DCI4CRMDMLRESULT" />
+  <xs:complexType name="DCI4CRMWTPCONVRESULT">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="NERRORNO" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SZCONVERSIONTEXT" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SZERRORMESSAGE" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMWTPCONVRESULT" nillable="true" type="tns:DCI4CRMWTPCONVRESULT" />
+  <xs:complexType name="DCI4CRMDETAIL">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ACTDCI4CRMRECORDS" nillable="true" type="tns:ArrayOfDCI4CRMRECORDID" />
+      <xs:element minOccurs="0" name="SZQUERYFIELDNAME" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SZVIEWNAME" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMDETAIL" nillable="true" type="tns:DCI4CRMDETAIL" />
+  <xs:complexType name="ArrayOfDCI4CRMRECORDID">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DCI4CRMRECORDID" nillable="true" type="tns:DCI4CRMRECORDID" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDCI4CRMRECORDID" nillable="true" type="tns:ArrayOfDCI4CRMRECORDID" />
+  <xs:complexType name="DCI4CRMRECORDID">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="NRECORDID" nillable="true" type="xs:decimal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMRECORDID" nillable="true" type="tns:DCI4CRMRECORDID" />
+  <xs:complexType name="DCI4CRMRESULT">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="NERRORNO" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SZERRORMESSAGE" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMRESULT" nillable="true" type="tns:DCI4CRMRESULT" />
+  <xs:complexType name="DCI4CRMADDLOGLISTFILTERREQ">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ACTTABLENAME" nillable="true" type="tns:ArrayOfDCI4CRMTABLENAME" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMADDLOGLISTFILTERREQ" nillable="true" type="tns:DCI4CRMADDLOGLISTFILTERREQ" />
+  <xs:complexType name="ArrayOfDCI4CRMTABLENAME">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DCI4CRMTABLENAME" nillable="true" type="tns:DCI4CRMTABLENAME" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDCI4CRMTABLENAME" nillable="true" type="tns:ArrayOfDCI4CRMTABLENAME" />
+  <xs:complexType name="DCI4CRMTABLENAME">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="SZTABLENAME" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMTABLENAME" nillable="true" type="tns:DCI4CRMTABLENAME" />
+  <xs:complexType name="DCI4CRMADDLOGLISTFILTERESULT">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ACTTABLENAMELIST" nillable="true" type="tns:ArrayOfDCI4CRMTABLENAMELIST" />
+      <xs:element minOccurs="0" name="NERRORNO" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SZERRORMESSAGE" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMADDLOGLISTFILTERESULT" nillable="true" type="tns:DCI4CRMADDLOGLISTFILTERESULT" />
+  <xs:complexType name="ArrayOfDCI4CRMTABLENAMELIST">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DCI4CRMTABLENAMELIST" nillable="true" type="tns:DCI4CRMTABLENAMELIST" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDCI4CRMTABLENAMELIST" nillable="true" type="tns:ArrayOfDCI4CRMTABLENAMELIST" />
+  <xs:complexType name="DCI4CRMTABLENAMELIST">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="NERRORNO" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SZERRORMESSAGE" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SZTABLENAME" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMTABLENAMELIST" nillable="true" type="tns:DCI4CRMTABLENAMELIST" />
+  <xs:complexType name="DCI4CRMGETLOGNRRESULT">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="NERRORNO" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="NMINLOGNR" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SZERRORMESSAGE" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DCI4CRMGETLOGNRRESULT" nillable="true" type="tns:DCI4CRMGETLOGNRRESULT" />
+</xs:schema>

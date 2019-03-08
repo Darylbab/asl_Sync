@@ -154,18 +154,34 @@ namespace asl_SyncLibrary
                 return tErrorFunctionMessage;
             }
         }
-        
-        public bool IsAltaPOS(long KassaNr)
+
+        public bool IsAltaPOS(long KassaNr) => (KassaNr >= 1 && KassaNr <= 60) || (KassaNr >= 100 && KassaNr <= 105) || (KassaNr >= 117 && KassaNr <= 121);
+
+        public bool SaveFormData(string FormName, int Top, int Left, int Height, int Width, DateTime? LastStart = null, DateTime? LastStop = null, int StopReason = -1)
         {
-            return (KassaNr >= 1 && KassaNr <= 60) || (KassaNr >= 100 && KassaNr <= 105) || (KassaNr >= 117 && KassaNr <= 121);
+            string MyQuery = string.Empty;
+            string MyFilter = $"`user`='{Environment.UserName.ToUpper()}' AND form='{FormName}'";
+            string LastStart_S = (LastStart == null ? "null" : $"'{LastStart.Value.ToString(Mirror.AxessDateTimeFormat)}'");
+            string lastStop_S = (LastStop == null ? "null" : $"'{LastStop.Value.ToString(Mirror.AxessDateTimeFormat)}'");
+            if (RowExists(DWConn, "alta_utilities.formData", $"{MyFilter}"))
+            {
+                MyQuery = $"UPDATE alta_utilities.formData SET top={Top}, `left`={Left}, height={Height}, width={Width}";
+                if (LastStart != null) MyQuery += $", lastStart={LastStart_S}";
+                if (LastStop != null) MyQuery += $", lastStop={lastStop_S}";
+                
+                if (StopReason != -1) MyQuery += $", stopReason={StopReason}";
+                MyQuery +=$" WHERE {MyFilter}";
+            }
+            else
+            {
+                MyQuery = $"INSERT alta_utilities.formData (`user`, form, top, `left`, height, width, lastStart, lastStop, stopReason) VALUES ('{Environment.UserName.ToUpper()}', '{FormName}', {Top}, {Left}, {Height}, {Width}, {LastStart_S}, {lastStop_S}, {StopReason})";
+            }
+            return ExecuteSQL(DWConn, MyQuery);
         }
 
-        public bool IsStringEmpty(string aValue)
-        {
-            return (aValue == string.Empty) || (aValue == "'null'") || (aValue == null);
-        }
+        public DataRow GetFormLocation(string FormName) => LoadDataRow(DWConn, $"SELECT * FROM alta_utilities.formData WHERE `user`='{Environment.UserName.ToUpper()}' AND form = '{FormName}'");
 
-		public string GetKeyValue(string aSource, int aKey)
+        public string GetKeyValue(string aSource, int aKey)
 		{
 			string[] tVals = aSource.Split('-');
 			if (tVals.Length <= aKey || aKey < 0 || aSource.Length == 0)
@@ -562,7 +578,8 @@ namespace asl_SyncLibrary
 				{
 					CommandType = CommandType.Text
 				};
-				Result = myCommand.ExecuteScalar().ToString();
+				var Result1 = myCommand.ExecuteScalar().ToString();
+                Result = (Result1 is null ? string.Empty : Result1.ToString());
             }
             catch (Exception ex)
             {
@@ -589,7 +606,8 @@ namespace asl_SyncLibrary
                 {
                     CommandType = CommandType.Text
                 };
-                Result = myCommand.ExecuteScalar().ToString();
+                var Result1 = myCommand.ExecuteScalar().ToString();
+                Result = (Result1 is null ? string.Empty : Result1.ToString());
             }
             catch (Exception ex)
             {
@@ -614,7 +632,8 @@ namespace asl_SyncLibrary
 				{
 					CommandType = CommandType.Text
 				};
-				Result = myCommand.ExecuteScalar().ToString();
+                var Result1 = myCommand.ExecuteScalar().ToString();
+                Result = (Result1 is null ? string.Empty : Result1.ToString());
             }
             catch (Exception ex)
             {
@@ -645,7 +664,7 @@ namespace asl_SyncLibrary
             catch (OleDbException ex)
             {
                 System.Diagnostics.Debug.Print(ex.Message);
-                tError.UpdateErrorLog("CommonFunctions.RowExists", 9998, ex.Message, ex.Data.ToString());
+                tError.UpdateErrorLog("CommonFunctions.RowExists", 9996, ex.Message, ex.Data.ToString());
             }
             if (myState == ConnectionState.Closed)
                 CloseConn(aConnection);
@@ -672,7 +691,7 @@ namespace asl_SyncLibrary
             catch (OleDbException ex)
             {
                 System.Diagnostics.Debug.Print(ex.Message);
-                tError.UpdateErrorLog("CommonFunctions.RowExists", 9998, ex.Message, ex.Data.ToString());
+                tError.UpdateErrorLog("CommonFunctions.RowExists", 9997, ex.Message, ex.Data.ToString());
             }
             if (myState == ConnectionState.Closed)
                 CloseConn(aConnection);
@@ -693,15 +712,21 @@ namespace asl_SyncLibrary
                 {
                     myCommand.CommandType = CommandType.Text;
                     if (myState == ConnectionState.Closed)
-                        OpenConn(aConnection);
-                    string TTT = myCommand.ExecuteScalar().ToString();
-                    Result = Convert.ToBoolean(myCommand.ExecuteScalar());
+                        if (OpenConn(aConnection) == ConnectionState.Open)
+                        {
+                            string TTT = myCommand.ExecuteScalar().ToString();
+                            Result = Convert.ToBoolean(myCommand.ExecuteScalar());
+                        }
+                    else
+                        {
+                            Result = false;
+                        }
                 }
             }
             catch (OleDbException ex)
             {
                 System.Diagnostics.Debug.Print(ex.Message);
-                tError.UpdateErrorLog("CommonFunctions.RowExists", 9998, ex.Message, ex.Data.ToString());
+                tError.UpdateErrorLog("CommonFunctions.RowExists", 9998, ex.Message, aTable + "--" + aFilter);
             }
             if (myState == ConnectionState.Closed)
                 CloseConn(aConnection);
@@ -820,7 +845,8 @@ namespace asl_SyncLibrary
 
             public bool ExecuteSQL(OleDbConnection aConnection, string aQuery, int cmdTimeout = 30)
             {
-                OleDbCommand myCommand = new OleDbCommand(aQuery + ";", aConnection);
+            OleDbCommand dbCmdNull = new OleDbCommand("SET NULL OFF",aConnection);
+            OleDbCommand myCommand = new OleDbCommand(aQuery + ";", aConnection);
                 OleDbDataReader myReader;
                 //Application.DoEvents();
                 myCommand.CommandTimeout = cmdTimeout;
@@ -829,7 +855,7 @@ namespace asl_SyncLibrary
                 {
                     if (OpenConn(aConnection) == ConnectionState.Open)
                     {
-
+                        dbCmdNull.ExecuteNonQuery();
                         myReader = myCommand.ExecuteReader();
                         while (myReader.Read()) { }
                         myReader.Close();
@@ -975,6 +1001,7 @@ namespace asl_SyncLibrary
             }
             catch (MySqlException ex)
             {
+
                 System.Diagnostics.Debug.Print(ex.Message);
             }
             if (aConnection.State != ConnectionState.Closed)
@@ -983,25 +1010,48 @@ namespace asl_SyncLibrary
             return aDS;
         }
 
-        public DataTable LoadTable(OleDbConnection aConnection, string aQuery, string aTableName)
+        public DataTable LoadTable(OleDbConnection aConnection, string aQuery, string aTableName, bool Append = false)
         {
 
-            DataSet tDS = LoadDataSet(aConnection, aQuery, new DataSet(), aTableName);
+            DataSet tDS = LoadDataSet(aConnection, aQuery, new DataSet(), aTableName, Append);
             return tDS.Tables[aTableName];
         }
 
-        public DataTable LoadTable(SqlConnection aConnection, string aQuery, string aTableName)
+        public DataTable LoadTable(SqlConnection aConnection, string aQuery, string aTableName, bool Append = false)
 		{
 
-            DataSet tDS = LoadDataSet(aConnection, aQuery, new DataSet(), aTableName);
+            DataSet tDS = LoadDataSet(aConnection, aQuery, new DataSet(), aTableName, Append);
             return tDS.Tables[aTableName];
         }
 
-        public DataTable LoadTable(MySqlConnection aConnection, string aQuery, string aTableName)
+        public DataTable LoadTable(MySqlConnection aConnection, string aQuery, string aTableName, bool Append = false)
 		{
 
-            DataSet tDS = LoadDataSet(aConnection, aQuery, new DataSet(), aTableName);
+            DataSet tDS = LoadDataSet(aConnection, aQuery, new DataSet(), aTableName, Append);
             return tDS.Tables[aTableName];
+        }
+
+        public bool TableHasData(DataTable aTable, Int32 aFieldNo = 0)
+        {
+            bool RtnVal = false;
+            if (aTable != null)
+            {
+                if (aTable.Rows.Count > 0)
+                {
+                    RtnVal = (aTable.Columns[aFieldNo].ToString() != string.Empty);
+                }
+            }
+            return RtnVal;
+        }
+
+        public bool RowHasData(DataRow aRow, Int32 aFieldNo = 0)
+        {
+            bool RtnVal = false;
+            if (aRow != null)
+            {
+                RtnVal = (aRow[aFieldNo].ToString() != string.Empty);
+            }
+            return RtnVal;
         }
 
 

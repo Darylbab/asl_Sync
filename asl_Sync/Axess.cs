@@ -12,6 +12,7 @@ namespace asl_SyncLibrary
     {
         //CONSTANTS
         private const string AXURL = "http://cwc.teamcom:16302/axis_705/services/DCI4CRM?wsdl";
+        private const string AXURL_IIS = "http://cwc.teamaxess.com:16351/DCI4CRM/DCI4CRMService.svc?wsdl";
         private const string uName = "705";
         private const string pWord = "705";
 
@@ -91,7 +92,7 @@ namespace asl_SyncLibrary
         private void ClearAll()
         {
             tSessionID = 0;
-            tErrorNo = 0;
+             tErrorNo = 0;
             tErrorMsg = "";
             tProjectNo = 0;
             tPOSNo = 0;
@@ -145,12 +146,12 @@ namespace asl_SyncLibrary
         {
             if (loginTimestamp != null)
             {
-                if (loginTimestamp < DateTime.Now.AddHours(-1)) Logout();
+                if (loginTimestamp.Value.AddHours(1) < DateTime.Now) Logout();
             }
             if (tSessionID == 0)
             {
                 ClearAll();
-                XmlDocument localXML = Execute(BuildSOAPEnvelope("login", $"<i_szUsername>{uName}</i_szUsername><i_szPassword>{pWord}</i_szPassword>", false));
+                 XmlDocument localXML = Execute(BuildSOAPEnvelope("login", $"<i_szUsername>{uName}</i_szUsername><i_szPassword>{pWord}</i_szPassword>", false));
                 if (tErrorNo == 0)
                 {
                     tProjectNo = Convert.ToInt64(localXML.GetElementsByTagName("NPROJNR").Item(0).InnerText);
@@ -370,7 +371,15 @@ namespace asl_SyncLibrary
             DateTime curTime = DateTime.Now;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Properties.Settings.Default.Axess_DCI4CRM);
             request.ContentType = "text/xml; charset=UTF-8; action =\"SOAP:Action\"";
+            //request.AutomaticDecompression = DecompressionMethods.GZip;
             request.Method = "POST";
+            //string credentials = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("705:705"));
+            //request.Headers[HttpRequestHeader.Authorization] = "Basic " + credentials;
+            IWebProxy proxy = request.Proxy;
+            proxy.GetProxy(request.RequestUri);
+            WebProxy myProxy = new WebProxy();
+            myProxy.Address = new Uri("");
+            request.Proxy = myProxy; 
             try
             {
                 using (Stream stream = request.GetRequestStream())
